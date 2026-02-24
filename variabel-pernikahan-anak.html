@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infografis Variabel Penyerta Pernikahan Anak</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card-bg: #111827;
+    --individu: #f97316;
+    --hubungan: #8b5cf6;
+    --komunitas: #06b6d4;
+    --masyarakat: #ec4899;
+    --negara: #10b981;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(6,182,212,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(6,182,212,0.15);
+    border: 1px solid rgba(6,182,212,0.3);
+    color: var(--komunitas);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 68px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #f1f5f9 30%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  /* ---- STATS ROW ---- */
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 72px;
+  }
+
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .stat-pill strong {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .stat-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- LEGEND ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 60px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .legend-item:hover, .legend-item.active {
+    border-color: var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- SECTION TITLE ---- */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .section-count {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+  }
+
+  /* ---- GRID ---- */
+  .section-block {
+    margin-bottom: 56px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+
+  .var-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+
+  .var-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .var-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .var-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .var-code {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    font-family: 'DM Sans', monospace;
+    margin-top: 1px;
+  }
+
+  .var-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  .var-justifikasi {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .var-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    gap: 8px;
+  }
+
+  .var-dimensi {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  .var-ref {
+    font-size: 10px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-style: italic;
+  }
+
+  .var-divider {
+    border: none;
+    border-top: 1px dashed rgba(255,255,255,0.07);
+    margin: 12px 0;
+  }
+
+  .var-justifikasi-dim-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.45;
+    margin-bottom: 5px;
+  }
+
+  .var-justifikasi-dim {
+    font-size: 11.5px;
+    color: rgba(241,245,249,0.6);
+    line-height: 1.55;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .var-ref-dim {
+    font-size: 10px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  /* ---- BRONFENBRENNER VISUAL ---- */
+  .theory-box {
+    background: linear-gradient(135deg, rgba(6,182,212,0.05), rgba(139,92,246,0.05));
+    border: 1px solid rgba(6,182,212,0.15);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 48px 0 72px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .theory-box { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .theory-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .theory-text p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .theory-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .theory-layer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .layer-bar {
+    height: 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ---- CIRCLES DIAGRAM ---- */
+  .circles-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .circles-diagram {
+    position: relative;
+    width: 260px;
+    height: 260px;
+  }
+
+  .circle-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .circle-label {
+    position: absolute;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 40px;
+  }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-block:nth-child(1) { animation-delay: 0.1s; }
+  .section-block:nth-child(2) { animation-delay: 0.2s; }
+  .section-block:nth-child(3) { animation-delay: 0.3s; }
+  .section-block:nth-child(4) { animation-delay: 0.4s; }
+  .section-block:nth-child(5) { animation-delay: 0.5s; }
+
+  /* ---- COLOR THEMING PER DIMENSI ---- */
+  .individu .var-card::before { background: var(--individu); }
+  .individu .var-card:hover { border-color: rgba(249,115,22,0.3); box-shadow: 0 20px 40px rgba(249,115,22,0.1); }
+  .individu .var-code { background: rgba(249,115,22,0.12); color: var(--individu); }
+  .individu .var-dimensi { color: var(--individu); }
+  .individu .section-title { color: var(--individu); }
+  .individu .section-icon { background: rgba(249,115,22,0.12); }
+
+  .hubungan .var-card::before { background: var(--hubungan); }
+  .hubungan .var-card:hover { border-color: rgba(139,92,246,0.3); box-shadow: 0 20px 40px rgba(139,92,246,0.1); }
+  .hubungan .var-code { background: rgba(139,92,246,0.12); color: var(--hubungan); }
+  .hubungan .var-dimensi { color: var(--hubungan); }
+  .hubungan .section-title { color: var(--hubungan); }
+  .hubungan .section-icon { background: rgba(139,92,246,0.12); }
+
+  .komunitas .var-card::before { background: var(--komunitas); }
+  .komunitas .var-card:hover { border-color: rgba(6,182,212,0.3); box-shadow: 0 20px 40px rgba(6,182,212,0.1); }
+  .komunitas .var-code { background: rgba(6,182,212,0.12); color: var(--komunitas); }
+  .komunitas .var-dimensi { color: var(--komunitas); }
+  .komunitas .section-title { color: var(--komunitas); }
+  .komunitas .section-icon { background: rgba(6,182,212,0.12); }
+
+  .masyarakat .var-card::before { background: var(--masyarakat); }
+  .masyarakat .var-card:hover { border-color: rgba(236,72,153,0.3); box-shadow: 0 20px 40px rgba(236,72,153,0.1); }
+  .masyarakat .var-code { background: rgba(236,72,153,0.12); color: var(--masyarakat); }
+  .masyarakat .var-dimensi { color: var(--masyarakat); }
+  .masyarakat .section-title { color: var(--masyarakat); }
+  .masyarakat .section-icon { background: rgba(236,72,153,0.12); }
+
+  .negara .var-card::before { background: var(--negara); }
+  .negara .var-card:hover { border-color: rgba(16,185,129,0.3); box-shadow: 0 20px 40px rgba(16,185,129,0.1); }
+  .negara .var-code { background: rgba(16,185,129,0.12); color: var(--negara); }
+  .negara .var-dimensi { color: var(--negara); }
+  .negara .section-title { color: var(--negara); }
+  .negara .section-icon { background: rgba(16,185,129,0.12); }
+
+  /* Expandable justifikasi */
+  .var-justifikasi {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .var-card:hover .var-justifikasi {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+
+  /* filter bar */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 48px;
+  }
+
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+  .filter-btn.active { background: rgba(255,255,255,0.07); color: var(--text); border-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div class="badge">Penelitian Perkawinan Anak · Kerangka Ekologi Bronfenbrenner</div>
+    <h1>Variabel Penyerta<br>Perkawinan Anak</h1>
+    <p>Pemetaan 46 indikator lintas lima dimensi ekologis berdasarkan Bioecological Model Bronfenbrenner & Morris (2006) untuk memahami determinan perkawinan anak di Indonesia.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-pill" style="animation-delay:0.1s">
+      <div class="dot" style="background:var(--individu)"></div>
+      <strong style="color:var(--individu)">46</strong>
+      <span>Total Variabel</span>
+    </div>
+    <div class="stat-pill" style="animation-delay:0.2s">
+      <div class="dot" style="background:var(--hubungan)"></div>
+      <strong style="color:var(--hubungan)">5</strong>
+      <span>Dimensi Ekologi</span>
+    </div>
+    <div class="stat-pill" style="animation-delay:0.3s">
+      <div class="dot" style="background:var(--komunitas)"></div>
+      <strong style="color:var(--komunitas)">28</strong>
+      <span>Variabel Komunitas</span>
+    </div>
+    <div class="stat-pill" style="animation-delay:0.4s">
+      <div class="dot" style="background:var(--negara)"></div>
+      <strong style="color:var(--negara)">12</strong>
+      <span>Variabel Negara</span>
+    </div>
+  </div>
+
+  <!-- THEORY BOX -->
+  <div class="theory-box">
+    <div class="theory-text">
+      <h2>Kerangka Teori Ekologi</h2>
+      <p>Penelitian ini mengadopsi <em>Bioecological Model</em> Bronfenbrenner & Morris (2006) yang memandang perkembangan individu sebagai produk interaksi dinamis antara karakteristik biopsikologis individu dengan berbagai lapisan lingkungan yang melingkupinya.</p>
+      <p>Setiap variabel dipilih karena kemampuannya merepresentasikan mekanisme ekologis yang secara teoritis dan empiris berhubungan dengan prevalensi perkawinan anak.</p>
+      <div class="theory-layers">
+        <div class="theory-layer">
+          <div class="layer-bar" style="width:60px; background:var(--individu)"></div>
+          <span style="font-size:12px; color:var(--muted)"><strong style="color:var(--individu)">Individu</strong> — Resource Characteristics biopsychological</span>
+        </div>
+        <div class="theory-layer">
+          <div class="layer-bar" style="width:50px; background:var(--hubungan)"></div>
+          <span style="font-size:12px; color:var(--muted)"><strong style="color:var(--hubungan)">Hubungan</strong> — Mikrosistem & interaksi tatap muka</span>
+        </div>
+        <div class="theory-layer">
+          <div class="layer-bar" style="width:80px; background:var(--komunitas)"></div>
+          <span style="font-size:12px; color:var(--muted)"><strong style="color:var(--komunitas)">Komunitas</strong> — Mesosistem & Eksosistem lokal</span>
+        </div>
+        <div class="theory-layer">
+          <div class="layer-bar" style="width:40px; background:var(--masyarakat)"></div>
+          <span style="font-size:12px; color:var(--muted)"><strong style="color:var(--masyarakat)">Masyarakat</strong> — Makrosistem & ideologi budaya</span>
+        </div>
+        <div class="theory-layer">
+          <div class="layer-bar" style="width:55px; background:var(--negara)"></div>
+          <span style="font-size:12px; color:var(--muted)"><strong style="color:var(--negara)">Negara</strong> — Eksosistem & kebijakan publik</span>
+        </div>
+      </div>
+    </div>
+    <div class="circles-wrap">
+      <svg width="280" height="280" viewBox="0 0 280 280">
+        <!-- Kronosistem outer -->
+        <circle cx="140" cy="140" r="130" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <!-- Makrosistem -->
+        <circle cx="140" cy="140" r="108" fill="rgba(236,72,153,0.04)" stroke="rgba(236,72,153,0.3)" stroke-width="1.5"/>
+        <!-- Eksosistem -->
+        <circle cx="140" cy="140" r="88" fill="rgba(16,185,129,0.05)" stroke="rgba(16,185,129,0.35)" stroke-width="1.5"/>
+        <!-- Mesosistem -->
+        <circle cx="140" cy="140" r="68" fill="rgba(6,182,212,0.07)" stroke="rgba(6,182,212,0.4)" stroke-width="1.5"/>
+        <!-- Mikrosistem -->
+        <circle cx="140" cy="140" r="48" fill="rgba(139,92,246,0.1)" stroke="rgba(139,92,246,0.45)" stroke-width="1.5"/>
+        <!-- Individu core -->
+        <circle cx="140" cy="140" r="26" fill="rgba(249,115,22,0.15)" stroke="rgba(249,115,22,0.6)" stroke-width="2"/>
+
+        <!-- Labels -->
+        <text x="140" y="144" text-anchor="middle" fill="rgba(249,115,22,0.9)" font-size="9" font-family="DM Sans" font-weight="700" letter-spacing="0.5">INDIVIDU</text>
+
+        <text x="140" y="99" text-anchor="middle" fill="rgba(139,92,246,0.8)" font-size="8" font-family="DM Sans" font-weight="600" letter-spacing="0.5">MIKROSISTEM</text>
+
+        <text x="140" y="79" text-anchor="middle" fill="rgba(6,182,212,0.8)" font-size="8" font-family="DM Sans" font-weight="600" letter-spacing="0.5">MESOSISTEM</text>
+
+        <text x="140" y="59" text-anchor="middle" fill="rgba(16,185,129,0.8)" font-size="8" font-family="DM Sans" font-weight="600" letter-spacing="0.5">EKSOSISTEM</text>
+
+        <text x="140" y="40" text-anchor="middle" fill="rgba(236,72,153,0.8)" font-size="8" font-family="DM Sans" font-weight="600" letter-spacing="0.5">MAKROSISTEM</text>
+
+        <text x="140" y="20" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7" font-family="DM Sans" font-weight="500" letter-spacing="1">KRONOSISTEM</text>
+
+        <!-- Variable count badges -->
+        <g>
+          <circle cx="206" cy="120" r="14" fill="rgba(249,115,22,0.2)" stroke="rgba(249,115,22,0.4)" stroke-width="1"/>
+          <text x="206" y="124" text-anchor="middle" fill="rgba(249,115,22,1)" font-size="10" font-family="DM Sans" font-weight="700">2</text>
+        </g>
+        <g>
+          <circle cx="195" cy="96" r="14" fill="rgba(139,92,246,0.2)" stroke="rgba(139,92,246,0.4)" stroke-width="1"/>
+          <text x="195" y="100" text-anchor="middle" fill="rgba(139,92,246,1)" font-size="10" font-family="DM Sans" font-weight="700">3</text>
+        </g>
+        <g>
+          <circle cx="220" cy="155" r="14" fill="rgba(6,182,212,0.2)" stroke="rgba(6,182,212,0.4)" stroke-width="1"/>
+          <text x="220" y="159" text-anchor="middle" fill="rgba(6,182,212,1)" font-size="10" font-family="DM Sans" font-weight="700">28</text>
+        </g>
+        <g>
+          <circle cx="75" cy="96" r="14" fill="rgba(236,72,153,0.2)" stroke="rgba(236,72,153,0.4)" stroke-width="1"/>
+          <text x="75" y="100" text-anchor="middle" fill="rgba(236,72,153,1)" font-size="10" font-family="DM Sans" font-weight="700">1</text>
+        </g>
+        <g>
+          <circle cx="60" cy="155" r="14" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+          <text x="60" y="159" text-anchor="middle" fill="rgba(16,185,129,1)" font-size="10" font-family="DM Sans" font-weight="700">12</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterDimensi('all', this)">Semua Dimensi</button>
+    <button class="filter-btn" onclick="filterDimensi('individu', this)" style="border-color:rgba(249,115,22,0.2)">🟠 Individu</button>
+    <button class="filter-btn" onclick="filterDimensi('hubungan', this)" style="border-color:rgba(139,92,246,0.2)">🟣 Hubungan</button>
+    <button class="filter-btn" onclick="filterDimensi('komunitas', this)" style="border-color:rgba(6,182,212,0.2)">🔵 Komunitas</button>
+    <button class="filter-btn" onclick="filterDimensi('masyarakat', this)" style="border-color:rgba(236,72,153,0.2)">🩷 Masyarakat</button>
+    <button class="filter-btn" onclick="filterDimensi('negara', this)" style="border-color:rgba(16,185,129,0.2)">🟢 Negara</button>
+  </div>
+
+  <!-- ===== DIMENSI INDIVIDU ===== -->
+  <div class="section-block individu" data-dimensi="individu">
+    <div class="section-header">
+      <div class="section-icon">🧬</div>
+      <div>
+        <div class="section-label">Dimensi 1</div>
+        <div class="section-title">Individu</div>
+      </div>
+      <div class="section-count">2 variabel · X₁–X₂</div>
+    </div>
+    <div class="cards-grid">
+      <div class="var-card">
+        <div class="var-card-top">
+          <div class="var-code">X₁</div>
+          <div class="var-name">Persentase penderita gizi buruk</div>
+        </div>
+        <div class="var-justifikasi">Kondisi gizi buruk menghambat perkembangan fisik, kognitif, dan emosional remaja, yang dapat menurunkan kemampuan mereka membuat keputusan terkait reproduksi dan meningkatkan kerentanan terhadap perkawinan anak.</div>
+        <hr class="var-divider"/>
+        <div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div>
+        <div class="var-justifikasi-dim">Mengukur <em>Resource Characteristics</em> (karakteristik sumber daya) biopsychological yang menentukan kapasitas fisik individu untuk terlibat dalam proses proksimal.</div>
+        <div class="var-footer">
+          <span class="var-dimensi">Resource Characteristics</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="var-ref">Hidayah et.al, 2024</span>
+            <span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span>
+          </div>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-card-top">
+          <div class="var-code">X₂</div>
+          <div class="var-name">Persentase kerawanan pangan</div>
+        </div>
+        <div class="var-justifikasi">Ketidakcukupan pangan secara langsung memengaruhi kesehatan remaja dan meningkatkan tekanan keluarga atau individu untuk menggunakan perkawinan sebagai strategi bertahan hidup, terutama dalam konteks kemiskinan ekstrem.</div>
+        <hr class="var-divider"/>
+        <div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div>
+        <div class="var-justifikasi-dim">Kondisi biologis yang memengaruhi kemampuan organisme untuk berinteraksi secara efektif dengan lingkungannya.</div>
+        <div class="var-footer">
+          <span class="var-dimensi">Kondisi Biologis</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="var-ref">Hidayah et.al, 2024</span>
+            <span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIMENSI HUBUNGAN ===== -->
+  <div class="section-block hubungan" data-dimensi="hubungan">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div>
+        <div class="section-label">Dimensi 2</div>
+        <div class="section-title">Hubungan</div>
+      </div>
+      <div class="section-count">3 variabel · X₃–X₅</div>
+    </div>
+    <div class="cards-grid">
+      <div class="var-card">
+        <div class="var-card-top">
+          <div class="var-code">X₃</div>
+          <div class="var-name">% desa dengan kelas ibu hamil</div>
+        </div>
+        <div class="var-justifikasi">Program kelas ibu hamil memperkuat edukasi keluarga mengenai kesehatan maternal dan reproduksi, yang kemudian mempengaruhi preferensi keluarga terhadap praktik perkawinan anak dan penundaan usia nikah.</div>
+        <hr class="var-divider"/>
+        <div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div>
+        <div class="var-justifikasi-dim">Mewakili <em>Mikrosistem</em>: seting yang memfasilitasi aktivitas molar dan interaksi tatap muka langsung antara pengasuh dan anak (calon anak).</div>
+        <div class="var-footer">
+          <span class="var-dimensi">Mikrosistem</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="var-ref">Dewi & Dartanto, 2018</span>
+            <span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span>
+          </div>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-card-top">
+          <div class="var-code">X₄</div>
+          <div class="var-name">% desa dengan kelas ibu balita</div>
+        </div>
+        <div class="var-justifikasi">Edukasi pengasuhan di kelas ibu balita meningkatkan kesadaran keluarga terkait kesehatan anak dan peran perkembangan, sehingga memperkuat pola asuh suportif yang cenderung tidak mendorong pernikahan dini.</div>
+        <hr class="var-divider"/>
+        <div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div>
+        <div class="var-justifikasi-dim">Fokus pada kualitas hubungan interpersonal dan kelekatan (<em>bonding</em>) di lingkungan terdekat individu.</div>
+        <div class="var-footer">
+          <span class="var-dimensi">Kelekatan Keluarga</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="var-ref">Dewi & Dartanto, 2018</span>
+            <span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span>
+          </div>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-card-top">
+          <div class="var-code">X₅</div>
+          <div class="var-name">% desa dengan perkelahian pelajar karena asmara</div>
+        </div>
+        <div class="var-justifikasi">Kejadian konflik pelajar terkait hubungan asmara mengindikasikan dinamika hubungan interpersonal remaja dan peer group yang dapat bereskalasi menjadi keputusan reproduksi prematur, termasuk pernikahan dini sebagai upaya menyelesaikan konflik sosial.</div>
+        <hr class="var-divider"/>
+        <div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div>
+        <div class="var-justifikasi-dim">Mencerminkan dinamika <em>Mikrosistem</em> sebaya; pola aktivitas dan peran sosial yang dialami individu dalam hubungan timbal balik.</div>
+        <div class="var-footer">
+          <span class="var-dimensi">Dinamika Mikrosistem Sebaya</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="var-ref">Emezue et.al, 2022</span>
+            <span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIMENSI KOMUNITAS ===== -->
+  <div class="section-block komunitas" data-dimensi="komunitas">
+    <div class="section-header">
+      <div class="section-icon">🏘️</div>
+      <div>
+        <div class="section-label">Dimensi 3</div>
+        <div class="section-title">Komunitas</div>
+      </div>
+      <div class="section-count">28 variabel · X₆–X₃₃</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₆</div><div class="var-name">Posyandu aktif per 1000 perempuan</div></div><div class="var-justifikasi">Keberadaan posyandu aktif menunjukkan intensitas dukungan kesehatan ibu dan anak, yang berkontribusi pada peningkatan pengetahuan pengasuhan dan reproduksi serta mempengaruhi keputusan keluarga terkait perkawinan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Mewakili <em>Mesosistem</em>: aksesibilitas layanan proksimal di tingkat lokal yang menghubungkan berbagai mikrosistem dalam komunitas.</div><div class="var-footer"><span class="var-dimensi">Mesosistem</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Andriani et.al, 2016</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₇</div><div class="var-name">Kader KB/ibu-anak per 1000 perempuan</div></div><div class="var-justifikasi">Kader KB berfungsi sebagai agen edukasi reproduksi di tingkat keluarga, di mana keberadaannya secara langsung mempengaruhi pemahaman keluarga mengenai risiko pernikahan dini dan pentingnya penundaan usia perkawinan.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Mobilisasi sosial di level komunitas yang memengaruhi norma keluarga melalui interaksi antar-seting lokal.</div><div class="var-footer"><span class="var-dimensi">Mobilisasi Sosial</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Lowe et.al, 2025</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Ceci, 1994</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₈</div><div class="var-name">% desa dengan keberadaan Bidan</div></div><div class="var-justifikasi">Interaksi antara keluarga dan bidan meningkatkan pengetahuan tentang kesehatan reproduksi dan risiko kehamilan remaja, sehingga memengaruhi keputusan keluarga dalam mencegah pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Ketersediaan dukungan profesional di lingkungan tinggal yang mendukung proses perkembangan kesehatan reproduksi secara langsung.</div><div class="var-footer"><span class="var-dimensi">Dukungan Profesional</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Strupat, 2016</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₉</div><div class="var-name">% desa dengan PMT ibu hamil KEK/RESTI keluarga miskin</div></div><div class="var-justifikasi">Program PMT untuk ibu hamil miskin menunjukkan perhatian keluarga terhadap gizi ibu hamil, berhubungan dengan stabilitas keluarga yang dapat mengurangi tekanan untuk menikahkan anak sebagai strategi ekonomi.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Intervensi komunitas di level <em>Mesosistem</em> untuk memperkuat kapasitas lingkungan dalam mendukung perkembangan anak.</div><div class="var-footer"><span class="var-dimensi">Mesosistem</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Asadullah et.al, 2020</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₀</div><div class="var-name">% desa dengan fasilitas pendidikan wajib belajar lengkap</div></div><div class="var-justifikasi">Fasilitas pendidikan yang memadai memperbaiki kemampuan kognitif anak, meningkatkan literasi dasar dan kemampuan mengambil keputusan terkait masa depan, termasuk keputusan untuk menolak pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Penyediaan seting pendidikan lokal yang menentukan transisi ekologis anak dari rumah ke sekolah.</div><div class="var-footer"><span class="var-dimensi">Transisi Ekologis</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Subramanee et.al, 2022</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₁</div><div class="var-name">% desa dengan kejadian perkosaan</div></div><div class="var-justifikasi">Tingginya tingkat kekerasan seksual mencerminkan lingkungan sosial yang tidak aman bagi remaja, yang terbukti meningkatkan risiko praktik pernikahan anak karena keluarga cenderung menggunakan perkawinan sebagai mekanisme proteksi.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Kondisi keamanan <em>Mikrosistem</em> luar (desa) yang memengaruhi resiliensi dan perlindungan fisik anak.</div><div class="var-footer"><span class="var-dimensi">Keamanan Mikrosistem</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Platt, 2017</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₂</div><div class="var-name">% desa dengan penerangan jalan utama</div></div><div class="var-justifikasi">Infrastruktur pencahayaan yang memadai meningkatkan mobilitas perempuan menuju sekolah dan fasilitas publik, serta mengurangi risiko kekerasan di ruang publik. Lingkungan yang aman menurunkan kerentanan anak perempuan terhadap pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Infrastruktur fisik komunitas yang mendukung keamanan aktivitas anak di luar rumah (lingkungan proksimal).</div><div class="var-footer"><span class="var-dimensi">Infrastruktur Fisik</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Lowe et.al, 2025</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₃</div><div class="var-name">% desa dengan jalan darat beraspal terluas</div></div><div class="var-justifikasi">Akses jalan yang baik meningkatkan mobilitas perempuan menuju sekolah dan fasilitas kesehatan, yang memperbesar peluang pendidikan dan memperkuat faktor protektif terhadap pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Infrastruktur fisik komunitas yang mendukung keamanan aktivitas anak di luar rumah (lingkungan proksimal).</div><div class="var-footer"><span class="var-dimensi">Infrastruktur Komunitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Subramanee et.al, 2022</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₄</div><div class="var-name">% desa dengan kegiatan keaksaraan dasar/lanjutan</div></div><div class="var-justifikasi">Kegiatan keaksaraan di tingkat desa meningkatkan kesempatan belajar bagi remaja putus sekolah, terbukti menunda usia kawin melalui peningkatan literasi fungsional dan kemampuan memahami risiko perkawinan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Program penguatan kapasitas warga di level <em>Mesosistem</em> untuk menciptakan lingkungan yang ramah terhadap tumbuh kembang.</div><div class="var-footer"><span class="var-dimensi">Mesosistem</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₅</div><div class="var-name">% desa dengan kegiatan pendidikan Paket A/B/C</div></div><div class="var-justifikasi">Ketersediaan jalur pendidikan alternatif membantu remaja putus sekolah kembali melanjutkan pendidikan, yang secara konsisten ditemukan sebagai faktor protektif terhadap pernikahan anak karena meningkatkan aspirasi dan peluang sosial-ekonomi.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Layanan pendidikan alternatif berbasis komunitas untuk memastikan hak anak di tingkat lokal tetap terpenuhi.</div><div class="var-footer"><span class="var-dimensi">Pendidikan Alternatif Komunitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₆</div><div class="var-name">% desa dengan Taman Bacaan Masyarakat (TBM)</div></div><div class="var-justifikasi">TBM meningkatkan paparan remaja terhadap informasi dan materi pendidikan yang memperkuat kemampuan analitis dan aspirasi akademik, sehingga berkontribusi pada pencegahan pernikahan anak melalui peningkatan sumber daya kognitif.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Sarana komunitas yang memicu interaksi proksimal anak dengan simbol dan objek intelektual di lingkungannya.</div><div class="var-footer"><span class="var-dimensi">Literasi Komunitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₇</div><div class="var-name">% keluarga di permukiman kumuh</div></div><div class="var-justifikasi">Permukiman kumuh meningkatkan kerentanan sosial, mengurangi akses pendidikan dan layanan kesehatan, dan menurunkan peluang remaja mengembangkan aspirasi pendidikan, sehingga secara empiris meningkatkan risiko pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Karakteristik lingkungan tinggal proksimal yang menjadi faktor risiko dalam proses perkembangan anak.</div><div class="var-footer"><span class="var-dimensi">Karakteristik Lingkungan</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Stark, 2017</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₈</div><div class="var-name">Rasio SD per 1000 perempuan</div></div><div class="var-justifikasi">Ketersediaan sekolah dasar dalam komunitas menunjukkan kapasitas sosial untuk mendukung pendidikan anak perempuan sejak awal, yang merupakan faktor fundamental dalam mencegah pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Ketersediaan infrastruktur pendidikan dasar di lingkup komunitas sebagai faktor pelindung anak.</div><div class="var-footer"><span class="var-dimensi">Infrastruktur Pendidikan</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₁₉</div><div class="var-name">Rasio SMP per 1000 perempuan</div></div><div class="var-justifikasi">Akses pendidikan tingkat menengah di komunitas secara signifikan menurunkan risiko perkawinan anak karena masa SMP merupakan fase kritis dalam pembentukan aspirasi dan keterampilan hidup remaja.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Aksesibilitas seting pendidikan menengah yang memengaruhi lintasan (<em>trajectory</em>) perkembangan remaja di desa.</div><div class="var-footer"><span class="var-dimensi">Aksesibilitas Pendidikan</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₀</div><div class="var-name">Rasio SMA per 1000 perempuan</div></div><div class="var-justifikasi">Ketersediaan SMA di komunitas memperpanjang masa sekolah dan memperkuat aspiration formation remaja perempuan, yang secara konsisten terbukti sebagai determinan kuat dalam menunda perkawinan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Jangkauan layanan pendidikan di tingkat lokal sebagai strategi pencegahan perkawinan anak di hulu.</div><div class="var-footer"><span class="var-dimensi">Pencegahan Hulu</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₁</div><div class="var-name">Rasio tenaga kesehatan per 1000 perempuan</div></div><div class="var-justifikasi">Komunitas dengan tenaga kesehatan yang memadai memiliki penetrasi pengetahuan kesehatan reproduksi yang lebih baik, berkontribusi pada penurunan risiko praktik pernikahan dini melalui peningkatan literasi kesehatan.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Dukungan profesional dalam <em>Mesosistem</em> kesehatan yang memengaruhi kualitas rujukan bagi remaja.</div><div class="var-footer"><span class="var-dimensi">Dukungan Profesional Mesosistem</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Fan & Koski, 2022</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₂</div><div class="var-name">Sarana/prasarana ekonomi per 1000 perempuan</div></div><div class="var-justifikasi">Ketersediaan sarana ekonomi di komunitas memperkuat ketahanan ekonomi keluarga dan menyediakan peluang kerja bagi perempuan, sehingga mengurangi tekanan ekonomi yang menjadi faktor struktural dalam praktik pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Daya dukung lingkungan sekitar untuk menekan kemiskinan wilayah yang memicu tekanan perkawinan anak.</div><div class="var-footer"><span class="var-dimensi">Daya Dukung Ekonomi</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Corno & Voena, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₃</div><div class="var-name">% desa dengan lokalisasi PSK</div></div><div class="var-justifikasi">Keberadaan lokalisasi PSK mencerminkan lingkungan sosial yang berisiko, dapat memicu perilaku seksual berbahaya, meningkatkan risiko kehamilan remaja, serta memperburuk stigma sosial yang mendorong pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Patologi sosial lingkungan yang memengaruhi norma dan nilai di tingkat komunitas (faktor risiko ekologis).</div><div class="var-footer"><span class="var-dimensi">Patologi Sosial Komunitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Warria, 2017</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₄</div><div class="var-name">% keluarga di bantaran sungai</div></div><div class="var-justifikasi">Hunian rawan bencana seperti bantaran sungai menggambarkan kerentanan sosial dan ekonomi komunitas, yang terbukti meningkatkan kemungkinan keluarga melihat perkawinan anak sebagai strategi adaptif.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Kerentanan geografis seting tempat tinggal yang memengaruhi stabilitas sistem perkembangan anak.</div><div class="var-footer"><span class="var-dimensi">Kerentanan Geografis</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Dewi & Dartanto, 2018</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₅</div><div class="var-name">% korban bencana</div></div><div class="var-justifikasi">Komunitas yang sering mengalami bencana menunjukkan pola meningkatnya praktik pernikahan anak akibat hilangnya mata pencaharian, dislokasi sosial, serta meningkatnya tekanan keluarga untuk mengamankan masa depan anak melalui perkawinan.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Gangguan ekologis mendadak yang memengaruhi stabilitas kronosistem dan lingkungan mikrosistem anak.</div><div class="var-footer"><span class="var-dimensi">Gangguan Kronosistem</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Asadullah et.al, 2020</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₆</div><div class="var-name">Sarana/prasarana keterampilan per 1000 perempuan</div></div><div class="var-justifikasi">Fasilitas pelatihan vokasional memperkuat pemberdayaan ekonomi perempuan di tingkat komunitas, dan peningkatan keterampilan kerja remaja perempuan terbukti meningkatkan bargaining power mereka dalam menolak pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Pusat optimalisasi kapasitas individu di tingkat komunitas untuk membangun resiliensi remaja.</div><div class="var-footer"><span class="var-dimensi">Optimalisasi Kapasitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Kidmana et.al, 2024</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₇</div><div class="var-name">Sarana kesehatan untuk persalinan per 1000 perempuan</div></div><div class="var-justifikasi">Ketersediaan fasilitas persalinan yang memadai meningkatkan kesadaran kesehatan reproduksi di komunitas dan mendorong norma yang lebih progresif terkait kesehatan maternal, sehingga secara tidak langsung menekan praktik pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Ketersediaan rujukan medis proksimal untuk pemenuhan hak kesehatan reproduksi di tingkat desa.</div><div class="var-footer"><span class="var-dimensi">Rujukan Medis Proksimal</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Lowe et.al, 2025</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₈</div><div class="var-name">% desa dengan orang yang dipasung</div></div><div class="var-justifikasi">Tingginya kasus pemasungan mencerminkan lemahnya layanan kesehatan mental komunitas, yang menunjukkan ketidakberfungsian sistem sosial dan dapat memperburuk kerentanan keluarga serta memengaruhi keputusan reproduksi.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Indikator derajat kesehatan mental dan stigma sosial dalam <em>Mikrosistem</em> luas masyarakat desa.</div><div class="var-footer"><span class="var-dimensi">Kesehatan Mental Komunitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Baklien et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₂₉</div><div class="var-name">% desa dengan lembaga kemasyarakatan</div></div><div class="var-justifikasi">Keberadaan lembaga kemasyarakatan merefleksikan kekuatan modal sosial desa, dan komunitas dengan modal sosial tinggi memiliki kapasitas lebih baik untuk melakukan pengawasan sosial serta mengembangkan norma yang melindungi anak dari praktik pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Mengukur kekuatan modal sosial komunitas dalam pengawasan dan perlindungan anak.</div><div class="var-footer"><span class="var-dimensi">Modal Sosial Komunitas</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Lowe et.al, 2025</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₀</div><div class="var-name">% desa dengan pub/diskotek/tempat karaoke</div></div><div class="var-justifikasi">Kehadiran tempat hiburan berisiko meningkatkan eksposur remaja terhadap perilaku sosial yang rentan, seperti konsumsi alkohol atau pergaulan berisiko, yang secara empiris berhubungan dengan meningkatnya kehamilan remaja dan tekanan menikah muda.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Pengaruh lingkungan hiburan dewasa terhadap pembentukan norma pergaulan di level komunitas.</div><div class="var-footer"><span class="var-dimensi">Norma Lingkungan Hiburan</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Bronstein et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₁</div><div class="var-name">Rasio guru/murid SD</div></div><div class="var-justifikasi">Kualitas pengajaran yang meningkat melalui rasio guru-murid yang lebih ideal memperbaiki kemampuan kognitif anak, meningkatkan literasi dasar dan kemampuan mengambil keputusan, termasuk keputusan untuk menolak pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Indikator intensitas bimbingan dalam <em>Mikrosistem</em> sekolah pada masa perkembangan awal.</div><div class="var-footer"><span class="var-dimensi">Mikrosistem Sekolah</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Berliana et.al, 2018</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₂</div><div class="var-name">Rasio guru/murid SMP</div></div><div class="var-justifikasi">Pembelajaran yang lebih efektif pada tingkat SMP meningkatkan keterampilan berpikir kritis dan aspirasi pendidikan remaja, yang secara empiris menurunkan risiko perkawinan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Kapasitas pendampingan proksimal pada masa transisi kritis remaja di lingkungan sekolah.</div><div class="var-footer"><span class="var-dimensi">Pendampingan Transisi Remaja</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₃</div><div class="var-name">Rasio guru/murid SMA</div></div><div class="var-justifikasi">Rasio guru-murid yang lebih rendah di tingkat SMA memperkuat proses pembelajaran dan meningkatkan peluang remaja untuk tetap bersekolah lebih lama, suatu faktor yang sangat kuat dalam mencegah pernikahan dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Penguatan agensi anak melalui interaksi dengan pendidik di jenjang pendidikan menengah.</div><div class="var-footer"><span class="var-dimensi">Agensi Pendidikan Menengah</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Pourtaheri et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+    </div>
+  </div>
+
+  <!-- ===== DIMENSI MASYARAKAT ===== -->
+  <div class="section-block masyarakat" data-dimensi="masyarakat">
+    <div class="section-header">
+      <div class="section-icon">🏛️</div>
+      <div>
+        <div class="section-label">Dimensi 4</div>
+        <div class="section-title">Masyarakat</div>
+      </div>
+      <div class="section-count">1 variabel · X₃₄</div>
+    </div>
+    <div class="cards-grid">
+      <div class="var-card">
+        <div class="var-card-top">
+          <div class="var-code">X₃₄</div>
+          <div class="var-name">% keterlibatan perempuan dalam parlemen</div>
+        </div>
+        <div class="var-justifikasi">Struktur masyarakat yang patriarkis tercermin dalam rendahnya representasi perempuan di politik. Negara dengan representasi gender rendah memiliki prevalensi child marriage yang lebih tinggi karena kebijakan publik cenderung tidak responsif gender.</div>
+        <hr class="var-divider"/>
+        <div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div>
+        <div class="var-justifikasi-dim">Mewakili <em>Makrosistem</em>: "Cetak biru" ideologi budaya mengenai kesetaraan gender dan peran perempuan dalam struktur sosial.</div>
+        <div class="var-footer">
+          <span class="var-dimensi">Makrosistem · Ideologi Budaya</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="var-ref">Ebetürk, 2021</span>
+            <span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIMENSI NEGARA ===== -->
+  <div class="section-block negara" data-dimensi="negara">
+    <div class="section-header">
+      <div class="section-icon">🏢</div>
+      <div>
+        <div class="section-label">Dimensi 5</div>
+        <div class="section-title">Negara</div>
+      </div>
+      <div class="section-count">12 variabel · X₃₅–X₄₆</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₅</div><div class="var-name">% keluarga penerima BLT</div></div><div class="var-justifikasi">Kondisi ekonomi keluarga yang rendah meningkatkan tekanan untuk menjadikan pernikahan anak sebagai strategi coping terhadap kemiskinan, sebagaimana ditunjukkan oleh berbagai studi bahwa household financial stress merupakan determinan utama praktik child marriage.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Mewakili <em>Eksosistem</em>: Kebijakan perlindungan sosial nasional untuk memitigasi dampak kemiskinan makro.</div><div class="var-footer"><span class="var-dimensi">Eksosistem · Perlindungan Sosial</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Austrian et.al, 2024</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₆</div><div class="var-name">% desa dengan jaminan kesehatan ibu hamil keluarga miskin</div></div><div class="var-justifikasi">Ketersediaan jaminan kesehatan maternal bagi keluarga miskin mencerminkan tingkat dukungan keluarga terhadap kesehatan reproduksi, yang berpengaruh pada keputusan reproduksi dan risiko menikahkan anak di usia dini.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Kebijakan regulasi negara dalam memberikan jaminan kesehatan inklusif sebagai sistem pelindung.</div><div class="var-footer"><span class="var-dimensi">Regulasi Kesehatan Inklusif</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Wodon et.al, 2017</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₇</div><div class="var-name">Rasio surat miskin/SKTM per keluarga</div></div><div class="var-justifikasi">Tingginya jumlah SKTM menunjukkan tingkat kerentanan ekonomi keluarga, yang secara empiris terbukti mendorong keluarga menikahkan anak sebagai upaya mengurangi beban ekonomi atau meningkatkan stabilitas finansial melalui perkawinan.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Representasi beban kemiskinan sistemik yang direspons melalui instrumen kebijakan negara.</div><div class="var-footer"><span class="var-dimensi">Beban Kemiskinan Sistemik</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Fitria et.al, 2024</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₈</div><div class="var-name">% desa dengan jaminan kesehatan anak baduta keluarga miskin</div></div><div class="var-justifikasi">Penyediaan jaminan kesehatan untuk anak baduta mencerminkan komitmen keluarga terhadap perlindungan anak, yang merupakan variabel kunci dalam mencegah praktik pernikahan anak yang muncul dari pengabaian atau kurangnya perhatian keluarga.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Regulasi negara untuk menjamin pemenuhan hak dasar dan kesehatan anak sejak dini.</div><div class="var-footer"><span class="var-dimensi">Hak Dasar Anak</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Wodon et.al, 2017</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₃₉</div><div class="var-name">% desa dengan akta kelahiran bayi keluarga miskin</div></div><div class="var-justifikasi">Kepemilikan akta kelahiran mencerminkan tingkat perlindungan dan pengakuan hukum terhadap anak, yang berkaitan dengan rendahnya risiko anak mengalami praktik berbahaya seperti child marriage akibat lemahnya identitas hukum.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Penguatan identitas hukum oleh negara untuk mencegah praktik manipulasi usia perkawinan.</div><div class="var-footer"><span class="var-dimensi">Identitas Hukum Negara</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Lowe et.al, 2025</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₀</div><div class="var-name">% desa dengan keberadaan angkutan umum</div></div><div class="var-justifikasi">Keberadaan transportasi umum di komunitas meningkatkan akses remaja perempuan ke sekolah dan layanan kesehatan, yang secara empiris berhubungan dengan peningkatan partisipasi sekolah dan penurunan risiko pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Infrastruktur layanan publik nasional yang memengaruhi mobilitas dan akses ke seting perkembangan lain.</div><div class="var-footer"><span class="var-dimensi">Infrastruktur Layanan Publik</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Lowe et.al, 2025</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₁</div><div class="var-name">% desa tanpa BTS</div></div><div class="var-justifikasi">Akses informasi yang terbatas membatasi kemampuan remaja memperoleh pengetahuan tentang kesehatan reproduksi, risiko pernikahan dini, dan keterampilan hidup, sehingga meningkatkan kerentanan mereka terhadap tekanan sosial untuk menikah muda.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Kesenjangan infrastruktur komunikasi nasional yang membatasi akses informasi bagi remaja di daerah.</div><div class="var-footer"><span class="var-dimensi">Kesenjangan Infrastruktur Komunikasi</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Fitria et.al, 2024</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₂</div><div class="var-name">% desa dengan sinyal 4G</div></div><div class="var-justifikasi">Akses internet yang baik memperluas peluang remaja memperoleh literasi kesehatan reproduksi, aspirasi pendidikan, dan informasi mengenai risiko pernikahan anak, yang terbukti menjadi faktor pelindung dalam berbagai studi global.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Kebijakan negara dalam literasi digital dan ketersediaan akses informasi sebagai faktor perkembangan modern.</div><div class="var-footer"><span class="var-dimensi">Literasi Digital</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Fitria et.al, 2024</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner & Morris, 2006</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₃</div><div class="var-name">% lahan non-pertanian</div></div><div class="var-justifikasi">Transisi struktural dari agraris ke non-agraris berpengaruh pada norma gender dan usia kawin. Urbanisasi dan diversifikasi ekonomi nasional terbukti menurunkan child marriage melalui peningkatan kesempatan ekonomi perempuan.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Mewakili pergeseran struktur ekonomi makro (industrialisasi) yang dikelola oleh regulasi negara.</div><div class="var-footer"><span class="var-dimensi">Struktur Ekonomi Makro</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Cameron et.al, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₄</div><div class="var-name">% desa dengan sentra industri</div></div><div class="var-justifikasi">Struktur ekonomi makro yang memberi peluang kerja bagi perempuan meningkatkan bargaining power dan aspirasi pendidikan, sehingga menurunkan pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Strategi pembangunan ekonomi wilayah oleh pemerintah untuk meningkatkan daya saing SDM.</div><div class="var-footer"><span class="var-dimensi">Pembangunan Ekonomi Wilayah</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Singh et.al, 2024</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₅</div><div class="var-name">% desa dengan bank beroperasi</div></div><div class="var-justifikasi">Financial inclusion meningkatkan pendapatan keluarga dan mengurangi strategi menikahkan anak sebagai coping terhadap kemiskinan. Akses layanan finansial merupakan unsur struktur sistem ekonomi nasional.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Ketersediaan sistem keuangan makro untuk mendukung stabilitas ekonomi keluarga melalui kebijakan perbankan.</div><div class="var-footer"><span class="var-dimensi">Sistem Keuangan Makro</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Corno & Voena, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+      <div class="var-card"><div class="var-card-top"><div class="var-code">X₄₆</div><div class="var-name">% desa dengan keberadaan koperasi</div></div><div class="var-justifikasi">Struktur ekonomi berbasis koperasi memperkuat pemberdayaan ekonomi perempuan secara nasional. Pemberdayaan ekonomi terbukti menurunkan risiko pernikahan anak.</div><hr class="var-divider"/><div class="var-justifikasi-dim-label">Justifikasi Definisi Dimensi</div><div class="var-justifikasi-dim">Pemberdayaan ekonomi kerakyatan melalui regulasi dan penguatan kelembagaan negara.</div><div class="var-footer"><span class="var-dimensi">Kelembagaan Ekonomi Kerakyatan</span><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="var-ref">Corno & Voena, 2023</span><span class="var-ref-dim">Bappenas, 2020; Bronfenbrenner, 1979</span></div></div></div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p style="margin-bottom:6px; font-weight:600; color:var(--text)">Variabel Penyerta Perkawinan Anak — Kerangka Ekologi Bronfenbrenner</p>
+  <p>Referensi utama: Bappenas (2020) · Bronfenbrenner & Morris (2006) · Bronfenbrenner (1979)</p>
+</footer>
+
+<script>
+function filterDimensi(dim, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const blocks = document.querySelectorAll('.section-block');
+  blocks.forEach(block => {
+    if (dim === 'all' || block.dataset.dimensi === dim) {
+      block.style.display = '';
+      block.style.animation = 'fadeUp 0.4s ease both';
+    } else {
+      block.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

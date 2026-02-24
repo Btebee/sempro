@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belajar SAE HB Beta</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --ink: #0e0d12;
+    --paper: #f7f4ee;
+    --cream: #ede8de;
+    --gold: #b8963e;
+    --gold-light: #d4af6a;
+    --teal: #1a5c5a;
+    --teal-light: #2a8a87;
+    --rust: #8b3a2a;
+    --rust-light: #c4553f;
+    --muted: #6b6760;
+    --border: #d8d2c8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--paper);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 20% 50%, rgba(184,150,62,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 70% at 80% 50%, rgba(26,92,90,0.2) 0%, transparent 60%);
+  }
+
+  header .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.15;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.15s ease forwards;
+  }
+
+  header h1 span {
+    color: var(--gold-light);
+  }
+
+  header .subtitle {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #aaa49e;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.3s ease forwards;
+  }
+
+  header .deco-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 1.5rem auto 0;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.45s ease forwards;
+  }
+
+  /* ─── LAYOUT ─── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.5s ease forwards;
+  }
+
+  .toc h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .toc ol {
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .toc a {
+    color: var(--teal);
+    text-decoration: none;
+    font-size: 0.93rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .toc a:hover { color: var(--teal-light); }
+
+  /* ─── SECTIONS ─── */
+  .section {
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--cream);
+    -webkit-text-stroke: 1.5px var(--gold);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--teal);
+  }
+
+  p {
+    margin-bottom: 1rem;
+    color: #2a2825;
+    font-weight: 300;
+  }
+
+  /* ─── CARDS ─── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .card {
+    border-radius: 6px;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid transparent;
+  }
+
+  .card-classic {
+    background: #f0ece4;
+    border-color: var(--border);
+  }
+
+  .card-bayes {
+    background: #e8f0ef;
+    border-color: #b4d4d2;
+  }
+
+  .card h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+  }
+
+  .card-classic h3 { color: var(--rust); }
+  .card-bayes h3 { color: var(--teal); }
+
+  .card p { margin: 0; font-size: 0.93rem; color: var(--ink); }
+
+  /* ─── BAYESIAN COMPONENTS ─── */
+  .components {
+    counter-reset: comp;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+  }
+
+  .comp-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .comp-num {
+    width: 28px;
+    height: 28px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .comp-body strong { font-weight: 600; }
+  .comp-body { font-size: 0.95rem; color: var(--ink); }
+
+  /* ─── HIERARCHY ─── */
+  .hierarchy {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 1.5rem 0;
+  }
+
+  .level {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+
+  .level-bar {
+    width: 4px;
+    background: var(--teal);
+    border-radius: 2px;
+    margin-right: 1.25rem;
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+
+  .level:nth-child(1) .level-bar { background: var(--teal); opacity: 1; }
+  .level:nth-child(2) .level-bar { background: var(--gold); opacity: 1; }
+  .level:nth-child(3) .level-bar { background: var(--rust); opacity: 1; }
+  .level:nth-child(4) .level-bar { background: var(--muted); opacity: 1; }
+
+  .level-content {
+    flex: 1;
+    padding: 1.25rem 1.5rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .level-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .level:nth-child(1) .level-tag { color: var(--teal); }
+  .level:nth-child(2) .level-tag { color: var(--gold); }
+  .level:nth-child(3) .level-tag { color: var(--rust); }
+  .level:nth-child(4) .level-tag { color: var(--muted); }
+
+  .level-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .level-content p { font-size: 0.9rem; margin: 0 0 0.5rem; }
+  .level-content p:last-child { margin-bottom: 0; }
+
+  /* ─── FORMULA BLOCKS ─── */
+  .formula-block {
+    background: #111119;
+    color: #e8e4dc;
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin: 1.25rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .formula-block .formula-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .formula-block .MJX-TEX { color: white; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 6px;
+    margin: 1.25rem 0;
+  }
+
+  .callout-info { background: #e8f3f2; border-left: 3px solid var(--teal); }
+  .callout-warn { background: #fdf5e6; border-left: 3px solid var(--gold); }
+  .callout-note { background: #f5ece9; border-left: 3px solid var(--rust-light); }
+
+  .callout-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    line-height: 1.6;
+  }
+
+  .callout p { margin: 0; font-size: 0.93rem; }
+  .callout strong { font-weight: 600; }
+
+  /* ─── DEFINITION LIST ─── */
+  .def-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1rem 0; }
+
+  .def-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.92rem;
+  }
+
+  .def-term {
+    font-weight: 600;
+    color: var(--teal);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+  }
+
+  .def-desc { color: var(--ink); font-weight: 300; }
+
+  /* ─── DECOMP BOX ─── */
+  .decomp {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .decomp-eq {
+    flex: 1;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .decomp-parts {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .decomp-part {
+    flex: 1;
+    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  .decomp-part:first-child {
+    background: #e8f3f2;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .decomp-part:last-child { background: #fdf5e6; }
+  .decomp-part strong { display: block; margin-bottom: 0.25rem; font-weight: 600; }
+
+  /* ─── MCMC STEPS ─── */
+  .mcmc-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 1.25rem 0;
+  }
+
+  .mcmc-step {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    align-items: flex-start;
+  }
+
+  .mcmc-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--teal);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .mcmc-step:nth-child(2) .mcmc-dot { background: var(--gold); }
+  .mcmc-step:nth-child(3) .mcmc-dot { background: var(--rust-light); }
+  .mcmc-step:nth-child(4) .mcmc-dot { background: var(--muted); }
+
+  .mcmc-step p { margin: 0; font-size: 0.92rem; }
+
+  /* ─── BADGE TAG ─── */
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15em 0.6em;
+    border-radius: 3px;
+    font-weight: 600;
+    vertical-align: middle;
+    margin-left: 0.4rem;
+  }
+
+  .badge-teal { background: #d0ecea; color: var(--teal); }
+  .badge-gold { background: #f5ecd5; color: #8a6e2c; }
+  .badge-rust { background: #f5e0db; color: var(--rust); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    color: #7a7570;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  footer span { color: var(--gold-light); }
+
+  /* ─── MATH OVERRIDES ─── */
+  .math-inline { font-size: 1em; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .s1 { animation-delay: 0.55s; }
+  .s2 { animation-delay: 0.65s; }
+  .s3 { animation-delay: 0.75s; }
+  .s4 { animation-delay: 0.85s; }
+  .s5 { animation-delay: 0.95s; }
+  .s6 { animation-delay: 1.05s; }
+  .s7 { animation-delay: 1.15s; }
+
+  @media (max-width: 600px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .decomp { flex-direction: column; }
+    .def-item { grid-template-columns: 1fr; gap: 0.25rem; }
+    .section-number { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="label">Modul Belajar · Statistika Bayesian</div>
+  <h1>Small Area Estimation<br><span>Hierarchical Bayes Beta</span></h1>
+  <p class="subtitle">Panduan lengkap memahami SAE HB dari paradigma hingga implementasi komputasi</p>
+  <div class="deco-line"></div>
+</header>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>Daftar Isi</h2>
+    <ol>
+      <li><a href="#s1">Paradigma Statistika: Klasik vs. Bayesian</a></li>
+      <li><a href="#s2">Tiga Komponen Utama Model Bayesian</a></li>
+      <li><a href="#s3">Struktur Hirarki dalam SAE HB</a></li>
+      <li><a href="#s4">Transformasi Menjadi Distribusi Posterior</a></li>
+      <li><a href="#s5">Terminologi: Distribusi Posterior vs. Statistik Posterior</a></li>
+      <li><a href="#s6">Hasil Akhir: Rata-rata dan Varians Posterior</a></li>
+      <li><a href="#s7">Implementasi Komputasi: MCMC</a></li>
+    </ol>
+  </nav>
+
+  <!-- SECTION 1 -->
+  <section class="section s1" id="s1">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2 class="section-title">Paradigma Statistika:<br><em>Klasik vs. Bayesian</em></h2>
+    </div>
+    <p>Dalam memahami SAE HB, kita harus membedakan dua paradigma utama yang menjadi fondasi berpikir statistik modern.</p>
+    <div class="card-grid">
+      <div class="card card-classic">
+        <h3>⬡ Metode Klasik (Frequentist)</h3>
+        <p>Menganggap parameter sebagai <strong>angka tetap</strong> yang nilainya tidak diketahui. Fokusnya adalah pada pengulangan sampel jangka panjang. <sup>[10.1]</sup></p>
+      </div>
+      <div class="card card-bayes">
+        <h3>◈ Metode Bayesian</h3>
+        <p>Menganggap parameter sebagai <strong>variabel acak</strong> yang memiliki distribusi peluang tertentu. Informasi tentang parameter diperbarui seiring munculnya data baru. <sup>[10.1, 521]</sup></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="section s2" id="s2">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2 class="section-title">Tiga Komponen Utama<br><em>Model Bayesian</em></h2>
+    </div>
+    <p>Model Bayesian bekerja dengan menyatukan tiga elemen yang saling melengkapi:</p>
+    <div class="components">
+      <div class="comp-item">
+        <div class="comp-num">1</div>
+        <div class="comp-body">
+          <strong>Distribusi Prior</strong> — Pengetahuan awal atau asumsi peneliti mengenai parameter <em>sebelum</em> melihat data observasi.
+        </div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-num">2</div>
+        <div class="comp-body">
+          <strong>Likelihood (Fungsi Peluang)</strong> — Informasi yang berasal langsung dari data observasi lapangan.
+        </div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-num">3</div>
+        <div class="comp-body">
+          <strong>Distribusi Posterior</strong> — Hasil penggabungan (perkalian) antara Prior dan Likelihood melalui Teorema Bayes. Distribusi inilah yang menjadi dasar seluruh inferensia Bayesian. <sup>[10.1, 701]</sup>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="section s3" id="s3">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2 class="section-title">Struktur Hirarki<br><em>dalam SAE HB</em></h2>
+    </div>
+    <p>Metode HB untuk estimasi area kecil bekerja melalui struktur bertingkat (hirarki) untuk menggabungkan berbagai sumber informasi:</p>
+
+    <!-- A. Fondasi -->
+    <div class="callout callout-info" style="margin-top:1.5rem;">
+      <div class="callout-icon">🔷</div>
+      <div>
+        <p><strong>A. Fondasi Dasar: Parameter Area (θ) dan Data (y)</strong></p>
+        <p style="margin-top:0.5rem;"><strong>Parameter Area Kecil (θᵢ):</strong> Karakteristik sebenarnya yang ingin diduga (seperti proporsi kemiskinan wilayah <em>i</em>) yang tidak teramati secara langsung.</p>
+        <p style="margin-top:0.5rem;"><strong>Data (yᵢ):</strong> Nilai observasi dari sampel lapangan (penduga langsung) yang digunakan sebagai bukti untuk memperbarui keyakinan mengenai θᵢ.</p>
+      </div>
+    </div>
+
+    <!-- Hierarchy Levels -->
+    <div class="hierarchy" style="margin-top:1.75rem;">
+
+      <!-- Level 1 -->
+      <div class="level">
+        <div class="level-bar"></div>
+        <div class="level-content">
+          <div class="level-tag">Level 1 · Sampling Model (Likelihood)</div>
+          <h3>f(y | θ, λ)</h3>
+          <p>Menjelaskan fluktuasi data sampel (<em>y</em>) di sekitar parameter sebenarnya (<em>θ</em>). Untuk data proporsi, Level 1 diasumsikan berdistribusi <strong>Beta</strong> karena nilainya secara alami terbatas pada rentang (0, 1).</p>
+          <div class="formula-block">
+            <div class="formula-label">Distribusi Sampling</div>
+            \[ \hat{\theta}_i \mid \theta_i \sim \text{Beta}(a_i, b_i), \quad i = 1, 2, 3, \ldots, m \]
+          </div>
+          <p>Parameter Beta disusun agar rata-ratanya adalah θᵢ dengan memperhitungkan <strong>Efek Desain (deff)</strong>:</p>
+          <div class="def-list">
+            <div class="def-item">
+              <div class="def-term">aᵢ = θᵢ · k</div>
+              <div class="def-desc">Parameter bentuk pertama distribusi Beta</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">bᵢ = (1 − θᵢ) · k</div>
+              <div class="def-desc">Parameter bentuk kedua distribusi Beta</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">k = nᵢ/deff_iw − 1</div>
+              <div class="def-desc">Presisi yang menangkap ketidakpastian varians desain</div>
+            </div>
+            <div class="def-item">
+              <div class="def-term">E(θᵢ) = aᵢ/(aᵢ+bᵢ)</div>
+              <div class="def-desc">Nilai harapan distribusi Beta sama dengan θᵢ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level 2 -->
+      <div class="level">
+        <div class="level-bar"></div>
+        <div class="level-content">
+          <div class="level-tag">Level 2 · Linking Model (Prior Parameter Area)</div>
+          <h3>f(θ | λ)</h3>
+          <p>Menghubungkan parameter area (<em>θ</em>) dengan variabel penyerta (data tambahan/administratif). Distribusi Beta dipilih karena sangat fleksibel menangani data asimetris <em>(skewed)</em>. Menggunakan fungsi penghubung <strong>Logit</strong> untuk menjamin hasil estimasi di rentang (0, 1).</p>
+          <div class="formula-block">
+            <div class="formula-label">Linking Model (Logit-Normal)</div>
+            \[ \text{Logit}(\theta_i) \mid \boldsymbol{\beta}, \sigma_v^2 \sim \mathcal{N}\!\left(\mathbf{z}_i^\top \boldsymbol{\beta},\ \sigma_v^2\right), \quad i = 1,\ldots,m \]
+            \[ \text{Logit}(\theta_i) = \mathbf{z}_i^\top \boldsymbol{\beta} + v_i \]
+          </div>
+          <div class="callout callout-warn" style="margin-top:0;">
+            <div class="callout-icon">⚡</div>
+            <div><p>Model ini berperan sebagai <strong>Prior</strong> bagi θ karena memberikan informasi tambahan sebelum data sampel dihitung. <em>Borrowing strength</em> terjadi di sini. <sup>[10.1.1, 789]</sup></p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level 3 -->
+      <div class="level">
+        <div class="level-bar"></div>
+        <div class="level-content">
+          <div class="level-tag">Level 3 · Hyperpriors f(λ)</div>
+          <h3>Prior Hyperparameter</h3>
+          <p><strong>λ (Hyperparameters):</strong> Parameter global model, mencakup koefisien regresi (<em>β</em>) dan varians efek acak (σ²ᵥ).</p>
+          <p><strong>Prior f(λ)</strong> ditentukan secara subjektif oleh peneliti. Bisa bersifat:</p>
+          <div class="card-grid" style="margin:0.75rem 0 0;">
+            <div class="card card-classic">
+              <h3>Informatif</h3>
+              <p>Berdasarkan studi atau pengetahuan terdahulu yang relevan.</p>
+            </div>
+            <div class="card card-bayes">
+              <h3>Diffuse / Non-informatif</h3>
+              <p>Seperti <em>Flat Prior f(β) ∝ 1</em> jika peneliti tidak ingin asumsi awalnya terlalu mendominasi data. <sup>[10.1, 10.3.2, 703]</sup></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="section s4" id="s4">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2 class="section-title">Transformasi Menjadi<br><em>Distribusi Posterior</em></h2>
+    </div>
+    <p>Inti dari HB adalah mendapatkan <strong>Distribusi Posterior Marginal</strong> \(f(\theta \mid y)\) melalui persamaan integral:</p>
+
+    <div class="formula-block">
+      <div class="formula-label">Posterior Marginal — Formula Utama</div>
+      \[ f(\theta \mid y) = \int \underbrace{f(\theta \mid y,\,\lambda)}_{\text{Posterior Kondisional}} \times \underbrace{f(\lambda \mid y)}_{\text{Posterior Hyperparameter}}\, d\lambda \]
+    </div>
+
+    <p style="margin-top:1.25rem;">Bedah setiap komponen:</p>
+    <div class="components">
+      <div class="comp-item">
+        <div class="comp-num">1</div>
+        <div class="comp-body">
+          <strong>Posterior Kondisional f(θ | y, λ)</strong> — Distribusi θ jika kita menganggap λ sudah diketahui. Merupakan hasil perkalian:
+          \[ f(\theta \mid y,\lambda) \propto \underbrace{f(y \mid \theta)}_{\text{Sampling Model}} \times \underbrace{f(\theta \mid \lambda)}_{\text{Linking Model}} \]
+        </div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-num">2</div>
+        <div class="comp-body">
+          <strong>Posterior Hyperparameter f(λ | y)</strong> — Distribusi parameter global λ yang telah diperbarui oleh data y. <sup>[10.1.4, 706]</sup>
+        </div>
+      </div>
+      <div class="comp-item">
+        <div class="comp-num">3</div>
+        <div class="comp-body">
+          <strong>Integral (Marginalisasi)</strong> — Proses "merata-ratakan" distribusi θ terhadap seluruh kemungkinan nilai λ. Hasilnya adalah peta peluang lengkap mengenai parameter area setelah memperhitungkan data dan semua ketidakpastian model. <sup>[10.1.4, 790]</sup>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="section s5" id="s5">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2 class="section-title">Terminologi:<br><em>Distribusi Posterior vs. Statistik Posterior</em></h2>
+    </div>
+    <p>Penting untuk membedakan antara wadah informasi peluang dengan nilai ringkasannya:</p>
+    <div class="card-grid" style="margin-top:1rem;">
+      <div class="card card-bayes">
+        <h3>📊 Distribusi Posterior</h3>
+        <p>Merujuk pada keseluruhan <strong>kurva atau fungsi kepadatan peluang</strong> seperti \(f(\theta \mid \mathbf{y})\) yang merangkum <em>seluruh informasi</em> dan ketidakpastian parameter setelah data observasi diperhitungkan.</p>
+      </div>
+      <div class="card card-classic">
+        <h3>📍 Posterior (Statistik Posterior)</h3>
+        <p>Sering kali digunakan secara ringkas untuk merujuk pada <strong>nilai statistik spesifik</strong> yang diekstraksi dari distribusi tersebut, seperti rata-rata posterior (estimasi titik) atau varians posterior (estimasi ketidakpastian).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section class="section s6" id="s6">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2 class="section-title">Hasil Akhir:<br><em>Rata-rata dan Varians Posterior</em></h2>
+    </div>
+    <p>Dalam kerangka Hierarchical Bayes, seluruh inferensia statistik didasarkan pada distribusi posterior marginal. <sup>[10.1, 676]</sup></p>
+
+    <!-- A -->
+    <div class="callout callout-note" style="margin-top:1.5rem;">
+      <div class="callout-icon">🎯</div>
+      <div>
+        <p><strong>A. Objek Pendugaan: Fungsi h(θ)</strong></p>
+        <p style="margin-top:0.5rem;">Dalam SAE, parameter ketertarikan sering bukan hanya θᵢ itu sendiri, melainkan sebuah fungsi h(θᵢ). Pada HB Beta, digunakan fungsi <strong>invers-logit</strong> untuk mengembalikan ke skala proporsi asli (Pᵢ):</p>
+        \[ h(\theta_i) = \frac{\exp(\theta_i)}{1 + \exp(\theta_i)} \]
+      </div>
+    </div>
+
+    <!-- B -->
+    <h3 style="font-family:'Playfair Display',serif; margin:1.75rem 0 0.75rem; font-size:1.1rem;">B. Rata-rata Posterior  \(\,E[h(\theta)\mid\mathbf{y}]\)</h3>
+    <p>Nilai ekspektasi dari fungsi parameter yang dicari diberikan data <strong>y</strong>. Penduga ini meminimalkan risiko kerugian kuadrat (<em>squared error loss</em>).</p>
+    <div class="formula-block">
+      <div class="formula-label">Rumus Integral Dasar [10.1, 724]</div>
+      \[ \hat{\phi}_{HB} = E[h(\theta)\mid y] = \int h(\theta)\,f(\theta \mid y)\,d\theta \]
+    </div>
+    <div class="formula-block">
+      <div class="formula-label">Rumus Campuran (Mixture) [10.1.4, 726]</div>
+      \[ E[h(\theta)\mid y] = \int\!\left[\int h(\theta)\,f(\theta \mid y,\lambda)\,d\theta\right] f(\lambda \mid y)\,d\lambda \]
+    </div>
+
+    <!-- C -->
+    <h3 style="font-family:'Playfair Display',serif; margin:1.75rem 0 0.75rem; font-size:1.1rem;">C. Varians Posterior \(\,V[h(\theta)\mid\mathbf{y}]\)</h3>
+    <p>Digunakan sebagai ukuran ketidakpastian atau <strong>presisi</strong> dari penduga HB:</p>
+    <div class="formula-block">
+      <div class="formula-label">Definisi Varians Posterior</div>
+      \[ V[h(\theta)\mid y] = \int\!\left[h(\theta) - E(h(\theta)\mid y)\right]^2 f(\theta \mid y)\,d\theta \]
+    </div>
+
+    <!-- D -->
+    <h3 style="font-family:'Playfair Display',serif; margin:1.75rem 0 0.75rem; font-size:1.1rem;">D. Rumus Dekomposisi (Hukum Varians Total)</h3>
+    <p>Salah satu keunggulan HB adalah kemampuannya memecah varians menjadi dua komponen untuk menangkap seluruh sumber ketidakpastian:</p>
+    <div class="formula-block">
+      <div class="formula-label">Dekomposisi Varians Total</div>
+      \[ V(h(\theta)\mid y) = \underbrace{E_\lambda\!\left[V(h(\theta)\mid y,\lambda)\right]}_{\text{Komponen 1}} + \underbrace{V_\lambda\!\left[E(h(\theta)\mid y,\lambda)\right]}_{\text{Komponen 2}} \]
+    </div>
+    <div class="decomp">
+      <div class="decomp-eq">
+        \[V = K_1 + K_2\]
+      </div>
+      <div class="decomp-parts">
+        <div class="decomp-part">
+          <strong>Komponen 1 <span class="badge badge-teal">Within</span></strong>
+          Rata-rata varians posterior jika parameter model (λ) dianggap diketahui — ketidakpastian <em>internal</em> wilayah.
+        </div>
+        <div class="decomp-part">
+          <strong>Komponen 2 <span class="badge badge-gold">Between</span></strong>
+          Varians dari rata-rata posterior akibat ketidakpastian dalam mengestimasi parameter model global λ itu sendiri.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section class="section s7" id="s7">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <h2 class="section-title">Implementasi Komputasi:<br><em>Markov Chain Monte Carlo (MCMC)</em></h2>
+    </div>
+    <p>Perhitungan distribusi posterior melibatkan integral berdimensi tinggi yang sulit diselesaikan secara analitik, khususnya pada model non-linear seperti HB Beta (di mana fungsi <em>logit</em> dan distribusi <em>Beta</em> tidak memiliki solusi tertutup).</p>
+
+    <div class="callout callout-info" style="margin:1.25rem 0;">
+      <div class="callout-icon">📖</div>
+      <div><p><strong>Definisi Konvergensi:</strong> Konvergensi berarti urutan sampel acak yang dihasilkan melalui simulasi telah stabil dan mewakili distribusi peluang yang diinginkan (distribusi posterior) dari parameter yang sedang diamati.</p></div>
+    </div>
+
+    <div class="mcmc-steps">
+      <div class="mcmc-step">
+        <div class="mcmc-dot"></div>
+        <p><strong>Mekanisme MCMC:</strong> Algoritma seperti <strong>Gibbs Sampling</strong> atau <strong>Metropolis-Hastings</strong> digunakan untuk membangkitkan ribuan sampel acak dari distribusi posterior gabungan tanpa harus menyelesaikan integral secara manual.</p>
+      </div>
+      <div class="mcmc-step">
+        <div class="mcmc-dot"></div>
+        <p><strong>Sampel Stabil:</strong> Setelah melewati periode awal yang dibuang (<strong>burn-in</strong>), sampel yang dihasilkan θ⁽¹⁾,...,θ⁽ᴰ⁾ dianggap sebagai perwakilan dari distribusi posterior target.</p>
+      </div>
+      <div class="mcmc-step">
+        <div class="mcmc-dot"></div>
+        <p><strong>Rata-rata Ergodik:</strong> Nilai \(E[h(\theta)\mid\mathbf{y}]\) (Penduga HB) didapat dengan menghitung rata-rata dari ribuan sampel simulasi:</p>
+      </div>
+      <div class="mcmc-step">
+        <div class="mcmc-dot"></div>
+        <p><strong>Varians Ergodik:</strong> Ukuran ketidakpastian dihitung dari varians sampel simulasi.</p>
+      </div>
+    </div>
+
+    <div class="formula-block">
+      <div class="formula-label">Rata-rata Ergodik (Penduga HB)</div>
+      \[ \hat{\phi}_{HB} \approx \frac{1}{D} \sum_{k=d+1}^{d+D} h\!\left(\theta^{(k)}\right) \]
+    </div>
+    <div class="formula-block">
+      <div class="formula-label">Varians Ergodik</div>
+      \[ \hat{V}(\phi \mid \mathbf{y}) \approx \frac{1}{D-1} \sum_{k=d+1}^{d+D} \left(h\!\left(\theta^{(k)}\right) - \hat{\phi}_{HB}\right)^2 \]
+    </div>
+
+    <div class="callout callout-warn" style="margin-top:1.25rem;">
+      <div class="callout-icon">🛠</div>
+      <div>
+        <p><strong>Catatan Tambahan:</strong> Penggunaan perangkat lunak seperti <strong>WinBUGS</strong> atau paket <span style="font-family:'JetBrains Mono',monospace;font-size:0.9em;background:#f0ece4;padding:0.1em 0.4em;border-radius:3px;">sae</span> di R mempermudah proses iterasi ini, terutama dalam menangani model-model kompleks yang memerlukan algoritma <em>Metropolis-Hastings within Gibbs</em>.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Modul Belajar · <span>SAE Hierarchical Bayes Beta</span> · Statistika Bayesian untuk Estimasi Area Kecil</p>
+</footer>
+
+</body>
+</html>

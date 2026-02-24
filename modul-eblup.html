@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul Belajar: SAE EBLUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+:root {
+  --bg: #f7f4ee;
+  --bg2: #efeae0;
+  --ink: #1c1a17;
+  --ink2: #4a4640;
+  --ink3: #7a7268;
+  --teal: #0d6e6e;
+  --teal2: #1a9090;
+  --teal-light: #e0f2f2;
+  --amber: #b05c00;
+  --amber-light: #fdf0e0;
+  --rose: #9b2335;
+  --rose-light: #fce8ea;
+  --border: rgba(28,26,23,0.1);
+  --border2: rgba(28,26,23,0.06);
+  --shadow: 0 2px 20px rgba(28,26,23,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: 'Outfit', sans-serif; font-size:15px; line-height:1.7; }
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed; left:0; top:0; bottom:0; width:240px;
+  background: var(--ink); padding:32px 0; z-index:100;
+  display:flex; flex-direction:column;
+}
+.sidebar-logo { padding:0 24px 24px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:16px; }
+.sidebar-logo .tag { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--teal2); font-weight:600; margin-bottom:6px; }
+.sidebar-logo h2 { font-family:'Crimson Pro',serif; font-size:22px; color:#f7f4ee; font-weight:600; line-height:1.2; }
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 24px; color:rgba(247,244,238,0.45); text-decoration:none;
+  font-size:12.5px; transition:all 0.2s; border-left:2px solid transparent; cursor:pointer;
+}
+.nav-item:hover, .nav-item.active { color:#f7f4ee; background:rgba(255,255,255,0.04); border-left-color:var(--teal2); }
+.nav-num { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--teal2); opacity:0.6; flex-shrink:0; }
+.nav-item.active .nav-num { opacity:1; }
+.sidebar-footer { margin-top:auto; padding:16px 24px; border-top:1px solid rgba(255,255,255,0.06); font-size:10px; color:rgba(247,244,238,0.2); }
+
+/* MAIN */
+.main { margin-left:240px; min-height:100vh; }
+
+/* HERO */
+.hero { background:var(--ink); padding:72px 64px 64px; position:relative; overflow:hidden; }
+.hero::after { content:'SAE'; position:absolute; right:-20px; bottom:-60px; font-family:'Crimson Pro',serif; font-size:260px; font-weight:300; color:rgba(255,255,255,0.025); pointer-events:none; line-height:1; }
+.hero-badge { display:inline-block; background:rgba(26,144,144,0.15); border:1px solid rgba(26,144,144,0.3); color:var(--teal2); font-size:10px; letter-spacing:2.5px; text-transform:uppercase; padding:5px 14px; border-radius:2px; margin-bottom:20px; font-weight:600; }
+.hero h1 { font-family:'Crimson Pro',serif; font-size:clamp(36px,4.5vw,60px); color:#f7f4ee; font-weight:300; line-height:1.1; margin-bottom:10px; }
+.hero h1 em { font-weight:600; font-style:italic; color:var(--teal2); }
+.hero-sub { font-size:14.5px; color:rgba(247,244,238,0.5); max-width:520px; line-height:1.65; margin-bottom:36px; }
+.hero-pills { display:flex; gap:8px; flex-wrap:wrap; }
+.hero-pill { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); color:rgba(247,244,238,0.6); font-size:11.5px; padding:5px 12px; border-radius:2px; font-family:'JetBrains Mono',monospace; }
+
+/* PROGRESS */
+#progress-bar { position:fixed; top:0; left:240px; right:0; height:2px; background:var(--teal2); transform-origin:left; transform:scaleX(0); z-index:200; transition:transform 0.1s; }
+
+/* CONTENT */
+.content { padding:0 64px 80px; }
+
+/* SECTION */
+.section { padding-top:60px; border-top:1px solid var(--border); margin-top:60px; }
+.section:first-child { border-top:none; margin-top:0; }
+.section-header { display:flex; align-items:flex-start; gap:18px; margin-bottom:32px; }
+.section-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal2); font-weight:600; letter-spacing:1px; margin-top:6px; flex-shrink:0; }
+.section-title { font-family:'Crimson Pro',serif; font-size:30px; font-weight:600; line-height:1.2; }
+
+/* PROSE */
+.prose p { margin-bottom:12px; font-size:14px; color:var(--ink2); line-height:1.7; }
+.prose p:last-child { margin-bottom:0; }
+
+/* ACRONYM GRID */
+.acronym-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:28px 0; }
+.acronym-card { background:white; border:1px solid var(--border); border-radius:6px; padding:20px 22px; display:flex; gap:14px; align-items:flex-start; box-shadow:var(--shadow); transition:transform 0.2s, box-shadow 0.2s; }
+.acronym-card:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(28,26,23,0.12); }
+.ac-letter { font-family:'Crimson Pro',serif; font-size:44px; font-weight:600; line-height:1; flex-shrink:0; width:46px; text-align:center; }
+.ac-B .ac-letter { color:var(--teal); }
+.ac-L .ac-letter { color:var(--amber); }
+.ac-U .ac-letter { color:var(--rose); }
+.ac-P .ac-letter { color:#5b5ea6; }
+.ac-body strong { display:block; font-size:14px; font-weight:600; margin-bottom:4px; }
+.ac-body p { font-size:13px; color:var(--ink2); line-height:1.55; }
+
+/* INFO BOX */
+.info-box { border-radius:6px; padding:18px 22px; margin:20px 0; border-left:3px solid; display:flex; gap:14px; }
+.info-box.teal { background:var(--teal-light); border-color:var(--teal); }
+.info-box.amber { background:var(--amber-light); border-color:var(--amber); }
+.info-box.rose { background:var(--rose-light); border-color:var(--rose); }
+.info-box.neutral { background:#f0ece4; border-color:var(--ink3); }
+.info-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+.info-box p { font-size:13px; color:var(--ink2); line-height:1.65; }
+.info-box p strong { color:var(--ink); }
+
+/* FORMULA BOX */
+.formula-wrap { background:var(--ink); border-radius:8px; padding:24px 28px; margin:20px 0; position:relative; overflow:hidden; }
+.formula-wrap::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--teal2), transparent); }
+.formula-label { font-size:9.5px; letter-spacing:2px; text-transform:uppercase; color:var(--teal2); font-weight:600; margin-bottom:12px; font-family:'JetBrains Mono',monospace; }
+.formula-inner { color:#f7f4ee; font-size:15px; overflow-x:auto; }
+.formula-note { margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.07); font-size:12px; color:rgba(247,244,238,0.4); line-height:1.6; font-style:italic; }
+mjx-container[jax="CHTML"] { color:#f7f4ee !important; }
+
+/* TWO-STAGE */
+.two-stage { display:grid; grid-template-columns:1fr 60px 1fr; gap:0; align-items:center; margin:28px 0; }
+.stage-box { background:white; border:1px solid var(--border); border-radius:8px; padding:22px; box-shadow:var(--shadow); }
+.stage-box .s-num { font-size:9px; letter-spacing:2px; text-transform:uppercase; font-weight:700; margin-bottom:6px; font-family:'JetBrains Mono',monospace; }
+.s1 .s-num { color:var(--amber); }
+.s2 .s-num { color:var(--teal); }
+.stage-box h4 { font-size:15px; font-weight:600; margin-bottom:8px; }
+.stage-box p { font-size:13px; color:var(--ink2); line-height:1.5; margin-bottom:8px; }
+.stage-arrow { display:flex; flex-direction:column; align-items:center; gap:4px; padding:0 10px; }
+.arr-line { width:2px; height:32px; background:linear-gradient(to bottom, var(--teal2), transparent); }
+.arr-line.rev { background:linear-gradient(to bottom, transparent, var(--teal2)); }
+.arr-icon { font-size:16px; color:var(--teal2); }
+.arr-label { font-size:8px; letter-spacing:1px; text-transform:uppercase; color:var(--ink3); text-align:center; font-weight:600; }
+
+/* STEPS */
+.steps { display:flex; flex-direction:column; gap:0; margin:24px 0; }
+.step { display:flex; gap:18px; padding-bottom:28px; position:relative; }
+.step:last-child { padding-bottom:0; }
+.step::before { content:''; position:absolute; left:18px; top:40px; bottom:0; width:2px; background:linear-gradient(to bottom, var(--border), transparent); }
+.step:last-child::before { display:none; }
+.step-num { width:38px; height:38px; border-radius:50%; background:var(--ink); color:#f7f4ee; font-family:'Crimson Pro',serif; font-size:18px; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; z-index:1; }
+.step-content { flex:1; }
+.step-content h4 { font-size:16px; font-weight:600; margin-bottom:8px; padding-top:4px; }
+.step-content p { font-size:13.5px; color:var(--ink2); line-height:1.65; margin-bottom:10px; }
+
+/* GAMMA VIZ */
+.gamma-viz { background:white; border:1px solid var(--border); border-radius:8px; padding:24px; margin:20px 0; box-shadow:var(--shadow); }
+.gamma-viz h4 { font-size:14px; font-weight:600; margin-bottom:4px; }
+.gamma-viz > p { font-size:12px; color:var(--ink3); margin-bottom:16px; }
+.slider-row { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.slider-row label { font-size:11.5px; font-family:'JetBrains Mono',monospace; color:var(--ink2); width:100px; flex-shrink:0; }
+input[type=range] { flex:1; -webkit-appearance:none; height:4px; border-radius:2px; background:var(--bg2); outline:none; cursor:pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:15px; height:15px; border-radius:50%; background:var(--teal); cursor:pointer; box-shadow:0 0 0 3px rgba(13,110,110,0.15); }
+.slider-val { font-family:'JetBrains Mono',monospace; font-size:11.5px; width:38px; text-align:right; font-weight:600; }
+.gamma-result-row { display:flex; justify-content:space-between; font-size:12px; color:var(--ink3); margin:12px 0 8px; }
+.gamma-bar-wrap { height:30px; background:var(--bg2); border-radius:4px; overflow:hidden; display:flex; }
+.bar-direct { background:var(--teal); height:100%; display:flex; align-items:center; justify-content:center; font-size:10px; color:white; font-weight:600; transition:width 0.3s; overflow:hidden; white-space:nowrap; padding:0 6px; }
+.bar-synth { background:var(--amber); flex:1; height:100%; display:flex; align-items:center; justify-content:center; font-size:10px; color:white; font-weight:600; overflow:hidden; white-space:nowrap; padding:0 6px; }
+.gamma-legend { display:flex; gap:18px; margin-top:8px; font-size:11px; color:var(--ink3); }
+.gamma-legend span { display:flex; align-items:center; gap:5px; }
+.ldot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+/* MSE GRID */
+.mse-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:20px 0; }
+.mse-card { border-radius:6px; padding:20px; border:1px solid var(--border); background:white; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+.mse-card::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.g1::after { background:var(--teal); }
+.g2::after { background:var(--amber); }
+.g3::after { background:var(--rose); }
+.mse-sym { font-family:'Crimson Pro',serif; font-size:28px; font-weight:600; margin-bottom:8px; }
+.g1 .mse-sym { color:var(--teal); }
+.g2 .mse-sym { color:var(--amber); }
+.g3 .mse-sym { color:var(--rose); }
+.mse-card h4 { font-size:13px; font-weight:600; margin-bottom:6px; }
+.mse-card p { font-size:12px; color:var(--ink2); line-height:1.55; }
+.mse-card .sub-formula { margin-top:10px; font-size:11.5px; color:var(--ink3); font-style:italic; }
+
+/* VAR TABLE */
+.var-table { width:100%; border-collapse:collapse; margin:18px 0; font-size:13px; }
+.var-table th { background:var(--ink); color:#f7f4ee; padding:10px 14px; text-align:left; font-weight:600; font-size:11px; letter-spacing:0.5px; }
+.var-table td { padding:9px 14px; border-bottom:1px solid var(--border2); vertical-align:top; }
+.var-table tr:nth-child(even) td { background:rgba(0,0,0,0.02); }
+.var-table td:first-child { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--teal); font-weight:600; white-space:nowrap; }
+
+/* PROBLEMS */
+.problems { display:flex; flex-direction:column; gap:12px; margin:20px 0; }
+.problem-row { display:grid; grid-template-columns:180px 1fr; border:1px solid var(--border); border-radius:6px; overflow:hidden; box-shadow:var(--shadow); }
+.prob-label { background:var(--ink); color:#f7f4ee; padding:16px 18px; font-size:13px; font-weight:600; line-height:1.4; }
+.prob-tag { font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal2); display:block; margin-bottom:4px; }
+.prob-content { background:white; padding:16px 18px; }
+.prob-issue { font-size:13px; color:var(--ink2); margin-bottom:8px; padding-bottom:8px; border-bottom:1px dashed var(--border); }
+.prob-solution { font-size:13px; color:var(--teal); font-weight:500; }
+.prob-solution::before { content:'→ '; font-weight:700; }
+
+/* FLOW DIAGRAM */
+.flow-diagram { display:flex; align-items:center; margin:24px 0; overflow-x:auto; padding-bottom:4px; }
+.flow-node { flex-shrink:0; background:white; border:1px solid var(--border); border-radius:6px; padding:12px 16px; text-align:center; box-shadow:var(--shadow); min-width:130px; }
+.fn-label { font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink3); font-weight:600; margin-bottom:4px; font-family:'JetBrains Mono',monospace; }
+.fn-title { font-size:12.5px; font-weight:600; }
+.flow-node.hl { background:var(--ink); border-color:var(--ink); }
+.flow-node.hl .fn-label { color:var(--teal2); }
+.flow-node.hl .fn-title { color:#f7f4ee; }
+.flow-arrow { padding:0 8px; color:var(--teal2); font-size:16px; flex-shrink:0; }
+
+/* METHOD CARDS */
+.method-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 0; }
+.method-card { border-radius:6px; padding:18px; border:1px solid var(--border); background:white; box-shadow:var(--shadow); }
+.method-card .m-sym { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; margin-bottom:8px; }
+.method-card h4 { font-size:13px; font-weight:600; margin-bottom:5px; }
+.method-card p { font-size:12px; color:var(--ink2); line-height:1.55; }
+.pill { display:inline-block; font-size:11px; padding:3px 10px; border-radius:100px; font-weight:500; border:1px solid; margin-top:8px; }
+.pill.teal { background:var(--teal-light); border-color:rgba(13,110,110,0.25); color:var(--teal); }
+.pill.amber { background:var(--amber-light); border-color:rgba(176,92,0,0.25); color:var(--amber); }
+.pill.neutral { background:#f0ece4; border-color:var(--border); color:var(--ink2); }
+
+/* RRMSE */
+.rrmse-scale { display:flex; flex-direction:column; gap:8px; }
+.rrmse-row { display:flex; align-items:center; gap:10px; }
+.rrmse-lbl { font-size:11px; width:60px; color:var(--ink3); font-family:'JetBrains Mono',monospace; }
+.rrmse-bar { height:10px; border-radius:2px; }
+.rrmse-desc { font-size:11px; color:var(--ink3); }
+.gauge-wrap { background:white; border:1px solid var(--border); border-radius:8px; padding:24px; margin:20px 0; box-shadow:var(--shadow); display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:center; }
+.gauge-text h4 { font-size:15px; font-weight:600; margin-bottom:8px; }
+.gauge-text p { font-size:13px; color:var(--ink2); line-height:1.6; margin-bottom:8px; }
+
+/* SUMMARY */
+.summary-card { background:var(--ink); border-radius:8px; padding:32px 36px; margin:40px 0 0; position:relative; overflow:hidden; }
+.summary-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--teal2), var(--amber), transparent); }
+.summary-card h3 { font-family:'Crimson Pro',serif; font-size:24px; color:#f7f4ee; font-weight:600; margin-bottom:12px; }
+.summary-card > p { font-size:13.5px; color:rgba(247,244,238,0.55); line-height:1.7; max-width:620px; }
+.summary-card > p strong { color:var(--teal2); }
+.key-formula { margin-top:20px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:6px; padding:18px 22px; color:#f7f4ee; font-size:14px; }
+.key-formula-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--teal2); font-weight:600; margin-bottom:10px; font-family:'JetBrains Mono',monospace; }
+
+.checklist-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:28px; }
+.checklist-box { border-radius:6px; padding:18px 20px; border-left:3px solid; }
+.checklist-box.teal { background:var(--teal-light); border-color:var(--teal); }
+.checklist-box.amber { background:var(--amber-light); border-color:var(--amber); }
+.checklist-box h4 { font-size:13px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.checklist-box ul { font-size:12.5px; color:var(--ink2); padding-left:16px; line-height:1.9; }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+.section { animation: fadeIn 0.4s ease both; }
+
+@media (max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .content { padding:0 20px 60px; }
+  .hero { padding:40px 20px; }
+  .acronym-grid, .mse-grid, .method-grid, .checklist-grid { grid-template-columns:1fr; }
+  .two-stage { grid-template-columns:1fr; }
+  .stage-arrow { display:none; }
+  .problem-row { grid-template-columns:1fr; }
+  .gauge-wrap { grid-template-columns:1fr; }
+  #progress-bar { left:0; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="tag">Modul Belajar</div>
+    <h2>SAE EBLUP</h2>
+  </div>
+  <a class="nav-item active" href="#filosofi"><span class="nav-num">01</span> Filosofi &amp; Definisi</a>
+  <a class="nav-item" href="#model-fh"><span class="nav-num">02</span> Model Fay-Herriot</a>
+  <a class="nav-item" href="#tahapan"><span class="nav-num">03</span> Tahapan BLUP → EBLUP</a>
+  <a class="nav-item" href="#mse"><span class="nav-num">04</span> Estimasi MSE</a>
+  <a class="nav-item" href="#rrmse"><span class="nav-num">05</span> Evaluasi: RRMSE</a>
+  <a class="nav-item" href="#masalah"><span class="nav-num">06</span> Masalah Praktis</a>
+  <a class="nav-item" href="#ringkasan"><span class="nav-num">07</span> Ringkasan</a>
+  <div class="sidebar-footer">Small Area Estimation · 2025</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Small Area Estimation</div>
+  <h1>Empirical Best Linear<br><em>Unbiased Prediction</em></h1>
+  <p class="hero-sub">Pendekatan frekuentis untuk menduga karakteristik wilayah kecil berbasis Model Linier Campuran — menyeimbangkan data survei lokal dengan informasi regional.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">Fay-Herriot Model</span>
+    <span class="hero-pill">Shrinkage Factor γᵢ</span>
+    <span class="hero-pill">Prasad-Rao MSE</span>
+    <span class="hero-pill">REML / ML / MoM</span>
+    <span class="hero-pill">Benchmarking</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ===== 01 FILOSOFI ===== -->
+<section class="section" id="filosofi">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Filosofi &amp; Definisi EBLUP</h2>
+  </div>
+
+  <div class="prose">
+    <p>Metode EBLUP adalah pendekatan <strong>frekuentis (klasik)</strong> dalam SAE yang digunakan ketika data mikro tidak tersedia dan peneliti harus bekerja dengan <strong>data agregat level area</strong>. EBLUP merupakan pengembangan dari BLUP, di mana parameter varians model yang biasanya tidak diketahui digantikan oleh <strong>estimasi empiris</strong> dari data.</p>
+  </div>
+
+  <div class="acronym-grid">
+    <div class="acronym-card ac-B">
+      <div class="ac-letter">B</div>
+      <div class="ac-body">
+        <strong>Best — Terbaik</strong>
+        <p>Meminimalkan <em>Mean Squared Error</em> (MSE) di antara kelas penduga tidak bias linier. Tidak ada penduga lain dalam kelas yang sama yang lebih efisien.</p>
+      </div>
+    </div>
+    <div class="acronym-card ac-L">
+      <div class="ac-letter">L</div>
+      <div class="ac-body">
+        <strong>Linear — Linier</strong>
+        <p>Penduga merupakan fungsi linier dari data observasi. Kombinasi bobot tertimbang antara survei langsung dan model regresi (sintetis).</p>
+      </div>
+    </div>
+    <div class="acronym-card ac-U">
+      <div class="ac-letter">U</div>
+      <div class="ac-body">
+        <strong>Unbiased — Tidak Bias</strong>
+        <p>Ekspektasi dari penduga sama dengan parameter yang diduga di bawah model: $E[\hat{\theta}_i^H] = \theta_i$.</p>
+      </div>
+    </div>
+    <div class="acronym-card ac-P">
+      <div class="ac-letter">P</div>
+      <div class="ac-body">
+        <strong>Prediction — Prediksi</strong>
+        <p>Istilah "prediksi" digunakan karena kita menduga nilai dari <em>variabel acak</em> (efek acak area $v_i$), bukan parameter tetap seperti $\beta$.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box teal">
+    <div class="info-icon">💡</div>
+    <p><strong>Kapan menggunakan EBLUP?</strong> Metode ini digunakan ketika data mikro (unit level) tidak tersedia dan peneliti harus bekerja dengan data agregat level area. EBLUP "meminjam kekuatan" (<em>borrowing strength</em>) dari wilayah-wilayah lain melalui model regresi untuk meningkatkan presisi pendugaan wilayah kecil.</p>
+  </div>
+</section>
+
+<!-- ===== 02 MODEL FAY-HERRIOT ===== -->
+<section class="section" id="model-fh">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Model Fay–Herriot (Area Level)</h2>
+  </div>
+
+  <div class="prose">
+    <p>Model Fay-Herriot adalah <strong>model dua tahap</strong> yang digunakan untuk menghubungkan penduga langsung dari survei dengan variabel penyerta wilayah. Model ini menjadi fondasi utama pendekatan EBLUP level area.</p>
+  </div>
+
+  <div class="two-stage">
+    <div class="stage-box s1">
+      <div class="s-num">Level 1</div>
+      <h4>Sampling Model</h4>
+      <p>Menjelaskan fluktuasi data survei di sekitar parameter sebenarnya:</p>
+      <div class="formula-wrap" style="padding:14px 18px; margin:0;">
+        <div class="formula-inner">$$\hat{\theta}_i = \theta_i + e_i, \quad e_i \sim N(0, \psi_i)$$</div>
+      </div>
+      <p style="margin-top:8px; font-size:12px; color:var(--ink3);">$\psi_i$ = varians sampling — diasumsikan <em>diketahui</em> (via Generalized Variance Functions)</p>
+    </div>
+
+    <div class="stage-arrow">
+      <div class="arr-line"></div>
+      <div class="arr-icon">⊕</div>
+      <div class="arr-label">Gabungan</div>
+      <div class="arr-line rev"></div>
+    </div>
+
+    <div class="stage-box s2">
+      <div class="s-num">Level 2</div>
+      <h4>Linking Model (Struktural)</h4>
+      <p>Menghubungkan parameter sebenarnya $\theta_i$ dengan variabel penyerta wilayah $\mathbf{z}_i$:</p>
+      <div class="formula-wrap" style="padding:14px 18px; margin:0;">
+        <div class="formula-inner">$$\theta_i = \mathbf{z}_i^T\boldsymbol{\beta} + b_i v_i, \quad v_i \sim N(0, \sigma_v^2)$$</div>
+      </div>
+      <p style="margin-top:8px; font-size:12px; color:var(--ink3);">$v_i$ = efek acak wilayah; menangkap keragaman yang <em>tidak terjelaskan</em> oleh variabel penyerta</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Crimson Pro',serif; font-size:20px; margin:24px 0 8px; font-weight:600;">Model Gabungan <em>(Combined Model)</em></h3>
+  <div class="formula-wrap">
+    <div class="formula-label">// Combined Model — Dasar Linear Mixed Model</div>
+    <div class="formula-inner">$$\hat{\theta}_i = \mathbf{z}_i^T\boldsymbol{\beta} + b_i v_i + e_i$$</div>
+    <div class="formula-note">Satu efek tetap (β) + satu efek acak (vᵢ). Ini adalah bentuk dasar Model Linier Campuran yang menjadi landasan seluruh inferensi EBLUP.</div>
+  </div>
+
+  <h3 style="font-family:'Crimson Pro',serif; font-size:20px; margin:24px 0 12px; font-weight:600;">Notasi &amp; Deskripsi Variabel</h3>
+  <table class="var-table">
+    <thead>
+      <tr><th>Notasi</th><th>Deskripsi</th><th>Keterangan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>$\hat{\theta}_i$</td><td>Penduga langsung dari survei untuk area ke-$i$</td><td>Skalar — data input utama</td></tr>
+      <tr><td>$\theta_i$</td><td>Parameter sebenarnya (target pendugaan) area ke-$i$</td><td>Skalar — tidak teramati</td></tr>
+      <tr><td>$\mathbf{z}_i$</td><td>Vektor variabel penyerta (data tambahan/administratif)</td><td>$p \times 1$</td></tr>
+      <tr><td>$\boldsymbol{\beta}$</td><td>Vektor koefisien regresi global $(\beta_1, \ldots, \beta_p)^T$</td><td>$p \times 1$ — efek tetap</td></tr>
+      <tr><td>$v_i$</td><td>Efek acak area — keragaman tak terjelaskan oleh $\mathbf{z}_i$</td><td>$\sim N(0, \sigma_v^2)$</td></tr>
+      <tr><td>$e_i$</td><td>Kesalahan sampling area ke-$i$</td><td>$\sim N(0, \psi_i)$</td></tr>
+      <tr><td>$b_i$</td><td>Konstanta positif yang diketahui</td><td>Biasanya $b_i = 1$</td></tr>
+      <tr><td>$\psi_i$</td><td>Varians sampling — diasumsikan diketahui</td><td>Skalar — input diketahui</td></tr>
+      <tr><td>$\sigma_v^2$</td><td>Varians efek acak — harus diduga dari data</td><td>Skalar — parameter kunci</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 03 TAHAPAN ===== -->
+<section class="section" id="tahapan">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Tahapan: BLUP → EBLUP</h2>
+  </div>
+
+  <div class="flow-diagram">
+    <div class="flow-node"><div class="fn-label">Input</div><div class="fn-title">Data Survei $\hat{\theta}_i$</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node"><div class="fn-label">Langkah 1</div><div class="fn-title">BLUP ($\sigma_v^2$ diketahui)</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node"><div class="fn-label">Langkah 2</div><div class="fn-title">Estimasi $\hat{\sigma}_v^2$</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node hl"><div class="fn-label">Output</div><div class="fn-title">EBLUP $\hat{\theta}_i^H$</div></div>
+  </div>
+
+  <div class="steps">
+
+    <!-- Step 1 -->
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>BLUP — Jika $\sigma_v^2$ Diketahui</h4>
+        <p>Jika varians efek acak $\sigma_v^2$ diketahui, penduga terbaik adalah <strong>BLUP</strong> — rata-rata tertimbang antara data survei langsung ($\hat{\theta}_i$) dan penduga sintetis dari model regresi ($\mathbf{z}_i^T\tilde{\boldsymbol{\beta}}$):</p>
+
+        <div class="formula-wrap">
+          <div class="formula-label">// BLUP Formula</div>
+          <div class="formula-inner">$$\tilde{\theta}_i^H = \gamma_i \hat{\theta}_i + (1-\gamma_i)\mathbf{z}_i^T\tilde{\boldsymbol{\beta}}$$</div>
+          <div class="formula-note">Di mana Shrinkage Factor: $\gamma_i = \dfrac{\sigma_v^2 b_i^2}{\psi_i + \sigma_v^2 b_i^2}$, &nbsp;&nbsp; $0 \leq \gamma_i \leq 1$</div>
+        </div>
+
+        <div class="formula-wrap" style="margin-top:12px;">
+          <div class="formula-label">// BLUE Estimator untuk β (Best Linear Unbiased Estimator)</div>
+          <div class="formula-inner">$$\tilde{\boldsymbol{\beta}} = \left[\sum_{i=1}^{m} \frac{\mathbf{z}_i \mathbf{z}_i^T}{\psi_i + \sigma_v^2 b_i^2}\right]^{-1} \left[\sum_{i=1}^{m} \frac{\mathbf{z}_i \hat{\theta}_i}{\psi_i + \sigma_v^2 b_i^2}\right]$$</div>
+          <div class="formula-note">Estimator GLS (Generalized Least Squares) untuk koefisien regresi global β</div>
+        </div>
+
+        <!-- GAMMA INTERACTIVE -->
+        <div class="gamma-viz">
+          <h4>🎛️ Visualisasi Interaktif: Faktor Penyusutan γᵢ</h4>
+          <p>Geser slider untuk melihat bagaimana γᵢ menyeimbangkan data survei vs. model regresi</p>
+          <div class="slider-row">
+            <label>$\sigma_v^2$ (var. acak)</label>
+            <input type="range" id="sv2" min="0.01" max="5" step="0.01" value="1">
+            <span class="slider-val" id="sv2-val">1.00</span>
+          </div>
+          <div class="slider-row">
+            <label>$\psi_i$ (var. sampling)</label>
+            <input type="range" id="psi" min="0.01" max="5" step="0.01" value="1">
+            <span class="slider-val" id="psi-val">1.00</span>
+          </div>
+          <div class="gamma-result-row">
+            <span>γᵢ (bobot survei) = <strong id="gamma-res" style="color:var(--teal); font-family:'JetBrains Mono',monospace;">0.500</strong></span>
+            <span>(1−γᵢ) (bobot regresi) = <strong id="synth-res" style="color:var(--amber); font-family:'JetBrains Mono',monospace;">0.500</strong></span>
+          </div>
+          <div class="gamma-bar-wrap">
+            <div class="bar-direct" id="bar-direct" style="width:50%">Survei Langsung</div>
+            <div class="bar-synth" id="bar-synth">Model Regresi</div>
+          </div>
+          <div class="gamma-legend">
+            <span><span class="ldot" style="background:var(--teal)"></span>Data survei (γᵢ)</span>
+            <span><span class="ldot" style="background:var(--amber)"></span>Penduga sintetis / regresi (1−γᵢ)</span>
+          </div>
+          <div class="info-box neutral" style="margin-top:14px; margin-bottom:0;">
+            <div class="info-icon">📌</div>
+            <p><strong>Interpretasi:</strong> Jika $\psi_i$ besar (survei tidak akurat) → $\gamma_i$ kecil → lebih mengandalkan regresi. Jika $\sigma_v^2$ besar (variasi antar wilayah tinggi) → $\gamma_i$ besar → lebih percaya data survei lokal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Estimasi Parameter Varians $\sigma_v^2$</h4>
+        <p>Dalam praktik, $\sigma_v^2$ tidak diketahui dan harus diduga dari data. Tiga metode yang sering digunakan:</p>
+        <div class="method-grid">
+          <div class="method-card" style="border-top:3px solid var(--teal);">
+            <div class="m-sym" style="color:var(--teal);">MoM</div>
+            <h4>Method of Moments</h4>
+            <p>Metode Fay-Herriot klasik. Menggunakan iterasi sederhana. Mudah diimplementasikan namun kadang menghasilkan nilai negatif.</p>
+            <span class="pill teal">Fay-Herriot Asli</span>
+          </div>
+          <div class="method-card" style="border-top:3px solid var(--ink3);">
+            <div class="m-sym" style="color:var(--ink3);">ML</div>
+            <h4>Maximum Likelihood</h4>
+            <p>Berdasarkan fungsi likelihood penuh. Cenderung menghasilkan estimasi yang <em>bias ke bawah</em> untuk sampel kecil.</p>
+            <span class="pill neutral">Bias ↓ saat n kecil</span>
+          </div>
+          <div class="method-card" style="border-top:3px solid var(--amber);">
+            <div class="m-sym" style="color:var(--amber);">REML</div>
+            <h4>Restricted ML</h4>
+            <p>Mengoreksi bias pada ML akibat estimasi derajat bebas. Lebih disukai dan menjadi standar dalam praktik SAE.</p>
+            <span class="pill amber">✓ Direkomendasikan</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Menghasilkan EBLUP</h4>
+        <p>Setelah mendapatkan estimasi $\hat{\sigma}_v^2$ dari langkah 2, substitusikan ke dalam rumus BLUP. Hasilnya adalah <strong>EBLUP</strong> — penduga akhir yang ingin diperoleh:</p>
+        <div class="formula-wrap">
+          <div class="formula-label">// EBLUP — Penduga Akhir</div>
+          <div class="formula-inner">$$\hat{\theta}_i^H = \hat{\gamma}_i \hat{\theta}_i + (1-\hat{\gamma}_i)\mathbf{z}_i^T\hat{\boldsymbol{\beta}}$$</div>
+          <div class="formula-note">Di mana $\hat{\gamma}_i = \dfrac{\hat{\sigma}_v^2 b_i^2}{\psi_i + \hat{\sigma}_v^2 b_i^2}$ menggunakan estimasi empiris $\hat{\sigma}_v^2$, bukan nilai yang diketahui. Inilah yang menjadikan metode ini "Empirical".</div>
+        </div>
+        <div class="info-box teal">
+          <div class="info-icon">🔁</div>
+          <p><strong>BLUP vs. EBLUP:</strong> BLUP mengasumsikan $\sigma_v^2$ diketahui (teoretis). EBLUP menggantikannya dengan estimasi $\hat{\sigma}_v^2$ dari data. Akibatnya, MSE EBLUP lebih kompleks dihitung karena harus memperhitungkan ketidakpastian tambahan dari estimasi $\hat{\sigma}_v^2$.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== 04 MSE ===== -->
+<section class="section" id="mse">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Estimasi Mean Squared Error (MSE)</h2>
+  </div>
+
+  <div class="prose">
+    <p>Mengukur ketidakpastian EBLUP lebih kompleks daripada statistik standar karena harus memperhitungkan <strong>ketidakpastian dari estimasi $\hat{\sigma}_v^2$</strong>. Metode yang digunakan adalah <strong>Aproksimasi Prasad-Rao</strong> (orde kedua).</p>
+  </div>
+
+  <div class="formula-wrap">
+    <div class="formula-label">// Aproksimasi MSE Prasad-Rao (Orde Kedua)</div>
+    <div class="formula-inner">$$\text{mse}\!\left(\hat{\theta}_i^H\right) = g_{1i}\!\left(\hat{\sigma}_v^2\right) + g_{2i}\!\left(\hat{\sigma}_v^2\right) + 2g_{3i}\!\left(\hat{\sigma}_v^2\right)$$</div>
+    <div class="formula-note">Tiga komponen yang masing-masing menangkap sumber ketidakpastian berbeda dalam penduga EBLUP</div>
+  </div>
+
+  <div class="mse-grid">
+    <div class="mse-card g1">
+      <div class="mse-sym">g₁ᵢ</div>
+      <h4>Ketidakpastian Efek Acak</h4>
+      <p>Menangkap ketidakpastian dalam memprediksi efek acak $v_i$. Ini adalah <strong>komponen utama dan terbesar</strong> dari MSE EBLUP.</p>
+      <div class="sub-formula">$g_{1i}(\sigma_v^2) = \gamma_i \psi_i = \dfrac{\sigma_v^2 b_i^2 \psi_i}{\psi_i + \sigma_v^2 b_i^2}$</div>
+    </div>
+    <div class="mse-card g2">
+      <div class="mse-sym">g₂ᵢ</div>
+      <h4>Ketidakpastian Koefisien β</h4>
+      <p>Menangkap ketidakpastian akibat estimasi koefisien regresi β. Semakin banyak area $m$, komponen ini semakin kecil (orde $m^{-1}$).</p>
+      <div class="sub-formula">Bergantung pada $\mathbf{z}_i$ dan varians total $(\psi_i + \sigma_v^2 b_i^2)$</div>
+    </div>
+    <div class="mse-card g3">
+      <div class="mse-sym">g₃ᵢ</div>
+      <h4>Ketidakpastian Varians $\sigma_v^2$</h4>
+      <p>Ketidakpastian tambahan karena $\sigma_v^2$ harus diduga dari data — koreksi orde kedua Prasad-Rao yang membuat MSE tidak bias.</p>
+      <div class="sub-formula">Melibatkan varians asimtotik $\bar{V}(\hat{\sigma}_v^2)$ dari penduga varians</div>
+    </div>
+  </div>
+
+  <div class="info-box amber">
+    <div class="info-icon">⚙️</div>
+    <p><strong>Penduga MSE Tidak Bias:</strong> Dalam implementasi praktis, penduga MSE diperoleh dengan menyubstitusikan $\hat{\sigma}_v^2$ ke rumus di atas dan <strong>menambahkan koreksi bias</strong> agar penduga MSE tetap akurat (tidak bias hingga orde kedua). Tanpa koreksi ini, MSE cenderung diremehkan (<em>underestimated</em>), yang berbahaya karena memberikan kesan presisi yang palsu.</p>
+  </div>
+</section>
+
+<!-- ===== 05 RRMSE ===== -->
+<section class="section" id="rrmse">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Evaluasi Presisi: RRMSE</h2>
+  </div>
+
+  <div class="prose">
+    <p>Untuk membandingkan apakah hasil EBLUP lebih baik daripada estimasi langsung, digunakan <strong>RRMSE</strong> sebagai standar ukuran presisi relatif yang dapat dibandingkan antar wilayah maupun antar metode.</p>
+  </div>
+
+  <div class="formula-wrap">
+    <div class="formula-label">// Relative Root Mean Square Error (RRMSE)</div>
+    <div class="formula-inner">$$RRMSE\!\left(\hat{\theta}_i^H\right) = \frac{\sqrt{\,\text{mse}\!\left(\hat{\theta}_i^H\right)\,}}{\hat{\theta}_i^H} \times 100\%$$</div>
+    <div class="formula-note">Analog dengan Koefisien Variasi (CV) namun berbasis MSE, bukan varians sampel. Makin kecil RRMSE, makin presisi penduga EBLUP.</div>
+  </div>
+
+  <div class="gauge-wrap">
+    <div class="gauge-text">
+      <h4>Interpretasi Nilai RRMSE</h4>
+      <p>RRMSE menyatakan besaran ketidakpastian relatif terhadap nilai penduga itu sendiri. EBLUP biasanya menghasilkan RRMSE yang jauh lebih kecil dibandingkan estimasi langsung, khususnya untuk wilayah dengan sampel kecil.</p>
+      <p style="font-size:12px; color:var(--ink3);">*Batas yang dapat diterima bergantung pada konteks studi. Untuk publikasi resmi BPS umumnya ditetapkan RRMSE &lt; 25%.</p>
+    </div>
+    <div>
+      <div class="rrmse-scale">
+        <div style="font-size:11px; font-weight:600; margin-bottom:10px; color:var(--ink2);">Skala Kualitas RRMSE</div>
+        <div class="rrmse-row">
+          <span class="rrmse-lbl">&lt; 10%</span>
+          <div class="rrmse-bar" style="width:96px; background:var(--teal);"></div>
+          <span class="rrmse-desc">Sangat baik</span>
+        </div>
+        <div class="rrmse-row">
+          <span class="rrmse-lbl">10–15%</span>
+          <div class="rrmse-bar" style="width:76px; background:#3aaa8a;"></div>
+          <span class="rrmse-desc">Baik</span>
+        </div>
+        <div class="rrmse-row">
+          <span class="rrmse-lbl">15–25%</span>
+          <div class="rrmse-bar" style="width:54px; background:var(--amber);"></div>
+          <span class="rrmse-desc">Cukup</span>
+        </div>
+        <div class="rrmse-row">
+          <span class="rrmse-lbl">&gt; 25%</span>
+          <div class="rrmse-bar" style="width:32px; background:var(--rose);"></div>
+          <span class="rrmse-desc">Hati-hati</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box teal">
+    <div class="info-icon">📊</div>
+    <p><strong>Keunggulan utama EBLUP:</strong> Untuk wilayah dengan sampel kecil (RRMSE estimasi langsung sangat besar), EBLUP secara dramatis mereduksi RRMSE dengan "meminjam kekuatan" dari informasi wilayah lain. Inilah bukti nyata keunggulan metode <em>borrowing strength</em> dalam SAE.</p>
+  </div>
+</section>
+
+<!-- ===== 06 MASALAH ===== -->
+<section class="section" id="masalah">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Masalah Praktis &amp; Solusi</h2>
+  </div>
+
+  <div class="problems">
+    <div class="problem-row">
+      <div class="prob-label">
+        <span class="prob-tag">Masalah 01</span>
+        Estimasi Varians Negatif
+      </div>
+      <div class="prob-content">
+        <div class="prob-issue">Kadang metode momen menghasilkan $\hat{\sigma}_v^2 &lt; 0$, yang secara statistik tidak valid karena varians harus non-negatif. Ini terjadi terutama ketika variabilitas antar wilayah sangat kecil.</div>
+        <div class="prob-solution">Membatasi nilai minimal menjadi nol: $\hat{\sigma}_v^2 = \max(0,\, \tilde{\sigma}_v^2)$. Atau gunakan metode <strong>Adjusted Density Maximization (ADM)</strong> yang menjamin hasil selalu positif secara aljabar.</div>
+      </div>
+    </div>
+    <div class="problem-row">
+      <div class="prob-label">
+        <span class="prob-tag">Masalah 02</span>
+        Inkonsistensi Benchmarking
+      </div>
+      <div class="prob-content">
+        <div class="prob-issue">EBLUP wilayah kecil jika dijumlahkan sering kali <em>tidak sama</em> dengan angka resmi wilayah besar (provinsi/nasional), menyebabkan inkonsistensi yang bermasalah untuk pelaporan resmi.</div>
+        <div class="prob-solution">Teknik <strong>Raking Benchmarking</strong> (perkalian rasio) atau <strong>Difference Benchmarking</strong> (penyesuaian aditif) agar agregat wilayah kecil konsisten dengan estimasi wilayah yang lebih besar.</div>
+      </div>
+    </div>
+    <div class="problem-row">
+      <div class="prob-label">
+        <span class="prob-tag">Masalah 03</span>
+        Pencilan (Outlier)
+      </div>
+      <div class="prob-content">
+        <div class="prob-issue">Data ekstrim dari satu atau beberapa wilayah dapat merusak estimasi regresi global $\hat{\boldsymbol{\beta}}$, mempengaruhi seluruh hasil EBLUP untuk semua wilayah lainnya.</div>
+        <div class="prob-solution">Metode <strong>Robust EBLUP</strong> menggunakan fungsi pengaruh terbatas (<em>bounded influence function</em>) untuk meredam pengaruh observasi wilayah yang menyimpang jauh dari tren umum.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 07 RINGKASAN ===== -->
+<section class="section" id="ringkasan">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Ringkasan Belajar</h2>
+  </div>
+
+  <div class="summary-card">
+    <h3>Inti Metode EBLUP</h3>
+    <p>EBLUP Level Area (Fay-Herriot) menggabungkan <strong>data survei langsung</strong> wilayah tersebut dengan <strong>informasi wilayah lain</strong> melalui model regresi linier campuran. Kekuatan utamanya terletak pada <strong>faktor penyusutan (γᵢ)</strong> yang secara otomatis memberikan bobot lebih besar pada model regresi ketika data survei lokal tidak memadai.</p>
+    <div class="key-formula">
+      <div class="key-formula-label">// Formula Kunci EBLUP</div>
+      $$\hat{\theta}_i^H = \underbrace{\hat{\gamma}_i \hat{\theta}_i}_{\substack{\text{Data} \\ \text{Lokal}}} + \underbrace{(1-\hat{\gamma}_i)\mathbf{z}_i^T\hat{\boldsymbol{\beta}}}_{\substack{\text{Model} \\ \text{Regional}}}$$
+    </div>
+  </div>
+
+  <div class="checklist-grid">
+    <div class="checklist-box teal">
+      <h4>✅ Yang Dipelajari</h4>
+      <ul>
+        <li>Akronim EBLUP &amp; makna tiap kata</li>
+        <li>Model dua-tahap Fay-Herriot</li>
+        <li>Faktor penyusutan γᵢ &amp; interpretasinya</li>
+        <li>BLUE estimator untuk koefisien β</li>
+        <li>Metode estimasi $\sigma_v^2$: MoM / ML / REML</li>
+        <li>Komponen MSE Prasad-Rao (g₁, g₂, g₃)</li>
+        <li>RRMSE sebagai ukuran presisi relatif</li>
+        <li>Masalah praktis: varians negatif, benchmarking, outlier</li>
+      </ul>
+    </div>
+    <div class="checklist-box amber">
+      <h4>⚠️ Hal Penting Diingat</h4>
+      <ul>
+        <li>BLUP ≠ EBLUP (empirical vs. known σ²)</li>
+        <li>$\psi_i$ diasumsikan <em>diketahui</em> di model FH</li>
+        <li>REML lebih baik dari ML untuk sampel kecil</li>
+        <li>MSE EBLUP harus ada koreksi bias orde-2</li>
+        <li>Tanpa koreksi, MSE cenderung <em>underestimated</em></li>
+        <li>Benchmarking penting untuk pelaporan resmi</li>
+        <li>Cek outlier sebelum menerapkan model</li>
+        <li>Semakin kecil γᵢ → semakin bergantung pada model</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+</div><!-- /content -->
+</main>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct = window.scrollY / total;
+  document.getElementById('progress-bar').style.transform = `scaleX(${pct})`;
+});
+
+// Nav active state on click
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() { setActive(this); });
+});
+
+// Intersection observer
+const sections = document.querySelectorAll('section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      navItems.forEach(n => {
+        n.classList.toggle('active', n.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => io.observe(s));
+
+// Gamma visualizer
+function updateGamma() {
+  const sv2 = parseFloat(document.getElementById('sv2').value);
+  const psi = parseFloat(document.getElementById('psi').value);
+  document.getElementById('sv2-val').textContent = sv2.toFixed(2);
+  document.getElementById('psi-val').textContent = psi.toFixed(2);
+
+  const gamma = sv2 / (psi + sv2); // b_i = 1
+  const synth = 1 - gamma;
+  document.getElementById('gamma-res').textContent = gamma.toFixed(3);
+  document.getElementById('synth-res').textContent = synth.toFixed(3);
+
+  const pct = (gamma * 100).toFixed(1);
+  const bar = document.getElementById('bar-direct');
+  const barS = document.getElementById('bar-synth');
+  bar.style.width = pct + '%';
+  bar.textContent = parseFloat(pct) > 15 ? `Survei (${pct}%)` : '';
+  barS.textContent = parseFloat(100-pct) > 15 ? `Regresi (${(100-parseFloat(pct)).toFixed(1)}%)` : '';
+}
+
+document.getElementById('sv2').addEventListener('input', updateGamma);
+document.getElementById('psi').addEventListener('input', updateGamma);
+updateGamma();
+</script>
+</body>
+</html>

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tujuan Penelitian 4 — Pola & Persebaran Spasial Perkawinan Anak di Sulawesi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2333;
+  --border: rgba(255,255,255,0.08);
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #e8a020;
+  --accent2: #3d9970;
+  --accent3: #c0392b;
+  --blue: #58a6ff;
+  --purple: #9775d4;
+
+  /* LISA colors */
+  --hh: #c0392b;
+  --ll: #2980b9;
+  --hl: #e67e22;
+  --lh: #27ae60;
+  --ns: #95a5a6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ====== HEADER ====== */
+.hero {
+  position: relative;
+  padding: 64px 72px 52px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,160,32,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,160,32,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.hero-glow {
+  position: absolute;
+  top: -120px; right: -80px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,160,32,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-glow2 {
+  position: absolute;
+  bottom: -100px; left: 10%;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,153,112,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(232,160,32,0.12);
+  border: 1px solid rgba(232,160,32,0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: white;
+  margin-bottom: 16px;
+  max-width: 700px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 640px;
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+
+.hero-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.chip.active { color: var(--blue); border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.06); }
+
+/* ====== LAYOUT ====== */
+.page-body {
+  padding: 0 72px 60px;
+}
+
+.section {
+  padding-top: 56px;
+}
+
+.section-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.section-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 32px;
+  max-width: 660px;
+  line-height: 1.7;
+}
+
+/* ====== TWO-COL ====== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* ====== CARD ====== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.card:hover { border-color: rgba(255,255,255,0.15); }
+
+.card-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.ci-choropleth { background: rgba(232,160,32,0.15); }
+.ci-lisa { background: rgba(61,153,112,0.15); }
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.card-body {
+  padding: 22px 24px;
+}
+
+.card-body p {
+  font-size: 13.5px;
+  color: #c9d1d9;
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+.card-body p:last-child { margin-bottom: 0; }
+
+/* ====== MAP MOCKUP ====== */
+.map-mockup {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.map-label {
+  position: absolute;
+  top: 10px; left: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+/* Choropleth SVG */
+.choropleth-svg { width: 100%; display: block; }
+
+/* ====== LEGEND ====== */
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #c9d1d9;
+}
+
+.legend-swatch {
+  width: 28px; height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+  margin-top: 6px;
+}
+
+.legend-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* ====== LISA QUADRANT ====== */
+.lisa-quadrant {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.quad {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+}
+
+.quad-hh { background: rgba(192,57,43,0.2); border: 1px solid rgba(192,57,43,0.4); }
+.quad-lh { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.3); }
+.quad-hl { background: rgba(230,126,34,0.15); border: 1px solid rgba(230,126,34,0.3); }
+.quad-ll { background: rgba(41,128,185,0.15); border: 1px solid rgba(41,128,185,0.3); }
+
+.quad-code {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'Libre Baskerville', serif;
+  margin-bottom: 4px;
+}
+
+.quad-hh .quad-code { color: var(--hh); }
+.quad-lh .quad-code { color: var(--lh); }
+.quad-hl .quad-code { color: var(--hl); }
+.quad-ll .quad-code { color: var(--ll); }
+
+.quad-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.quad-desc { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+.quad-hh .quad-name { color: var(--hh); }
+.quad-lh .quad-name { color: var(--lh); }
+.quad-hl .quad-name { color: var(--hl); }
+.quad-ll .quad-name { color: var(--ll); }
+
+.quad-axis {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.axis-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* ====== STEP LIST ====== */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent2));
+  opacity: 0.3;
+}
+
+.step {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.step:last-child { border-bottom: none; }
+
+.step-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid;
+}
+
+.step-num.gold { border-color: var(--accent); color: var(--accent); background: rgba(232,160,32,0.1); }
+.step-num.green { border-color: var(--accent2); color: var(--accent2); background: rgba(61,153,112,0.1); }
+
+.step-content h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.step-content p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ====== FORMULA BOX ====== */
+.formula-box {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 14px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #f0c060;
+  letter-spacing: 0.3px;
+}
+
+.formula-caption {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ====== REFERENCE BOX ====== */
+.ref-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-top: 48px;
+}
+
+.ref-box h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.ref-item {
+  display: flex;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.ref-item:last-child { border-bottom: none; }
+
+.ref-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(232,160,32,0.15);
+  border: 1px solid rgba(232,160,32,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.ref-text {
+  font-size: 12.5px;
+  color: #c9d1d9;
+  line-height: 1.65;
+}
+
+.ref-text strong { color: white; }
+.ref-text em { color: var(--blue); font-style: italic; }
+
+/* ====== FULL CARD ====== */
+.full-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+
+/* ====== MORAN TABLE ====== */
+.moran-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.moran-table th {
+  background: rgba(255,255,255,0.04);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.moran-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #c9d1d9;
+  vertical-align: top;
+}
+
+.moran-table tr:last-child td { border-bottom: none; }
+
+.moran-val {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.moran-pos { background: rgba(192,57,43,0.2); color: #e74c3c; }
+.moran-zero { background: rgba(149,165,166,0.2); color: #95a5a6; }
+.moran-neg { background: rgba(41,128,185,0.2); color: #3498db; }
+
+/* ====== HIGHLIGHT QUOTE ====== */
+.highlight-quote {
+  background: rgba(232,160,32,0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 13.5px;
+  color: #c9d1d9;
+  line-height: 1.75;
+  font-style: italic;
+}
+
+.highlight-quote cite {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ====== BADGE ====== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-primary { background: rgba(232,160,32,0.15); color: var(--accent); border: 1px solid rgba(232,160,32,0.3); }
+.badge-secondary { background: rgba(61,153,112,0.15); color: var(--accent2); border: 1px solid rgba(61,153,112,0.3); }
+.badge-info { background: rgba(88,166,255,0.1); color: var(--blue); border: 1px solid rgba(88,166,255,0.25); }
+
+/* ====== DIVIDER ====== */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 48px 0 0;
+}
+
+/* ====== ANIMATION ====== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero, .page-body { animation: fadeInUp 0.6s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ====== HERO ====== -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-label">
+    🔬 Tujuan Penelitian ke-4
+  </div>
+
+  <h1>Pola & Persebaran Spasial<br><em>Tingkat Perkawinan Anak</em><br>di Pulau Sulawesi</h1>
+
+  <p class="hero-desc">
+    Menganalisis pola dan persebaran spasial tingkat perkawinan anak antarwilayah kabupaten/kota di Pulau Sulawesi berdasarkan hasil estimasi terbaik — menggunakan <strong style="color:white">Choropleth Map</strong> untuk persebaran dan <strong style="color:white">Peta LISA</strong> untuk pola spasial.
+  </p>
+
+  <div class="hero-chips">
+    <span class="chip active">📍 POI-Based Spatial Analysis</span>
+    <span class="chip active">🗺️ Choropleth Map</span>
+    <span class="chip active">📊 LISA (Local Moran's I)</span>
+    <span class="chip">Kabupaten/Kota — Sulawesi</span>
+    <span class="chip">Spatial Autocorrelation</span>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <!-- ====== SECTION 1: DUA ALAT UTAMA ====== -->
+  <div class="section">
+    <div class="section-eyebrow">01 — Metode Visualisasi Spasial</div>
+    <div class="section-title">Dua Instrumen Analisis yang Digunakan</div>
+    <div class="section-sub">
+      Tujuan penelitian keempat ini menggunakan dua alat visualisasi yang saling melengkapi: Choropleth Map untuk menggambarkan <em>di mana</em> tingkat perkawinan anak berada, dan Peta LISA untuk menguji <em>apakah ada pola pengelompokan spasial</em> yang signifikan secara statistik.
+    </div>
+
+    <div class="two-col">
+
+      <!-- CHOROPLETH -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon ci-choropleth">🗺️</div>
+          <div>
+            <div class="card-title">Choropleth Map</div>
+            <div class="card-subtitle">Persebaran Spasial · Distribusi Nilai</div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <!-- Mock Choropleth SVG Sulawesi-style -->
+          <div class="map-mockup" style="background:#1a2332;">
+            <div class="map-label">Ilustrasi: Choropleth Perkawinan Anak</div>
+            <svg viewBox="0 0 320 200" class="choropleth-svg">
+              <!-- Sulawesi-inspired abstract shape clusters -->
+              <!-- North Sulawesi region (low) -->
+              <ellipse cx="240" cy="40" rx="50" ry="22" fill="rgba(41,128,185,0.6)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              <text x="240" y="44" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="8">Sulawesi Utara</text>
+
+              <!-- Central region (medium-high) -->
+              <ellipse cx="160" cy="90" rx="60" ry="30" fill="rgba(230,126,34,0.65)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              <text x="160" y="94" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="8">Sulawesi Tengah</text>
+
+              <!-- South region (high) -->
+              <ellipse cx="130" cy="150" rx="55" ry="28" fill="rgba(192,57,43,0.7)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              <text x="130" y="154" text-anchor="middle" fill="white" font-size="8">Sulawesi Selatan</text>
+
+              <!-- Southeast (medium) -->
+              <ellipse cx="220" cy="155" rx="40" ry="22" fill="rgba(243,156,18,0.6)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              <text x="220" y="159" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">Sulawesi Tenggara</text>
+
+              <!-- West (low-medium) -->
+              <ellipse cx="65" cy="120" rx="35" ry="20" fill="rgba(88,180,74,0.55)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              <text x="65" y="124" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="8">Sulawesi Barat</text>
+
+              <!-- Gorontalo (very low) -->
+              <ellipse cx="200" cy="60" rx="28" ry="16" fill="rgba(52,152,219,0.5)" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              <text x="200" y="64" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="7">Gorontalo</text>
+            </svg>
+          </div>
+
+          <div class="legend-title">Legenda Prevalensi (Ilustratif)</div>
+          <div class="legend-grid">
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:rgba(192,57,43,0.8)"></div>
+              <span>Sangat Tinggi (≥ 30%)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:rgba(230,126,34,0.8)"></div>
+              <span>Tinggi (20–30%)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:rgba(243,156,18,0.8)"></div>
+              <span>Sedang (10–20%)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:rgba(88,180,74,0.7)"></div>
+              <span>Rendah (5–10%)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:rgba(41,128,185,0.8)"></div>
+              <span>Sangat Rendah (< 5%)</span>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;"></div>
+          <p>Choropleth map memvisualisasikan nilai tingkat perkawinan anak setiap kabupaten/kota menggunakan gradasi warna. Semakin gelap/merah warnanya, semakin tinggi prevalensinya. Metode ini setara dengan yang digunakan oleh <strong style="color:white">Wei et al. (2025)</strong> untuk memetakan distribusi absolut fasilitas pendidikan per kapita di Cekungan Sungai Kuning — mengklasifikasikan data ke dalam lima kelompok untuk memudahkan perbandingan antar wilayah.</p>
+        </div>
+      </div>
+
+      <!-- LISA -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon ci-lisa">📊</div>
+          <div>
+            <div class="card-title">Peta LISA</div>
+            <div class="card-subtitle">Local Indicators of Spatial Association</div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <div class="map-mockup" style="background:#1a2332; padding:16px;">
+            <div class="map-label">Diagram Moran Scatter</div>
+            <svg viewBox="0 0 280 200" style="width:100%;display:block;">
+              <!-- axes -->
+              <line x1="140" y1="10" x2="140" y2="190" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+              <line x1="20" y1="100" x2="260" y2="100" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+              <!-- quadrant labels -->
+              <text x="80" y="55" text-anchor="middle" fill="rgba(192,57,43,0.9)" font-size="9" font-weight="bold">H–H</text>
+              <text x="200" y="55" text-anchor="middle" fill="rgba(230,126,34,0.9)" font-size="9" font-weight="bold">H–L</text>
+              <text x="80" y="155" text-anchor="middle" fill="rgba(39,174,96,0.9)" font-size="9" font-weight="bold">L–H</text>
+              <text x="200" y="155" text-anchor="middle" fill="rgba(41,128,185,0.9)" font-size="9" font-weight="bold">L–L</text>
+
+              <!-- scatter dots (H-H quadrant) -->
+              <circle cx="60" cy="40" r="5" fill="rgba(192,57,43,0.85)"/>
+              <circle cx="90" cy="60" r="4" fill="rgba(192,57,43,0.75)"/>
+              <circle cx="75" cy="75" r="6" fill="rgba(192,57,43,0.9)"/>
+              <circle cx="50" cy="70" r="4" fill="rgba(192,57,43,0.7)"/>
+
+              <!-- H-L quadrant -->
+              <circle cx="180" cy="40" r="4" fill="rgba(230,126,34,0.8)"/>
+              <circle cx="210" cy="65" r="3" fill="rgba(230,126,34,0.7)"/>
+
+              <!-- L-H quadrant -->
+              <circle cx="80" cy="140" r="4" fill="rgba(39,174,96,0.8)"/>
+              <circle cx="110" cy="160" r="3" fill="rgba(39,174,96,0.7)"/>
+
+              <!-- L-L quadrant -->
+              <circle cx="180" cy="140" r="5" fill="rgba(41,128,185,0.85)"/>
+              <circle cx="210" cy="155" r="6" fill="rgba(41,128,185,0.9)"/>
+              <circle cx="230" cy="135" r="4" fill="rgba(41,128,185,0.75)"/>
+              <circle cx="200" cy="170" r="3" fill="rgba(41,128,185,0.7)"/>
+
+              <!-- Moran's I line (trend) -->
+              <line x1="30" y1="165" x2="250" y2="30" stroke="rgba(232,160,32,0.6)" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+              <!-- axis labels -->
+              <text x="258" y="103" fill="rgba(255,255,255,0.5)" font-size="8">X (nilai)</text>
+              <text x="143" y="14" fill="rgba(255,255,255,0.5)" font-size="8">Lag W</text>
+            </svg>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <div class="axis-labels">
+              <span>← Tinggi</span>
+              <span>Nilai Lokal</span>
+              <span>Rendah →</span>
+            </div>
+            <div class="lisa-quadrant">
+              <div class="quad quad-hh">
+                <div class="quad-code">H–H</div>
+                <div class="quad-name">High–High</div>
+                <div class="quad-desc">Prevalensi tinggi, dikelilingi wilayah tinggi</div>
+              </div>
+              <div class="quad quad-hl">
+                <div class="quad-code">H–L</div>
+                <div class="quad-name">High–Low</div>
+                <div class="quad-desc">Prevalensi tinggi, tetapi tetangga rendah</div>
+              </div>
+              <div class="quad quad-lh">
+                <div class="quad-code">L–H</div>
+                <div class="quad-name">Low–High</div>
+                <div class="quad-desc">Prevalensi rendah, dikelilingi wilayah tinggi</div>
+              </div>
+              <div class="quad quad-ll">
+                <div class="quad-code">L–L</div>
+                <div class="quad-name">Low–Low</div>
+                <div class="quad-desc">Prevalensi rendah, tetangga juga rendah</div>
+              </div>
+            </div>
+          </div>
+
+          <p>LISA (Local Indicators of Spatial Association) menggunakan Local Moran's I untuk mengidentifikasi cluster dan outlier spasial yang signifikan secara statistik. Persis seperti Wei et al. (2025) yang menggunakan Local Moran's I untuk menemukan cluster H-H dan L-L fasilitas pendidikan di berbagai provinsi Cekungan Sungai Kuning.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SECTION 2: MENGAPA PERLU KEDUANYA ====== -->
+  <div class="section">
+    <div class="section-eyebrow">02 — Justifikasi Metodologis</div>
+    <div class="section-title">Mengapa Membutuhkan Keduanya?</div>
+    <div class="section-sub">Choropleth dan LISA adalah dua level analisis yang berbeda namun saling melengkapi — dari deskripsi visual menuju inferensi statistik spasial.</div>
+
+    <div class="full-card">
+      <div class="two-col">
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">Choropleth — "Di Mana?"</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num gold">1</div>
+              <div class="step-content">
+                <h4>Menampilkan Nilai Estimasi Terbaik</h4>
+                <p>Hasil estimasi prevalensi perkawinan anak tiap kabupaten/kota divisualisasikan dengan gradasi warna berdasarkan klasifikasi kuantil atau natural breaks.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num gold">2</div>
+              <div class="step-content">
+                <h4>Identifikasi Disparitas Antar-Wilayah</h4>
+                <p>Memperlihatkan wilayah mana yang memiliki prevalensi tertinggi vs terendah — setara dengan temuan Wei et al. (2025) bahwa hilir Sungai Kuning menyumbang 82,45% fasilitas pendidikan, jauh melampaui hulu.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num gold">3</div>
+              <div class="step-content">
+                <h4>Dasar Perumusan Kebijakan Wilayah</h4>
+                <p>Peta distribusi memberi pemerintah daerah dasar visual untuk memprioritaskan intervensi di wilayah dengan beban tertinggi.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:13px; font-weight:700; color:var(--accent2); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">LISA — "Apakah Ada Pola Kluster?"</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num green">1</div>
+              <div class="step-content">
+                <h4>Uji Autokorelasi Spasial Lokal</h4>
+                <p>LISA menguji apakah suatu wilayah memiliki nilai yang mirip dengan tetangganya — mendeteksi pengelompokan (clustering) yang tidak muncul dari peta distribusi biasa.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num green">2</div>
+              <div class="step-content">
+                <h4>Identifikasi Hot Spot & Cold Spot</h4>
+                <p>Cluster H-H (hot spot) = daerah prioritas intervensi konsentrat. Cluster L-L (cold spot) = model keberhasilan yang bisa direplikasi. Sejalan dengan temuan Wei et al. (2025) tentang kluster prasekolah di barat dan cluster primer-sekunder di utara.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num green">3</div>
+              <div class="step-content">
+                <h4>Deteksi Outlier Spasial (H-L & L-H)</h4>
+                <p>Mengidentifikasi kabupaten "anomali" — prevalensi tinggi di tengah wilayah rendah, atau sebaliknya — yang perlu penjelasan faktor khusus.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SECTION 3: DASAR TEORI MORAN'S I ====== -->
+  <div class="section">
+    <div class="section-eyebrow">03 — Landasan Statistik</div>
+    <div class="section-title">Global vs Local Moran's I</div>
+    <div class="section-sub">Analisis LISA dibangun di atas uji Global Moran's I terlebih dahulu, sebelum menelusuri pola lokal di setiap unit wilayah.</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(88,166,255,0.12);">🌐</div>
+          <div>
+            <div class="card-title">Global Moran's I</div>
+            <div class="card-subtitle">Mengukur Autokorelasi Spasial Keseluruhan</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="formula-box">
+            I = n · Σᵢ Σⱼ Wᵢⱼ(xᵢ − x̄)(xⱼ − x̄)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;────────────────────────────<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Σᵢ Σⱼ Wᵢⱼ · Σᵢ(xᵢ − x̄)²
+            <div class="formula-caption">Sumber: Wei et al. (2025), Formula (2) — digunakan untuk mengukur asosiasi spasial fasilitas pendidikan dasar</div>
+          </div>
+
+          <table class="moran-table">
+            <thead>
+              <tr>
+                <th>Nilai I</th>
+                <th>Interpretasi</th>
+                <th>Implikasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="moran-val moran-pos">I > 0</span></td>
+                <td>Autokorelasi positif</td>
+                <td>Kluster — wilayah tinggi cenderung berdekatan</td>
+              </tr>
+              <tr>
+                <td><span class="moran-val moran-zero">I = 0</span></td>
+                <td>Distribusi acak</td>
+                <td>Tidak ada pola spasial yang sistematis</td>
+              </tr>
+              <tr>
+                <td><span class="moran-val moran-neg">I < 0</span></td>
+                <td>Autokorelasi negatif</td>
+                <td>Dispersi — wilayah berbeda berdekatan (checkerboard)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-quote">
+            "Preprimary, primary, and secondary education facilities exhibit strong spatial clustering, with Moran's I indices of 0.26, 0.19, and 0.09, respectively."
+            <cite>— Wei et al. (2025, hal. 1), sebagai contoh penerapan Global Moran's I</cite>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(151,117,212,0.12);">📍</div>
+          <div>
+            <div class="card-title">Local Moran's I (LISA)</div>
+            <div class="card-subtitle">Dekomposisi Spasial di Level Kabupaten/Kota</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p>LISA adalah dekomposisi lokal dari statistik Global Moran's I. Setiap unit wilayah mendapat nilai Iᵢ sendiri, sehingga dapat diidentifikasi apakah sebuah kabupaten/kota membentuk kluster yang signifikan secara statistik (p &lt; 0.05) dengan tetangganya.</p>
+
+          <div style="margin: 16px 0;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(192,57,43,0.08); border-radius:8px; border:1px solid rgba(192,57,43,0.2);">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--hh);flex-shrink:0;"></div>
+                <div>
+                  <span style="font-size:13px;font-weight:700;color:#e74c3c;">H–H (Hot Spot)</span>
+                  <span style="font-size:12px;color:var(--muted);margin-left:8px;">Kabupaten prioritas — beban tinggi & menular ke tetangga</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(41,128,185,0.08); border-radius:8px; border:1px solid rgba(41,128,185,0.2);">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--ll);flex-shrink:0;"></div>
+                <div>
+                  <span style="font-size:13px;font-weight:700;color:#3498db;">L–L (Cold Spot)</span>
+                  <span style="font-size:12px;color:var(--muted);margin-left:8px;">Wilayah dengan pencapaian baik — bisa jadi model replikasi</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(230,126,34,0.08); border-radius:8px; border:1px solid rgba(230,126,34,0.2);">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--hl);flex-shrink:0;"></div>
+                <div>
+                  <span style="font-size:13px;font-weight:700;color:#e67e22;">H–L (Outlier Tinggi)</span>
+                  <span style="font-size:12px;color:var(--muted);margin-left:8px;">Anomali lokal — perlu investigasi faktor internal</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(39,174,96,0.08); border-radius:8px; border:1px solid rgba(39,174,96,0.2);">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--lh);flex-shrink:0;"></div>
+                <div>
+                  <span style="font-size:13px;font-weight:700;color:#27ae60;">L–H (Outlier Rendah)</span>
+                  <span style="font-size:12px;color:var(--muted);margin-left:8px;">Pencapaian baik di tengah lingkungan yang tertinggal</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(149,165,166,0.06); border-radius:8px; border:1px solid rgba(149,165,166,0.15);">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--ns);flex-shrink:0;"></div>
+                <div>
+                  <span style="font-size:13px;font-weight:700;color:#95a5a6;">Not Significant</span>
+                  <span style="font-size:12px;color:var(--muted);margin-left:8px;">Tidak ada pola spasial yang signifikan secara statistik</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-quote">
+            "H-H cluster areas are primarily concentrated in the eastern regions … L-L cluster areas of per capita preprimary educational resources are predominantly located in the western regions."
+            <cite>— Wei et al. (2025, hal. 10), menunjukkan output tipikal analisis LISA</cite>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SECTION 4: ALUR ANALISIS ====== -->
+  <div class="section">
+    <div class="section-eyebrow">04 — Alur Kerja Analisis</div>
+    <div class="section-title">Tahapan Pelaksanaan Tujuan Penelitian ke-4</div>
+    <div class="section-sub">Dari data estimasi hasil terbaik hingga peta LISA yang siap diinterpretasikan untuk rekomendasi kebijakan.</div>
+
+    <div class="full-card">
+      <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:16px; align-items:start;">
+
+        <div style="text-align:center; padding:16px 10px; background:rgba(232,160,32,0.07); border-radius:12px; border:1px solid rgba(232,160,32,0.2);">
+          <div style="font-size:28px; margin-bottom:10px;">📥</div>
+          <div style="font-size:12px; font-weight:700; color:var(--accent); text-transform:uppercase; margin-bottom:6px;">Input</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.5;">Hasil estimasi terbaik prevalensi perkawinan anak per kabupaten/kota</div>
+        </div>
+
+        <div style="text-align:center; padding:4px;">
+          <div style="font-size:22px; color:var(--muted); margin-top:30px;">→</div>
+        </div>
+
+        <div style="text-align:center; padding:16px 10px; background:rgba(88,166,255,0.07); border-radius:12px; border:1px solid rgba(88,166,255,0.2);">
+          <div style="font-size:28px; margin-bottom:10px;">🗺️</div>
+          <div style="font-size:12px; font-weight:700; color:var(--blue); text-transform:uppercase; margin-bottom:6px;">Choropleth</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.5;">Klasifikasi nilai ke 5 kelas warna, visualisasi persebaran spasial</div>
+        </div>
+
+        <div style="text-align:center; padding:4px;">
+          <div style="font-size:22px; color:var(--muted); margin-top:30px;">+</div>
+        </div>
+
+        <div style="text-align:center; padding:16px 10px; background:rgba(61,153,112,0.07); border-radius:12px; border:1px solid rgba(61,153,112,0.2);">
+          <div style="font-size:28px; margin-bottom:10px;">📊</div>
+          <div style="font-size:12px; font-weight:700; color:var(--accent2); text-transform:uppercase; margin-bottom:6px;">LISA Map</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.5;">Hitung Global Moran's I → Local Moran's I per kab/kota → Peta H-H, L-L, H-L, L-H</div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div>
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px;">Output Choropleth</div>
+          <div class="steps" style="gap:0;">
+            <div class="step">
+              <div class="step-num gold" style="width:28px;height:28px;font-size:11px;">A</div>
+              <div class="step-content">
+                <h4>Peta Distribusi Prevalensi</h4>
+                <p>Visualisasi nilai estimasi terbaik dengan 5 kelas warna (sangat rendah–sangat tinggi)</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num gold" style="width:28px;height:28px;font-size:11px;">B</div>
+              <div class="step-content">
+                <h4>Identifikasi Disparitas Regional</h4>
+                <p>Membandingkan kabupaten/kota berbasis propinsi di seluruh Sulawesi</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:12px;">Output LISA</div>
+          <div class="steps" style="gap:0;">
+            <div class="step">
+              <div class="step-num green" style="width:28px;height:28px;font-size:11px;">C</div>
+              <div class="step-content">
+                <h4>Peta Kluster Spasial Signifikan</h4>
+                <p>Identifikasi hot spots (H-H) dan cold spots (L-L) yang terbukti secara statistik</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num green" style="width:28px;height:28px;font-size:11px;">D</div>
+              <div class="step-content">
+                <h4>Deteksi Outlier Spasial</h4>
+                <p>Mengungkap kabupaten anomali (H-L & L-H) untuk analisis mendalam lebih lanjut</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== REFERENSI ====== -->
+  <div class="divider"></div>
+  <div class="ref-box">
+    <h3>📚 Referensi Pendukung Metodologi</h3>
+
+    <div class="ref-item">
+      <div class="ref-num">1</div>
+      <div class="ref-text">
+        <strong>Wei, H.; Ji, W.; Li, L.; Yang, Y.; Liu, M. (2025).</strong> Exploring the Equality and Determinants of Basic Educational Public Services from a Spatial Variation Perspective Using POI Data. <em>ISPRS International Journal of Geo-Information, 14</em>, 66.
+        <br><span style="color:var(--accent); font-size:11px; margin-top:4px; display:block;">→ Penggunaan Kernel Density Analysis, Global & Local Moran's I, serta Choropleth Map untuk menganalisis distribusi dan pola spasial fasilitas pendidikan — metodologi yang diadaptasi dalam penelitian ini untuk perkawinan anak di Sulawesi.</span>
+      </div>
+    </div>
+
+    <div class="ref-item">
+      <div class="ref-num">2</div>
+      <div class="ref-text">
+        <strong>Getis, A. (2010).</strong> Spatial autocorrelation. In <em>Handbook of Applied Spatial Analysis.</em> Springer, Berlin/Heidelberg (pp. 255–278).
+        <br><span style="color:var(--accent); font-size:11px; margin-top:4px; display:block;">→ Fondasi teoritis Global Moran's I dan LISA yang digunakan dalam penelitian ini (dikutip dalam Wei et al., 2025 sebagai Referensi [76]).</span>
+      </div>
+    </div>
+
+    <div class="ref-item">
+      <div class="ref-num">3</div>
+      <div class="ref-text">
+        <strong>Brunsdon, C.; Fotheringham, A.S.; Charlton, M.E. (1996).</strong> Geographically Weighted Regression: A Method for Exploring Spatial Nonstationarity. <em>International Encyclopedia of Human Geography, 28</em>, 281–298.
+        <br><span style="color:var(--accent); font-size:11px; margin-top:4px; display:block;">→ Landasan metode GWR yang digunakan Wei et al. (2025) untuk menganalisis faktor penjelas distribusi spasial — relevan jika penelitian berlanjut ke tujuan analisis faktor.</span>
+      </div>
+    </div>
+
+    <div class="ref-item">
+      <div class="ref-num">4</div>
+      <div class="ref-text">
+        <strong>West, M. (1991).</strong> Kernel Density Estimation and Marginalization Consistency. <em>Biometrika, 78</em>, 421–425.
+        <br><span style="color:var(--accent); font-size:11px; margin-top:4px; display:block;">→ Landasan Kernel Density Analysis yang digunakan Wei et al. (2025) untuk visualisasi konsentrasi fasilitas (dikutip sebagai Referensi [75]).</span>
+      </div>
+    </div>
+
+    <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border); font-size:12px; color:var(--muted); line-height:1.7;">
+      <strong style="color:white;">Catatan:</strong> Kerangka metodologis dalam Wei et al. (2025) — menggunakan GIS-based kernel density analysis, spatial autocorrelation (Global dan Local Moran's I), serta choropleth map untuk menganalisis fasilitas pendidikan di 9 provinsi Cekungan Sungai Kuning — secara langsung dapat diadaptasi untuk menganalisis pola dan persebaran spasial perkawinan anak di kabupaten/kota Pulau Sulawesi. Analisis ini membutuhkan software ArcGIS atau GeoDa.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
