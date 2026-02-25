@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estimasi SAE — Penduga Langsung Kabupaten/Kota</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e29;
+  --card: #1e2230;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.04);
+  --text: #e8eaf0;
+  --text2: #9098b0;
+  --text3: #5a6080;
+  --cyan: #00d4d4;
+  --cyan2: #00a8a8;
+  --amber: #f0a03c;
+  --amber2: #c07820;
+  --rose: #f0556e;
+  --rose2: #c03050;
+  --green: #40d080;
+  --green2: #28a060;
+  --violet: #9080f0;
+  --cut: #f0a03c;
+  --shadow: 0 4px 32px rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.6; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:3px; }
+
+/* TOPBAR */
+.topbar {
+  position: sticky; top:0; z-index:100;
+  background: rgba(13,15,20,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 0;
+  height: 56px;
+}
+.topbar-brand { font-family:'Syne',sans-serif; font-weight:800; font-size:15px; color:var(--cyan); letter-spacing:0.5px; margin-right:auto; }
+.topbar-brand span { color:var(--text2); font-weight:400; }
+.tab-btn {
+  height:56px; padding:0 20px; background:none; border:none; cursor:pointer;
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500;
+  color:var(--text3); border-bottom:2px solid transparent;
+  transition:all 0.2s; white-space:nowrap;
+}
+.tab-btn:hover { color:var(--text2); }
+.tab-btn.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+
+/* HERO */
+.hero {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 48px 36px;
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:'SAE 531';
+  position:absolute; right:-10px; top:-20px;
+  font-family:'Syne',sans-serif; font-size:130px; font-weight:800;
+  color:rgba(255,255,255,0.02); pointer-events:none; line-height:1;
+}
+.hero-tag { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); font-weight:600; margin-bottom:12px; font-family:'JetBrains Mono',monospace; }
+.hero h1 { font-family:'Syne',sans-serif; font-size:clamp(24px,3vw,40px); font-weight:800; line-height:1.1; margin-bottom:8px; }
+.hero h1 em { color:var(--cyan); font-style:normal; }
+.hero-sub { font-size:14px; color:var(--text2); max-width:560px; margin-bottom:28px; }
+.hero-stats { display:flex; gap:24px; flex-wrap:wrap; }
+.stat-chip {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:6px; padding:10px 18px;
+  display:flex; flex-direction:column; gap:2px;
+}
+.stat-chip .s-val { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; }
+.stat-chip .s-lbl { font-size:10px; color:var(--text3); letter-spacing:1px; text-transform:uppercase; }
+.stat-chip.c { --col:var(--cyan); }
+.stat-chip.a { --col:var(--amber); }
+.stat-chip.g { --col:var(--green); }
+.stat-chip.r { --col:var(--rose); }
+.stat-chip .s-val { color:var(--col); }
+
+/* FILTERS ROW */
+.filters {
+  padding: 16px 32px;
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+}
+.filter-label { font-size:11px; color:var(--text3); letter-spacing:1px; text-transform:uppercase; font-weight:600; }
+.search-box {
+  background:var(--bg3); border:1px solid var(--border2);
+  border-radius:5px; padding:6px 12px;
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px;
+  width:200px; outline:none; transition:border 0.2s;
+}
+.search-box:focus { border-color:var(--cyan); }
+.search-box::placeholder { color:var(--text3); }
+select.search-box { cursor:pointer; }
+.sort-btn {
+  background:var(--bg3); border:1px solid var(--border2);
+  border-radius:5px; padding:6px 14px;
+  color:var(--text2); font-size:12px; cursor:pointer;
+  transition:all 0.2s; font-family:'DM Sans',sans-serif;
+}
+.sort-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+.sort-btn.active { background:rgba(0,212,212,0.1); border-color:var(--cyan); color:var(--cyan); }
+.cut-legend { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text3); }
+.cut-line-demo { width:24px; height:2px; background:var(--cut); border-radius:1px; }
+
+/* CONTENT AREA */
+.content { padding:24px 32px 48px; }
+
+/* YEAR PANEL */
+.year-panel { display:none; }
+.year-panel.active { display:block; }
+
+.year-header {
+  display:flex; align-items:center; gap:16px; margin-bottom:20px;
+}
+.year-badge {
+  font-family:'Syne',sans-serif; font-size:28px; font-weight:800;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.year-info { display:flex; gap:12px; flex-wrap:wrap; }
+.yinfo-chip { background:var(--bg3); border:1px solid var(--border2); border-radius:4px; padding:4px 10px; font-size:11px; color:var(--text2); font-family:'JetBrains Mono',monospace; }
+.yinfo-chip span { color:var(--cyan); }
+
+/* CHART CONTAINER */
+.chart-section {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.chart-header {
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:12px;
+}
+.chart-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; }
+.chart-subtitle { font-size:11px; color:var(--text3); margin-left:auto; font-family:'JetBrains Mono',monospace; }
+.chart-body { padding:16px 20px 20px; position:relative; overflow-x:auto; }
+
+/* BAR CHART */
+.bar-chart-wrap { position:relative; }
+.bar-chart-scroll { overflow-x:auto; padding-bottom:8px; }
+.bar-chart-svg-wrap { min-width:1600px; }
+
+/* TABLE */
+.data-table {
+  width:100%; border-collapse:collapse; font-size:12.5px;
+}
+.data-table th {
+  background:var(--bg3); color:var(--text3);
+  padding:8px 12px; text-align:left;
+  font-size:10px; letter-spacing:1px; text-transform:uppercase; font-weight:600;
+  border-bottom:1px solid var(--border); white-space:nowrap;
+  cursor:pointer; user-select:none;
+}
+.data-table th:hover { color:var(--cyan); }
+.data-table td {
+  padding:8px 12px; border-bottom:1px solid var(--border2);
+  vertical-align:middle; white-space:nowrap;
+}
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tr:hover td { background:rgba(255,255,255,0.02); }
+
+.kako-cell { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cyan); }
+.name-cell { color:var(--text2); max-width:200px; overflow:hidden; text-overflow:ellipsis; }
+.est-cell { font-weight:600; font-family:'JetBrains Mono',monospace; }
+.rse-badge {
+  display:inline-block; padding:2px 7px; border-radius:3px;
+  font-size:11px; font-family:'JetBrains Mono',monospace; font-weight:600;
+}
+.rse-low { background:rgba(64,208,128,0.15); color:var(--green); }
+.rse-mid { background:rgba(240,160,60,0.15); color:var(--amber); }
+.rse-high { background:rgba(240,85,110,0.15); color:var(--rose); }
+.ci-bar {
+  display:flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3);
+}
+
+/* NORMALITY TABLE */
+.norm-section { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.norm-header { padding:14px 20px; border-bottom:1px solid var(--border); }
+.norm-header h3 { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; }
+.norm-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
+.norm-year-col { border-right:1px solid var(--border); }
+.norm-year-col:last-child { border-right:none; }
+.norm-year-label { padding:10px 16px; background:var(--bg3); font-family:'Syne',sans-serif; font-size:13px; font-weight:700; border-bottom:1px solid var(--border); }
+.norm-row { display:flex; padding:10px 16px; border-bottom:1px solid var(--border2); gap:12px; align-items:center; }
+.norm-row:last-child { border-bottom:none; }
+.norm-metode { font-size:12px; color:var(--text2); flex:1; }
+.norm-pval { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3); }
+.norm-badge { font-size:10px; padding:2px 8px; border-radius:100px; font-weight:600; white-space:nowrap; }
+.norm-tolak { background:rgba(240,85,110,0.15); color:var(--rose); }
+.norm-gagal { background:rgba(64,208,128,0.15); color:var(--green); }
+
+/* SUMMARY PANEL */
+.summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.sum-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
+.sum-card .sc-label { font-size:10px; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+.sum-card .sc-val { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; }
+.sum-card .sc-sub { font-size:11px; color:var(--text3); margin-top:4px; }
+.sc-cyan .sc-val { color:var(--cyan); }
+.sc-amber .sc-val { color:var(--amber); }
+.sc-rose .sc-val { color:var(--rose); }
+.sc-green .sc-val { color:var(--green); }
+
+/* TREND SECTION */
+.trend-section { background:var(--card); border:1px solid var(--border); border-radius:10px; margin-bottom:20px; overflow:hidden; }
+
+/* SCATTER */
+.scatter-section { background:var(--card); border:1px solid var(--border); border-radius:10px; margin-bottom:20px; overflow:hidden; }
+
+/* TOOLTIP */
+#tooltip {
+  position:fixed; z-index:1000; pointer-events:none;
+  background:rgba(19,22,30,0.97); border:1px solid var(--border);
+  border-radius:8px; padding:10px 14px; max-width:240px;
+  font-size:12px; line-height:1.6;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  opacity:0; transition:opacity 0.15s;
+}
+#tooltip.show { opacity:1; }
+#tooltip .tt-name { font-weight:600; color:var(--cyan); margin-bottom:4px; }
+#tooltip .tt-row { display:flex; justify-content:space-between; gap:16px; }
+#tooltip .tt-key { color:var(--text3); }
+#tooltip .tt-val { font-family:'JetBrains Mono',monospace; color:var(--text); }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.year-panel.active { animation:fadeUp 0.3s ease; }
+
+@media(max-width:768px) {
+  .hero { padding:24px 20px; }
+  .content { padding:16px 16px 40px; }
+  .filters { padding:12px 16px; }
+  .topbar { padding:0 16px; }
+  .summary-grid { grid-template-columns:repeat(2,1fr); }
+  .norm-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-row"><span class="tt-key">Estimasi</span><span class="tt-val" id="tt-est"></span></div>
+  <div class="tt-row"><span class="tt-key">RSE</span><span class="tt-val" id="tt-rse"></span></div>
+  <div class="tt-row"><span class="tt-key">95% CI</span><span class="tt-val" id="tt-ci"></span></div>
+  <div class="tt-row"><span class="tt-key">SE</span><span class="tt-val" id="tt-se"></span></div>
+  <div class="tt-row"><span class="tt-key">DEFF</span><span class="tt-val" id="tt-deff"></span></div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">ESTIMASI SAE <span>/ Penduga Langsung</span></div>
+  <button class="tab-btn active" onclick="showTab('all')">Ringkasan</button>
+  <button class="tab-btn" onclick="showTab('2023')">2023</button>
+  <button class="tab-btn" onclick="showTab('2024')">2024</button>
+  <button class="tab-btn" onclick="showTab('2025')">2025</button>
+  <button class="tab-btn" onclick="showTab('norm')">Uji Normalitas</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">// Small Area Estimation · Sulawesi</div>
+  <h1>Estimasi Penduga Langsung<br><em>81 Kabupaten/Kota</em></h1>
+  <p class="hero-sub">Visualisasi data RSE, Estimasi, Confidence Interval, dan DEFF untuk tiga tahun pengamatan. Garis <span style="color:var(--amber);font-weight:600;">RSE = 25%</span> ditampilkan sebagai batas presisi.</p>
+  <div class="hero-stats">
+    <div class="stat-chip c"><div class="s-val">81</div><div class="s-lbl">Kab/Kota</div></div>
+    <div class="stat-chip a"><div class="s-val">3</div><div class="s-lbl">Tahun (2023–2025)</div></div>
+    <div class="stat-chip g"><div class="s-val" id="hero-below">—</div><div class="s-lbl">RSE ≤ 25% (2024)</div></div>
+    <div class="stat-chip r"><div class="s-val" id="hero-above">—</div><div class="s-lbl">RSE > 25% (2024)</div></div>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters" id="filter-bar" style="display:none;">
+  <span class="filter-label">Filter:</span>
+  <input class="search-box" type="text" placeholder="Cari kode / nama..." id="search-input" oninput="applyFilter()">
+  <select class="search-box" id="rse-filter" onchange="applyFilter()">
+    <option value="all">Semua RSE</option>
+    <option value="good">RSE ≤ 25%</option>
+    <option value="mid">RSE 25–50%</option>
+    <option value="high">RSE > 50%</option>
+  </select>
+  <button class="sort-btn" id="sort-est" onclick="sortTable('est')">↕ Estimasi</button>
+  <button class="sort-btn" id="sort-rse" onclick="sortTable('rse')">↕ RSE</button>
+  <button class="sort-btn" id="sort-kako" onclick="sortTable('kako')">↕ Kode</button>
+  <div class="cut-legend">
+    <div class="cut-line-demo"></div>
+    <span>Batas RSE 25%</span>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ===== RINGKASAN ===== -->
+  <div class="year-panel active" id="panel-all">
+    <div class="summary-grid" id="sum-grid-all"></div>
+    <div class="trend-section">
+      <div class="chart-header">
+        <div class="chart-title">Tren RSE per Kabupaten/Kota (2023–2025)</div>
+        <div class="chart-subtitle">Hover untuk detail</div>
+      </div>
+      <div class="chart-body">
+        <canvas id="trend-chart" height="320"></canvas>
+      </div>
+    </div>
+    <div class="scatter-section">
+      <div class="chart-header">
+        <div class="chart-title">Scatter: Estimasi vs RSE — Tiga Tahun</div>
+        <div class="chart-subtitle">Warna per tahun · Garis RSE=25</div>
+      </div>
+      <div class="chart-body">
+        <canvas id="scatter-chart" height="340"></canvas>
+      </div>
+    </div>
+    <div class="norm-section" id="norm-section-inline"></div>
+  </div>
+
+  <!-- ===== 2023 ===== -->
+  <div class="year-panel" id="panel-2023">
+    <div class="year-header">
+      <div class="year-badge">2023</div>
+      <div class="year-info" id="yinfo-2023"></div>
+    </div>
+    <div class="summary-grid" id="sum-grid-2023"></div>
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Estimasi &amp; RSE per Kabupaten/Kota · 2023</div>
+        <div class="chart-subtitle">— Garis RSE = 25% · Kiri: Estimasi · Kanan: RSE</div>
+      </div>
+      <div class="chart-body" style="overflow-x:auto;padding-bottom:4px;">
+        <div id="line-2023" style="min-width:1200px;"></div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Distribusi Estimasi · 2023</div>
+        <div class="chart-subtitle">Histogram + KDE · sumbu X = nilai estimasi (%)</div>
+      </div>
+      <div class="chart-body">
+        <div id="hist-2023"></div>
+      </div>
+    </div>
+    <div class="chart-section" style="overflow:hidden;">
+      <div class="chart-header"><div class="chart-title">Tabel Data Lengkap · 2023</div></div>
+      <div style="overflow-x:auto;"><table class="data-table" id="table-2023"></table></div>
+    </div>
+  </div>
+
+  <!-- ===== 2024 ===== -->
+  <div class="year-panel" id="panel-2024">
+    <div class="year-header">
+      <div class="year-badge">2024</div>
+      <div class="year-info" id="yinfo-2024"></div>
+    </div>
+    <div class="summary-grid" id="sum-grid-2024"></div>
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Estimasi &amp; RSE per Kabupaten/Kota · 2024</div>
+        <div class="chart-subtitle">— Garis RSE = 25% · Kiri: Estimasi · Kanan: RSE</div>
+      </div>
+      <div class="chart-body" style="overflow-x:auto;padding-bottom:4px;">
+        <div id="line-2024" style="min-width:1200px;"></div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Distribusi Estimasi · 2024</div>
+        <div class="chart-subtitle">Histogram + KDE · sumbu X = nilai estimasi (%)</div>
+      </div>
+      <div class="chart-body">
+        <div id="hist-2024"></div>
+      </div>
+    </div>
+    <div class="chart-section" style="overflow:hidden;">
+      <div class="chart-header"><div class="chart-title">Tabel Data Lengkap · 2024</div></div>
+      <div style="overflow-x:auto;"><table class="data-table" id="table-2024"></table></div>
+    </div>
+  </div>
+
+  <!-- ===== 2025 ===== -->
+  <div class="year-panel" id="panel-2025">
+    <div class="year-header">
+      <div class="year-badge">2025</div>
+      <div class="year-info" id="yinfo-2025"></div>
+    </div>
+    <div class="summary-grid" id="sum-grid-2025"></div>
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Estimasi &amp; RSE per Kabupaten/Kota · 2025</div>
+        <div class="chart-subtitle">— Garis RSE = 25% · Kiri: Estimasi · Kanan: RSE</div>
+      </div>
+      <div class="chart-body" style="overflow-x:auto;padding-bottom:4px;">
+        <div id="line-2025" style="min-width:1200px;"></div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-header">
+        <div class="chart-title">Distribusi Estimasi · 2025</div>
+        <div class="chart-subtitle">Histogram + KDE · sumbu X = nilai estimasi (%)</div>
+      </div>
+      <div class="chart-body">
+        <div id="hist-2025"></div>
+      </div>
+    </div>
+    <div class="chart-section" style="overflow:hidden;">
+      <div class="chart-header"><div class="chart-title">Tabel Data Lengkap · 2025</div></div>
+      <div style="overflow-x:auto;"><table class="data-table" id="table-2025"></table></div>
+    </div>
+  </div>
+
+  <!-- ===== NORMALITAS ===== -->
+  <div class="year-panel" id="panel-norm">
+    <div class="year-header">
+      <div class="year-badge" style="font-size:20px;">Uji Normalitas</div>
+    </div>
+    <div id="norm-full-section"></div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+// ==================== DATA ====================
+const NAMES = {"7101":"Kab. Bolaang Mongondow","7102":"Kab. Minahasa","7103":"Kab. Kepulauan Sangihe","7104":"Kab. Kepulauan Talaud","7105":"Kab. Minahasa Selatan","7106":"Kab. Minahasa Utara","7107":"Kab. Bolaang Mongondow Utara","7108":"Kab. Siau Tagulandang Biaro","7109":"Kab. Minahasa Tenggara","7110":"Kab. Bolaang Mongondow Selatan","7111":"Kab. Bolaang Mongondow Timur","7171":"Kota Manado","7172":"Kota Bitung","7173":"Kota Tomohon","7174":"Kota Kotamobagu","7201":"Kab. Banggai Kepulauan","7202":"Kab. Banggai","7203":"Kab. Morowali","7204":"Kab. Poso","7205":"Kab. Donggala","7206":"Kab. Toli-Toli","7207":"Kab. Buol","7208":"Kab. Parigi Moutong","7209":"Kab. Tojo Una-Una","7210":"Kab. Sigi","7211":"Kab. Banggai Laut","7212":"Kab. Morowali Utara","7271":"Kota Palu","7301":"Kab. Kepulauan Selayar","7302":"Kab. Bulukumba","7303":"Kab. Bantaeng","7304":"Kab. Jeneponto","7305":"Kab. Takalar","7306":"Kab. Gowa","7307":"Kab. Sinjai","7308":"Kab. Maros","7309":"Kab. Pangkajene dan Kepulauan","7310":"Kab. Barru","7311":"Kab. Bone","7312":"Kab. Soppeng","7313":"Kab. Wajo","7314":"Kab. Sidenreng Rappang","7315":"Kab. Pinrang","7316":"Kab. Enrekang","7317":"Kab. Luwu","7318":"Kab. Tana Toraja","7322":"Kab. Luwu Utara","7325":"Kab. Luwu Timur","7326":"Kab. Toraja Utara","7371":"Kota Makassar","7372":"Kota Parepare","7373":"Kota Palopo","7401":"Kab. Buton","7402":"Kab. Muna","7403":"Kab. Konawe","7404":"Kab. Kolaka","7405":"Kab. Konawe Selatan","7406":"Kab. Bombana","7407":"Kab. Wakatobi","7408":"Kab. Kolaka Utara","7409":"Kab. Buton Utara","7410":"Kab. Konawe Utara","7411":"Kab. Kolaka Timur","7412":"Kab. Konawe Kepulauan","7413":"Kab. Muna Barat","7414":"Kab. Buton Tengah","7415":"Kab. Buton Selatan","7471":"Kota Kendari","7472":"Kota Baubau","7501":"Kab. Boalemo","7502":"Kab. Gorontalo","7503":"Kab. Pohuwato","7504":"Kab. Bone Bolango","7505":"Kab. Gorontalo Utara","7571":"Kota Gorontalo","7601":"Kab. Majene","7602":"Kab. Polewali Mandar","7603":"Kab. Mamasa","7604":"Kab. Mamuju","7605":"Kab. Mamuju Utara","7606":"Kab. Mamuju Tengah"};
+
+const RAW = {"2023":[{"kako":"7101","est":5.84,"se":3.89,"var":15.13,"ci_low":0.0,"ci_up":13.47,"rse":66.57,"deff":1.38},{"kako":"7102","est":5.81,"se":3.39,"var":11.49,"ci_low":0.0,"ci_up":12.45,"rse":58.32,"deff":1.27},{"kako":"7103","est":17.13,"se":6.32,"var":39.94,"ci_low":4.74,"ci_up":29.53,"rse":36.91,"deff":1.31},{"kako":"7104","est":6.62,"se":3.4,"var":11.56,"ci_low":0.0,"ci_up":13.29,"rse":51.39,"deff":0.76},{"kako":"7105","est":21.32,"se":7.49,"var":56.1,"ci_low":6.65,"ci_up":36.0,"rse":35.12,"deff":1.11},{"kako":"7106","est":9.45,"se":4.36,"var":19.01,"ci_low":0.89,"ci_up":18.0,"rse":46.2,"deff":1.46},{"kako":"7107","est":10.08,"se":4.64,"var":21.53,"ci_low":0.99,"ci_up":19.17,"rse":46.0,"deff":1.06},{"kako":"7108","est":9.96,"se":3.8,"var":14.44,"ci_low":2.5,"ci_up":17.41,"rse":38.2,"deff":0.84},{"kako":"7109","est":29.33,"se":8.54,"var":72.93,"ci_low":12.59,"ci_up":46.07,"rse":29.12,"deff":1.65},{"kako":"7110","est":22.01,"se":5.69,"var":32.38,"ci_low":10.86,"ci_up":33.15,"rse":25.84,"deff":1.16},{"kako":"7111","est":28.67,"se":7.74,"var":59.91,"ci_low":13.51,"ci_up":43.83,"rse":26.98,"deff":1.46},{"kako":"7171","est":5.65,"se":2.96,"var":8.76,"ci_low":0.0,"ci_up":11.45,"rse":52.45,"deff":1.42},{"kako":"7172","est":10.8,"se":4.93,"var":24.3,"ci_low":1.13,"ci_up":20.47,"rse":45.69,"deff":1.83},{"kako":"7173","est":3.1,"se":2.86,"var":8.18,"ci_low":0.0,"ci_up":8.7,"rse":92.12,"deff":1.76},{"kako":"7174","est":10.32,"se":4.28,"var":18.32,"ci_low":1.92,"ci_up":18.71,"rse":41.5,"deff":1.18},{"kako":"7201","est":16.14,"se":5.95,"var":35.4,"ci_low":4.48,"ci_up":27.81,"rse":36.88,"deff":1.35},{"kako":"7202","est":2.19,"se":1.15,"var":1.32,"ci_low":0.0,"ci_up":4.45,"rse":52.67,"deff":0.39},{"kako":"7203","est":18.58,"se":8.74,"var":76.39,"ci_low":1.46,"ci_up":35.71,"rse":47.01,"deff":3.06},{"kako":"7204","est":6.65,"se":3.57,"var":12.74,"ci_low":0.0,"ci_up":13.64,"rse":53.65,"deff":0.93},{"kako":"7205","est":14.0,"se":5.1,"var":26.01,"ci_low":4.0,"ci_up":23.99,"rse":36.43,"deff":1.54},{"kako":"7206","est":9.36,"se":4.69,"var":22.0,"ci_low":0.17,"ci_up":18.54,"rse":50.09,"deff":1.54},{"kako":"7207","est":14.4,"se":5.29,"var":27.98,"ci_low":4.03,"ci_up":24.76,"rse":36.74,"deff":1.91},{"kako":"7208","est":11.65,"se":3.37,"var":11.36,"ci_low":5.04,"ci_up":18.25,"rse":28.93,"deff":0.89},{"kako":"7209","est":2.39,"se":1.79,"var":3.2,"ci_low":0.0,"ci_up":5.91,"rse":75.02,"deff":0.91},{"kako":"7210","est":11.46,"se":4.31,"var":18.58,"ci_low":3.0,"ci_up":19.92,"rse":37.65,"deff":1.35},{"kako":"7211","est":6.88,"se":2.7,"var":7.29,"ci_low":1.58,"ci_up":12.18,"rse":39.3,"deff":0.68},{"kako":"7212","est":11.79,"se":5.6,"var":31.36,"ci_low":0.82,"ci_up":22.75,"rse":47.47,"deff":1.18},{"kako":"7271","est":4.76,"se":2.76,"var":7.62,"ci_low":0.0,"ci_up":10.16,"rse":57.92,"deff":1.65},{"kako":"7301","est":3.76,"se":1.75,"var":3.06,"ci_low":0.33,"ci_up":7.2,"rse":46.51,"deff":0.49},{"kako":"7302","est":8.78,"se":2.98,"var":8.88,"ci_low":2.94,"ci_up":14.61,"rse":33.91,"deff":0.83},{"kako":"7303","est":12.3,"se":4.45,"var":19.8,"ci_low":3.57,"ci_up":21.03,"rse":36.21,"deff":1.41},{"kako":"7304","est":12.1,"se":5.45,"var":29.7,"ci_low":1.42,"ci_up":22.79,"rse":45.03,"deff":1.6},{"kako":"7305","est":2.82,"se":1.37,"var":1.88,"ci_low":0.13,"ci_up":5.51,"rse":48.73,"deff":0.53},{"kako":"7306","est":2.38,"se":1.88,"var":3.53,"ci_low":0.0,"ci_up":6.06,"rse":78.86,"deff":1.72},{"kako":"7307","est":2.92,"se":2.84,"var":8.07,"ci_low":0.0,"ci_up":8.49,"rse":97.21,"deff":2.04},{"kako":"7308","est":4.54,"se":2.38,"var":5.66,"ci_low":0.0,"ci_up":9.2,"rse":52.31,"deff":0.94},{"kako":"7309","est":9.86,"se":3.05,"var":9.3,"ci_low":3.89,"ci_up":15.83,"rse":30.9,"deff":0.76},{"kako":"7310","est":10.16,"se":5.15,"var":26.52,"ci_low":0.06,"ci_up":20.26,"rse":50.72,"deff":1.71},{"kako":"7311","est":10.59,"se":3.69,"var":13.62,"ci_low":3.36,"ci_up":17.82,"rse":34.83,"deff":1.25},{"kako":"7312","est":0.99,"se":0.83,"var":0.69,"ci_low":0.0,"ci_up":2.61,"rse":83.29,"deff":0.43},{"kako":"7313","est":4.4,"se":2.5,"var":6.25,"ci_low":0.0,"ci_up":9.3,"rse":56.76,"deff":0.89},{"kako":"7314","est":12.4,"se":4.23,"var":17.89,"ci_low":4.12,"ci_up":20.69,"rse":34.06,"deff":1.27},{"kako":"7315","est":5.56,"se":2.61,"var":6.81,"ci_low":0.44,"ci_up":10.68,"rse":47.0,"deff":1.01},{"kako":"7316","est":11.28,"se":4.42,"var":19.54,"ci_low":2.63,"ci_up":19.94,"rse":39.15,"deff":0.94},{"kako":"7317","est":5.78,"se":2.45,"var":6.0,"ci_low":0.98,"ci_up":10.59,"rse":42.39,"deff":1.0},{"kako":"7318","est":20.42,"se":5.71,"var":32.6,"ci_low":9.22,"ci_up":31.62,"rse":27.97,"deff":1.07},{"kako":"7322","est":15.5,"se":6.01,"var":36.12,"ci_low":3.72,"ci_up":27.27,"rse":38.77,"deff":2.11},{"kako":"7325","est":16.84,"se":4.98,"var":24.8,"ci_low":7.07,"ci_up":26.61,"rse":29.59,"deff":1.2},{"kako":"7326","est":12.33,"se":7.83,"var":61.31,"ci_low":0.0,"ci_up":27.69,"rse":63.51,"deff":3.84},{"kako":"7371","est":5.38,"se":2.49,"var":6.2,"ci_low":0.5,"ci_up":10.25,"rse":46.26,"deff":1.94},{"kako":"7372","est":1.78,"se":1.05,"var":1.1,"ci_low":0.0,"ci_up":3.84,"rse":59.02,"deff":0.55},{"kako":"7373","est":9.4,"se":3.38,"var":11.42,"ci_low":2.77,"ci_up":16.03,"rse":35.99,"deff":1.14},{"kako":"7401","est":11.3,"se":4.18,"var":17.47,"ci_low":3.11,"ci_up":19.5,"rse":37.0,"deff":1.32},{"kako":"7402","est":14.42,"se":5.65,"var":31.92,"ci_low":3.35,"ci_up":25.48,"rse":39.16,"deff":1.09},{"kako":"7403","est":20.7,"se":6.75,"var":45.56,"ci_low":7.47,"ci_up":33.94,"rse":32.62,"deff":1.79},{"kako":"7404","est":5.02,"se":3.26,"var":10.63,"ci_low":0.0,"ci_up":11.41,"rse":64.91,"deff":1.57},{"kako":"7405","est":15.81,"se":5.16,"var":26.63,"ci_low":5.7,"ci_up":25.93,"rse":32.64,"deff":1.35},{"kako":"7406","est":15.23,"se":5.26,"var":27.67,"ci_low":4.93,"ci_up":25.53,"rse":34.52,"deff":0.99},{"kako":"7407","est":11.52,"se":5.64,"var":31.81,"ci_low":0.47,"ci_up":22.56,"rse":48.93,"deff":2.35},{"kako":"7408","est":20.07,"se":7.61,"var":57.91,"ci_low":5.15,"ci_up":34.99,"rse":37.92,"deff":1.78},{"kako":"7409","est":20.13,"se":5.74,"var":32.95,"ci_low":8.88,"ci_up":31.37,"rse":28.51,"deff":0.98},{"kako":"7410","est":17.6,"se":4.68,"var":21.9,"ci_low":8.44,"ci_up":26.77,"rse":26.57,"deff":1.13},{"kako":"7411","est":6.42,"se":3.52,"var":12.39,"ci_low":0.0,"ci_up":13.33,"rse":54.88,"deff":1.13},{"kako":"7412","est":21.3,"se":5.82,"var":33.87,"ci_low":9.89,"ci_up":32.71,"rse":27.33,"deff":0.97},{"kako":"7413","est":7.99,"se":4.14,"var":17.14,"ci_low":0.0,"ci_up":16.11,"rse":51.84,"deff":0.83},{"kako":"7414","est":15.49,"se":5.0,"var":25.0,"ci_low":5.68,"ci_up":25.29,"rse":32.3,"deff":1.35},{"kako":"7415","est":7.46,"se":2.92,"var":8.53,"ci_low":1.74,"ci_up":13.19,"rse":39.12,"deff":1.22},{"kako":"7471","est":2.76,"se":1.83,"var":3.35,"ci_low":0.0,"ci_up":6.35,"rse":66.37,"deff":1.26},{"kako":"7472","est":3.99,"se":2.62,"var":6.86,"ci_low":0.0,"ci_up":9.12,"rse":65.51,"deff":1.69},{"kako":"7501","est":11.6,"se":4.5,"var":20.25,"ci_low":2.77,"ci_up":20.42,"rse":38.84,"deff":1.16},{"kako":"7502","est":11.57,"se":4.02,"var":16.16,"ci_low":3.7,"ci_up":19.45,"rse":34.73,"deff":1.35},{"kako":"7503","est":22.79,"se":6.53,"var":42.64,"ci_low":9.98,"ci_up":35.59,"rse":28.67,"deff":1.52},{"kako":"7504","est":8.67,"se":3.29,"var":10.82,"ci_low":2.22,"ci_up":15.12,"rse":37.95,"deff":1.18},{"kako":"7505","est":19.15,"se":6.97,"var":48.58,"ci_low":5.49,"ci_up":32.82,"rse":36.4,"deff":1.98},{"kako":"7571","est":1.51,"se":0.8,"var":0.64,"ci_low":0.0,"ci_up":3.07,"rse":53.01,"deff":0.35},{"kako":"7601","est":9.66,"se":3.74,"var":13.99,"ci_low":2.33,"ci_up":17.0,"rse":38.72,"deff":1.61},{"kako":"7602","est":6.19,"se":2.24,"var":5.02,"ci_low":1.79,"ci_up":10.58,"rse":36.24,"deff":0.78},{"kako":"7603","est":15.32,"se":4.59,"var":21.07,"ci_low":6.32,"ci_up":24.32,"rse":29.97,"deff":0.95},{"kako":"7604","est":7.58,"se":3.12,"var":9.73,"ci_low":1.46,"ci_up":13.7,"rse":41.2,"deff":1.15},{"kako":"7605","est":23.28,"se":5.01,"var":25.1,"ci_low":13.45,"ci_up":33.1,"rse":21.54,"deff":0.92},{"kako":"7606","est":16.98,"se":6.08,"var":36.97,"ci_low":5.07,"ci_up":28.89,"rse":35.78,"deff":1.67}],"2024":[{"kako":"7101","est":12.11,"se":7.5,"var":56.25,"ci_low":0.0,"ci_up":26.81,"rse":61.95,"deff":3.03},{"kako":"7102","est":5.42,"se":2.37,"var":5.62,"ci_low":0.77,"ci_up":10.06,"rse":43.73,"deff":0.74},{"kako":"7103","est":11.4,"se":5.55,"var":30.8,"ci_low":0.53,"ci_up":22.27,"rse":48.66,"deff":1.63},{"kako":"7104","est":6.18,"se":3.92,"var":15.37,"ci_low":0.0,"ci_up":13.86,"rse":63.4,"deff":0.91},{"kako":"7105","est":12.58,"se":5.23,"var":27.35,"ci_low":2.33,"ci_up":22.83,"rse":41.57,"deff":0.88},{"kako":"7106","est":10.52,"se":5.1,"var":26.01,"ci_low":0.52,"ci_up":20.53,"rse":48.5,"deff":1.59},{"kako":"7107","est":20.92,"se":7.39,"var":54.61,"ci_low":6.44,"ci_up":35.4,"rse":35.32,"deff":1.89},{"kako":"7108","est":12.57,"se":5.48,"var":30.03,"ci_low":1.83,"ci_up":23.32,"rse":43.59,"deff":1.46},{"kako":"7109","est":18.45,"se":7.25,"var":52.56,"ci_low":4.24,"ci_up":32.66,"rse":39.29,"deff":1.74},{"kako":"7110","est":16.57,"se":7.94,"var":63.04,"ci_low":1.02,"ci_up":32.13,"rse":47.9,"deff":2.66},{"kako":"7111","est":19.72,"se":5.12,"var":26.21,"ci_low":9.67,"ci_up":29.76,"rse":25.99,"deff":0.97},{"kako":"7171","est":3.75,"se":2.68,"var":7.18,"ci_low":0.0,"ci_up":9.01,"rse":71.44,"deff":1.62},{"kako":"7172","est":11.21,"se":5.06,"var":25.6,"ci_low":1.3,"ci_up":21.12,"rse":45.1,"deff":1.94},{"kako":"7173","est":0.08,"se":0.08,"var":0.01,"ci_low":0.0,"ci_up":0.24,"rse":101.66,"deff":0.04},{"kako":"7174","est":7.35,"se":3.52,"var":12.39,"ci_low":0.45,"ci_up":14.25,"rse":47.91,"deff":1.09},{"kako":"7201","est":9.32,"se":4.88,"var":23.81,"ci_low":0.0,"ci_up":18.88,"rse":52.33,"deff":1.28},{"kako":"7202","est":10.93,"se":4.18,"var":17.47,"ci_low":2.73,"ci_up":19.13,"rse":38.29,"deff":1.21},{"kako":"7203","est":1.98,"se":1.58,"var":2.5,"ci_low":0.0,"ci_up":5.08,"rse":79.81,"deff":0.64},{"kako":"7204","est":3.89,"se":2.54,"var":6.45,"ci_low":0.0,"ci_up":8.87,"rse":65.35,"deff":0.85},{"kako":"7205","est":8.31,"se":3.71,"var":13.76,"ci_low":1.05,"ci_up":15.57,"rse":44.6,"deff":1.42},{"kako":"7206","est":11.71,"se":4.39,"var":19.27,"ci_low":3.11,"ci_up":20.31,"rse":37.46,"deff":1.41},{"kako":"7207","est":18.14,"se":5.33,"var":28.41,"ci_low":7.7,"ci_up":28.58,"rse":29.36,"deff":1.76},{"kako":"7208","est":13.52,"se":5.25,"var":27.56,"ci_low":3.22,"ci_up":23.82,"rse":38.88,"deff":1.87},{"kako":"7209","est":10.85,"se":4.67,"var":21.81,"ci_low":1.69,"ci_up":20.01,"rse":43.08,"deff":1.51},{"kako":"7210","est":7.53,"se":3.67,"var":13.47,"ci_low":0.34,"ci_up":14.71,"rse":48.73,"deff":1.38},{"kako":"7211","est":24.05,"se":9.74,"var":94.87,"ci_low":4.95,"ci_up":43.14,"rse":40.51,"deff":2.27},{"kako":"7212","est":8.7,"se":5.04,"var":25.4,"ci_low":0.0,"ci_up":18.58,"rse":58.0,"deff":1.46},{"kako":"7271","est":2.73,"se":1.73,"var":2.99,"ci_low":0.0,"ci_up":6.13,"rse":63.61,"deff":1.21},{"kako":"7301","est":1.56,"se":0.96,"var":0.92,"ci_low":0.0,"ci_up":3.44,"rse":61.32,"deff":0.41},{"kako":"7302","est":5.21,"se":2.74,"var":7.51,"ci_low":0.0,"ci_up":10.58,"rse":52.61,"deff":1.02},{"kako":"7303","est":8.07,"se":2.67,"var":7.13,"ci_low":2.83,"ci_up":13.32,"rse":33.12,"deff":0.76},{"kako":"7304","est":15.95,"se":6.43,"var":41.34,"ci_low":3.35,"ci_up":28.55,"rse":40.31,"deff":2.39},{"kako":"7305","est":7.18,"se":4.31,"var":18.58,"ci_low":0.0,"ci_up":15.63,"rse":60.06,"deff":2.02},{"kako":"7306","est":11.24,"se":3.62,"var":13.1,"ci_low":4.15,"ci_up":18.34,"rse":32.2,"deff":1.3},{"kako":"7307","est":3.13,"se":2.16,"var":4.67,"ci_low":0.0,"ci_up":7.37,"rse":68.99,"deff":1.32},{"kako":"7308","est":7.6,"se":3.36,"var":11.29,"ci_low":1.02,"ci_up":14.18,"rse":44.17,"deff":1.16},{"kako":"7309","est":6.82,"se":2.46,"var":6.05,"ci_low":1.99,"ci_up":11.64,"rse":36.14,"deff":0.67},{"kako":"7310","est":16.2,"se":6.84,"var":46.79,"ci_low":2.8,"ci_up":29.6,"rse":42.2,"deff":1.49},{"kako":"7311","est":10.35,"se":5.19,"var":26.94,"ci_low":0.17,"ci_up":20.52,"rse":50.18,"deff":3.39},{"kako":"7312","est":1.11,"se":0.64,"var":0.41,"ci_low":0.0,"ci_up":2.36,"rse":57.11,"deff":0.24},{"kako":"7313","est":8.13,"se":3.7,"var":13.69,"ci_low":0.88,"ci_up":15.38,"rse":45.48,"deff":1.08},{"kako":"7314","est":13.93,"se":4.74,"var":22.47,"ci_low":4.64,"ci_up":23.21,"rse":34.01,"deff":1.51},{"kako":"7315","est":7.22,"se":3.75,"var":14.06,"ci_low":0.0,"ci_up":14.56,"rse":51.92,"deff":1.58},{"kako":"7316","est":7.63,"se":3.78,"var":14.29,"ci_low":0.23,"ci_up":15.03,"rse":49.5,"deff":0.75},{"kako":"7317","est":8.18,"se":2.47,"var":6.1,"ci_low":3.34,"ci_up":13.02,"rse":30.19,"deff":0.81},{"kako":"7318","est":7.27,"se":3.58,"var":12.82,"ci_low":0.26,"ci_up":14.28,"rse":49.23,"deff":1.02},{"kako":"7322","est":6.38,"se":2.67,"var":7.13,"ci_low":1.15,"ci_up":11.61,"rse":41.79,"deff":0.59},{"kako":"7325","est":21.97,"se":5.04,"var":25.4,"ci_low":12.09,"ci_up":31.85,"rse":22.94,"deff":1.09},{"kako":"7326","est":18.92,"se":6.3,"var":39.69,"ci_low":6.57,"ci_up":31.27,"rse":33.3,"deff":1.88},{"kako":"7371","est":4.02,"se":2.06,"var":4.24,"ci_low":0.0,"ci_up":8.06,"rse":51.29,"deff":1.78},{"kako":"7372","est":3.73,"se":1.82,"var":3.31,"ci_low":0.15,"ci_up":7.3,"rse":48.93,"deff":0.86},{"kako":"7373","est":5.65,"se":2.36,"var":5.57,"ci_low":1.03,"ci_up":10.28,"rse":41.76,"deff":0.85},{"kako":"7401","est":6.43,"se":2.85,"var":8.12,"ci_low":0.84,"ci_up":12.02,"rse":44.36,"deff":1.09},{"kako":"7402","est":5.08,"se":3.22,"var":10.37,"ci_low":0.0,"ci_up":11.39,"rse":63.27,"deff":1.02},{"kako":"7403","est":14.14,"se":5.31,"var":28.2,"ci_low":3.73,"ci_up":24.56,"rse":37.58,"deff":1.43},{"kako":"7404","est":10.04,"se":4.43,"var":19.62,"ci_low":1.36,"ci_up":18.73,"rse":44.12,"deff":1.55},{"kako":"7405","est":12.09,"se":6.48,"var":41.99,"ci_low":0.0,"ci_up":24.78,"rse":53.58,"deff":2.42},{"kako":"7406","est":15.32,"se":5.22,"var":27.25,"ci_low":5.09,"ci_up":25.54,"rse":34.07,"deff":0.74},{"kako":"7407","est":12.2,"se":6.94,"var":48.16,"ci_low":0.0,"ci_up":25.8,"rse":56.85,"deff":3.16},{"kako":"7408","est":20.71,"se":7.16,"var":51.27,"ci_low":6.68,"ci_up":34.75,"rse":34.58,"deff":1.64},{"kako":"7409","est":18.73,"se":6.24,"var":38.94,"ci_low":6.5,"ci_up":30.97,"rse":33.32,"deff":1.02},{"kako":"7410","est":19.99,"se":6.74,"var":45.43,"ci_low":6.79,"ci_up":33.19,"rse":33.7,"deff":1.83},{"kako":"7411","est":6.7,"se":2.81,"var":7.9,"ci_low":1.2,"ci_up":12.21,"rse":41.87,"deff":0.62},{"kako":"7412","est":15.84,"se":6.22,"var":38.69,"ci_low":3.64,"ci_up":28.04,"rse":39.28,"deff":1.33},{"kako":"7413","est":9.5,"se":4.71,"var":22.18,"ci_low":0.27,"ci_up":18.74,"rse":49.59,"deff":1.13},{"kako":"7414","est":7.98,"se":4.6,"var":21.16,"ci_low":0.0,"ci_up":17.01,"rse":57.65,"deff":1.92},{"kako":"7415","est":3.88,"se":2.23,"var":4.97,"ci_low":0.0,"ci_up":8.26,"rse":57.47,"deff":1.03},{"kako":"7471","est":4.75,"se":2.34,"var":5.48,"ci_low":0.17,"ci_up":9.34,"rse":49.23,"deff":1.26},{"kako":"7472","est":2.16,"se":1.78,"var":3.17,"ci_low":0.0,"ci_up":5.66,"rse":82.43,"deff":1.3},{"kako":"7501","est":16.03,"se":5.47,"var":29.92,"ci_low":5.31,"ci_up":26.76,"rse":34.12,"deff":1.58},{"kako":"7502","est":5.51,"se":3.05,"var":9.3,"ci_low":0.0,"ci_up":11.49,"rse":55.28,"deff":1.65},{"kako":"7503","est":12.95,"se":4.92,"var":24.21,"ci_low":3.31,"ci_up":22.59,"rse":38.0,"deff":1.56},{"kako":"7504","est":10.13,"se":4.0,"var":16.0,"ci_low":2.28,"ci_up":17.98,"rse":39.54,"deff":1.57},{"kako":"7505","est":8.08,"se":4.33,"var":18.75,"ci_low":0.0,"ci_up":16.56,"rse":53.52,"deff":1.3},{"kako":"7571","est":0.37,"se":0.37,"var":0.14,"ci_low":0.0,"ci_up":1.1,"rse":101.39,"deff":0.36},{"kako":"7601","est":7.37,"se":3.05,"var":9.3,"ci_low":1.38,"ci_up":13.35,"rse":41.47,"deff":1.25},{"kako":"7602","est":4.78,"se":2.03,"var":4.12,"ci_low":0.81,"ci_up":8.75,"rse":42.35,"deff":0.9},{"kako":"7603","est":12.42,"se":6.19,"var":38.32,"ci_low":0.29,"ci_up":24.56,"rse":49.84,"deff":1.71},{"kako":"7604","est":14.47,"se":4.25,"var":18.06,"ci_low":6.13,"ci_up":22.8,"rse":29.39,"deff":1.22},{"kako":"7605","est":16.42,"se":4.86,"var":23.62,"ci_low":6.89,"ci_up":25.94,"rse":29.6,"deff":1.04},{"kako":"7606","est":14.2,"se":5.75,"var":33.06,"ci_low":2.93,"ci_up":25.48,"rse":40.49,"deff":1.7}],"2025":[{"kako":"7101","est":11.89,"se":7.37,"var":54.32,"ci_low":0.0,"ci_up":26.34,"rse":62.01,"deff":2.93},{"kako":"7102","est":2.53,"se":1.73,"var":2.99,"ci_low":0.0,"ci_up":5.93,"rse":68.49,"deff":0.53},{"kako":"7103","est":8.25,"se":4.57,"var":20.88,"ci_low":0.0,"ci_up":17.21,"rse":55.39,"deff":1.2},{"kako":"7104","est":10.47,"se":8.3,"var":68.89,"ci_low":0.0,"ci_up":26.74,"rse":79.24,"deff":2.61},{"kako":"7105","est":12.53,"se":6.91,"var":47.75,"ci_low":0.0,"ci_up":26.06,"rse":55.12,"deff":1.67},{"kako":"7106","est":2.43,"se":1.5,"var":2.25,"ci_low":0.0,"ci_up":5.37,"rse":61.62,"deff":0.66},{"kako":"7107","est":12.91,"se":6.49,"var":42.12,"ci_low":0.19,"ci_up":25.64,"rse":50.28,"deff":1.44},{"kako":"7108","est":2.21,"se":1.51,"var":2.28,"ci_low":0.0,"ci_up":5.16,"rse":68.04,"deff":0.31},{"kako":"7109","est":7.94,"se":3.33,"var":11.09,"ci_low":1.41,"ci_up":14.48,"rse":41.99,"deff":0.7},{"kako":"7110","est":22.25,"se":6.72,"var":45.15,"ci_low":9.08,"ci_up":35.41,"rse":30.19,"deff":1.39},{"kako":"7111","est":14.57,"se":7.61,"var":57.91,"ci_low":0.0,"ci_up":29.49,"rse":52.22,"deff":2.08},{"kako":"7171","est":2.56,"se":1.88,"var":3.53,"ci_low":0.0,"ci_up":6.24,"rse":73.46,"deff":1.32},{"kako":"7172","est":10.71,"se":6.15,"var":37.82,"ci_low":0.0,"ci_up":22.76,"rse":57.38,"deff":2.99},{"kako":"7173","est":4.1,"se":3.93,"var":15.44,"ci_low":0.0,"ci_up":11.8,"rse":95.78,"deff":2.02},{"kako":"7174","est":10.7,"se":4.86,"var":23.62,"ci_low":1.18,"ci_up":20.22,"rse":45.4,"deff":1.63},{"kako":"7201","est":2.47,"se":2.43,"var":5.9,"ci_low":0.0,"ci_up":7.24,"rse":98.4,"deff":1.17},{"kako":"7202","est":7.29,"se":3.02,"var":9.12,"ci_low":1.38,"ci_up":13.2,"rse":41.34,"deff":1.11},{"kako":"7203","est":9.12,"se":4.96,"var":24.6,"ci_low":0.0,"ci_up":18.83,"rse":54.35,"deff":1.32},{"kako":"7204","est":1.43,"se":1.13,"var":1.28,"ci_low":0.0,"ci_up":3.66,"rse":79.22,"deff":0.56},{"kako":"7205","est":15.25,"se":5.14,"var":26.42,"ci_low":5.17,"ci_up":25.33,"rse":33.72,"deff":1.42},{"kako":"7206","est":9.69,"se":3.5,"var":12.25,"ci_low":2.84,"ci_up":16.54,"rse":36.07,"deff":1.11},{"kako":"7207","est":9.05,"se":3.91,"var":15.29,"ci_low":1.38,"ci_up":16.72,"rse":43.25,"deff":1.57},{"kako":"7208","est":7.19,"se":3.23,"var":10.43,"ci_low":0.86,"ci_up":13.52,"rse":44.93,"deff":1.16},{"kako":"7209","est":13.37,"se":4.72,"var":22.28,"ci_low":4.13,"ci_up":22.61,"rse":35.27,"deff":1.18},{"kako":"7210","est":9.86,"se":4.59,"var":21.07,"ci_low":0.86,"ci_up":18.85,"rse":46.56,"deff":1.82},{"kako":"7211","est":8.75,"se":5.12,"var":26.21,"ci_low":0.0,"ci_up":18.78,"rse":58.55,"deff":1.23},{"kako":"7212","est":14.3,"se":6.26,"var":39.19,"ci_low":2.04,"ci_up":26.57,"rse":43.74,"deff":1.06},{"kako":"7271","est":0.51,"se":0.5,"var":0.25,"ci_low":0.0,"ci_up":1.49,"rse":98.79,"deff":0.6},{"kako":"7301","est":14.27,"se":5.61,"var":31.47,"ci_low":3.27,"ci_up":25.27,"rse":39.33,"deff":1.12},{"kako":"7302","est":8.24,"se":4.74,"var":22.47,"ci_low":0.0,"ci_up":17.52,"rse":57.52,"deff":1.76},{"kako":"7303","est":18.71,"se":7.0,"var":49.0,"ci_low":4.99,"ci_up":32.43,"rse":37.4,"deff":1.92},{"kako":"7304","est":9.02,"se":4.15,"var":17.22,"ci_low":0.9,"ci_up":17.15,"rse":45.95,"deff":1.49},{"kako":"7305","est":3.8,"se":2.05,"var":4.2,"ci_low":0.0,"ci_up":7.82,"rse":54.06,"deff":0.86},{"kako":"7306","est":3.72,"se":1.97,"var":3.88,"ci_low":0.0,"ci_up":7.58,"rse":52.92,"deff":1.17},{"kako":"7307","est":3.58,"se":2.2,"var":4.84,"ci_low":0.0,"ci_up":7.88,"rse":61.39,"deff":1.26},{"kako":"7308","est":0.83,"se":0.41,"var":0.17,"ci_low":0.03,"ci_up":1.63,"rse":48.99,"deff":0.17},{"kako":"7309","est":9.51,"se":3.62,"var":13.1,"ci_low":2.41,"ci_up":16.6,"rse":38.07,"deff":1.23},{"kako":"7310","est":1.98,"se":1.25,"var":1.56,"ci_low":0.0,"ci_up":4.44,"rse":63.14,"deff":0.57},{"kako":"7311","est":10.55,"se":4.01,"var":16.08,"ci_low":2.69,"ci_up":18.41,"rse":38.01,"deff":1.66},{"kako":"7312","est":0.95,"se":0.71,"var":0.5,"ci_low":0.0,"ci_up":2.35,"rse":74.54,"deff":0.25},{"kako":"7313","est":6.85,"se":4.18,"var":17.47,"ci_low":0.0,"ci_up":15.03,"rse":60.99,"deff":1.7},{"kako":"7314","est":8.56,"se":3.3,"var":10.89,"ci_low":2.09,"ci_up":15.03,"rse":38.55,"deff":1.18},{"kako":"7315","est":8.24,"se":3.99,"var":15.92,"ci_low":0.43,"ci_up":16.05,"rse":48.37,"deff":1.5},{"kako":"7316","est":24.82,"se":10.02,"var":100.4,"ci_low":5.17,"ci_up":44.46,"rse":40.39,"deff":1.73},{"kako":"7317","est":12.6,"se":4.7,"var":22.09,"ci_low":3.39,"ci_up":21.81,"rse":37.28,"deff":1.57},{"kako":"7318","est":6.8,"se":3.52,"var":12.39,"ci_low":0.0,"ci_up":13.69,"rse":51.7,"deff":1.14},{"kako":"7322","est":9.47,"se":3.72,"var":13.84,"ci_low":2.17,"ci_up":16.77,"rse":39.33,"deff":0.96},{"kako":"7325","est":7.4,"se":3.53,"var":12.46,"ci_low":0.48,"ci_up":14.31,"rse":47.7,"deff":1.39},{"kako":"7326","est":4.1,"se":1.88,"var":3.53,"ci_low":0.42,"ci_up":7.77,"rse":45.8,"deff":0.75},{"kako":"7371","est":2.88,"se":1.24,"var":1.54,"ci_low":0.44,"ci_up":5.32,"rse":43.17,"deff":0.94},{"kako":"7372","est":4.57,"se":2.14,"var":4.58,"ci_low":0.37,"ci_up":8.77,"rse":46.88,"deff":0.95},{"kako":"7373","est":5.85,"se":2.79,"var":7.78,"ci_low":0.37,"ci_up":11.33,"rse":47.75,"deff":1.39},{"kako":"7401","est":6.08,"se":3.85,"var":14.82,"ci_low":0.0,"ci_up":13.63,"rse":63.3,"deff":1.72},{"kako":"7402","est":10.25,"se":5.83,"var":33.99,"ci_low":0.0,"ci_up":21.68,"rse":56.87,"deff":1.82},{"kako":"7403","est":7.22,"se":3.47,"var":12.04,"ci_low":0.43,"ci_up":14.01,"rse":47.98,"deff":1.65},{"kako":"7404","est":1.94,"se":1.47,"var":2.16,"ci_low":0.0,"ci_up":4.81,"rse":75.59,"deff":0.82},{"kako":"7405","est":4.28,"se":2.8,"var":7.84,"ci_low":0.0,"ci_up":9.76,"rse":65.28,"deff":1.42},{"kako":"7406","est":21.74,"se":6.88,"var":47.33,"ci_low":8.26,"ci_up":35.21,"rse":31.64,"deff":1.65},{"kako":"7407","est":3.86,"se":2.9,"var":8.41,"ci_low":0.0,"ci_up":9.54,"rse":74.98,"deff":1.26},{"kako":"7408","est":15.84,"se":4.79,"var":22.94,"ci_low":6.46,"ci_up":25.22,"rse":30.22,"deff":1.01},{"kako":"7409","est":5.52,"se":3.17,"var":10.05,"ci_low":0.0,"ci_up":11.72,"rse":57.44,"deff":0.78},{"kako":"7410","est":16.52,"se":4.98,"var":24.8,"ci_low":6.77,"ci_up":26.27,"rse":30.12,"deff":0.82},{"kako":"7411","est":26.7,"se":15.72,"var":247.12,"ci_low":0.0,"ci_up":57.52,"rse":58.89,"deff":7.8},{"kako":"7412","est":11.3,"se":5.31,"var":28.2,"ci_low":0.9,"ci_up":21.71,"rse":46.98,"deff":1.2},{"kako":"7413","est":3.02,"se":2.06,"var":4.24,"ci_low":0.0,"ci_up":7.06,"rse":68.24,"deff":0.57},{"kako":"7414","est":5.69,"se":3.34,"var":11.16,"ci_low":0.0,"ci_up":12.23,"rse":58.71,"deff":1.51},{"kako":"7415","est":2.76,"se":2.73,"var":7.45,"ci_low":0.0,"ci_up":8.11,"rse":98.65,"deff":1.67},{"kako":"7471","est":6.25,"se":2.56,"var":6.55,"ci_low":1.23,"ci_up":11.27,"rse":40.96,"deff":1.16},{"kako":"7472","est":4.92,"se":2.68,"var":7.18,"ci_low":0.0,"ci_up":10.17,"rse":54.35,"deff":1.19},{"kako":"7501","est":11.06,"se":4.47,"var":19.98,"ci_low":2.31,"ci_up":19.82,"rse":40.39,"deff":1.68},{"kako":"7502","est":2.54,"se":1.36,"var":1.85,"ci_low":0.0,"ci_up":5.21,"rse":53.74,"deff":0.61},{"kako":"7503","est":11.12,"se":4.14,"var":17.14,"ci_low":3.0,"ci_up":19.24,"rse":37.26,"deff":1.32},{"kako":"7504","est":7.96,"se":3.66,"var":13.4,"ci_low":0.79,"ci_up":15.13,"rse":45.96,"deff":1.5},{"kako":"7505","est":12.72,"se":4.44,"var":19.71,"ci_low":4.01,"ci_up":21.43,"rse":34.92,"deff":0.92},{"kako":"7571","est":1.28,"se":0.96,"var":0.92,"ci_low":0.0,"ci_up":3.17,"rse":74.86,"deff":0.65},{"kako":"7601","est":10.68,"se":3.72,"var":13.84,"ci_low":3.39,"ci_up":17.96,"rse":34.8,"deff":1.32},{"kako":"7602","est":9.51,"se":2.95,"var":8.7,"ci_low":3.74,"ci_up":15.29,"rse":30.96,"deff":1.05},{"kako":"7603","est":11.32,"se":4.2,"var":17.64,"ci_low":3.1,"ci_up":19.54,"rse":37.07,"deff":0.92},{"kako":"7604","est":10.71,"se":3.81,"var":14.52,"ci_low":3.23,"ci_up":18.18,"rse":35.63,"deff":1.41},{"kako":"7605","est":18.99,"se":4.96,"var":24.6,"ci_low":9.27,"ci_up":28.7,"rse":26.1,"deff":1.01},{"kako":"7606","est":6.96,"se":3.7,"var":13.69,"ci_low":0.0,"ci_up":14.21,"rse":53.09,"deff":1.58}]};
+
+const NORM = [{"metode":"Shapiro–Wilk","tahun":"2023","pval":0.00973,"keputusan":"Tolak H0","hasil":"Data tidak menyebar mengikuti distribusi normal"},{"metode":"Lilliefors (KS)","tahun":"2023","pval":0.04043,"keputusan":"Tolak H0","hasil":"Data tidak menyebar mengikuti distribusi normal"},{"metode":"Pearson Chi-Square","tahun":"2023","pval":0.007276,"keputusan":"Tolak H0","hasil":"Data tidak menyebar mengikuti distribusi normal"},{"metode":"Jarque–Bera","tahun":"2023","pval":0.08064,"keputusan":"Gagal Tolak H0","hasil":"Data menyebar mengikuti distribusi normal"},{"metode":"Shapiro–Wilk","tahun":"2024","pval":0.1058,"keputusan":"Gagal Tolak H0","hasil":"Data menyebar mengikuti distribusi normal"},{"metode":"Lilliefors (KS)","tahun":"2024","pval":0.02694,"keputusan":"Tolak H0","hasil":"Data tidak menyebar mengikuti distribusi normal"},{"metode":"Pearson Chi-Square","tahun":"2024","pval":0.3657,"keputusan":"Gagal Tolak H0","hasil":"Data menyebar mengikuti distribusi normal"},{"metode":"Jarque–Bera","tahun":"2024","pval":0.2021,"keputusan":"Gagal Tolak H0","hasil":"Data menyebar mengikuti distribusi normal"},{"metode":"Shapiro–Wilk","tahun":"2025","pval":0.000405,"keputusan":"Tolak H0","hasil":"Data tidak menyebar mengikuti distribusi normal"},{"metode":"Lilliefors (KS)","tahun":"2025","pval":0.0695,"keputusan":"Gagal Tolak H0","hasil":"Data menyebar mengikuti distribusi normal"},{"metode":"Pearson Chi-Square","tahun":"2025","pval":0.08695,"keputusan":"Gagal Tolak H0","hasil":"Data menyebar mengikuti distribusi normal"},{"metode":"Jarque–Bera","tahun":"2025","pval":0.000444,"keputusan":"Tolak H0","hasil":"Data tidak menyebar mengikuti distribusi normal"}];
+
+// ==================== HELPERS ====================
+const CUT = 25;
+function rseColor(r) {
+  if (r <= CUT) return '#40d080';
+  if (r <= 50) return '#f0a03c';
+  return '#f0556e';
+}
+function rseBadge(r) {
+  if (r <= CUT) return 'rse-low';
+  if (r <= 50) return 'rse-mid';
+  return 'rse-high';
+}
+function f2(n) { return (+n).toFixed(2); }
+
+function calcStats(arr) {
+  const rses = arr.map(d => d.rse);
+  const ests = arr.map(d => d.est);
+  return {
+    n: arr.length,
+    below: arr.filter(d => d.rse <= CUT).length,
+    above: arr.filter(d => d.rse > CUT).length,
+    medRse: [...rses].sort((a,b)=>a-b)[Math.floor(rses.length/2)],
+    avgEst: ests.reduce((a,b)=>a+b,0)/ests.length,
+    maxRse: Math.max(...rses),
+    minRse: Math.min(...rses),
+  };
+}
+
+// ==================== DUAL LINE CHART (Estimasi + RSE) ====================
+function buildLineChart(year, targetId) {
+  const data = RAW[year]; // urutan asli kode kab
+  const n = data.length;
+  const STEP = 16;         // px per titik (scrollable)
+  const W = Math.max(1200, n * STEP + 100);
+  const H = 360;
+  const pad = { top:36, right:72, bottom:72, left:56 };
+  const iW = W - pad.left - pad.right;
+  const iH = H - pad.top - pad.bottom;
+
+  // Scale left: Estimasi
+  const maxEst = Math.ceil(Math.max(...data.map(d=>d.est)) / 5) * 5 + 5;
+  // Scale right: RSE
+  const maxRse = Math.ceil(Math.max(...data.map(d=>d.rse)) / 20) * 20 + 10;
+
+  function xPx(i) { return (i / (n-1)) * iW; }
+  function yEst(v) { return iH - (v / maxEst * iH); }
+  function yRse(v) { return iH - (v / maxRse * iH); }
+
+  let gridLines = '', estPath = '', rsePath = '', dots = '', xLabels = '';
+  let estPts = [], rsePts = [];
+
+  // Y grid left (Estimasi) — steps of 5
+  for (let v = 0; v <= maxEst; v += 5) {
+    const y = yEst(v);
+    gridLines += `<line x1="0" x2="${iW}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+    gridLines += `<text x="-8" y="${y+4}" fill="#5a6080" font-size="9" text-anchor="end" font-family="JetBrains Mono,monospace">${v}</text>`;
+  }
+  // Y axis label left
+  gridLines += `<text transform="translate(-44,${iH/2}) rotate(-90)" fill="#00d4d4" font-size="10" text-anchor="middle" font-weight="600" font-family="DM Sans,sans-serif">Estimasi (%)</text>`;
+
+  // Y grid right (RSE) — steps of 25
+  for (let v = 0; v <= maxRse; v += 25) {
+    const y = yRse(v);
+    const isCut = v === 25;
+    gridLines += `<line x1="0" x2="${iW}" y1="${y}" y2="${y}"
+      stroke="${isCut ? '#f0a03c' : 'rgba(255,255,255,0.0)'}"
+      stroke-width="${isCut ? 1.8 : 0}"
+      stroke-dasharray="${isCut ? '6,4' : ''}"/>`;
+    gridLines += `<text x="${iW+8}" y="${y+4}" fill="${isCut ? '#f0a03c' : '#5a6080'}" font-size="9" text-anchor="start" font-family="JetBrains Mono,monospace">${v}%</text>`;
+    if (isCut) {
+      gridLines += `<text x="${iW+8}" y="${y-5}" fill="#f0a03c" font-size="8" font-weight="700" font-family="JetBrains Mono,monospace">RSE=25</text>`;
+    }
+  }
+  // Y axis label right
+  gridLines += `<text transform="translate(${iW+56},${iH/2}) rotate(90)" fill="#f0556e" font-size="10" text-anchor="middle" font-weight="600" font-family="DM Sans,sans-serif">RSE (%)</text>`;
+
+  // Compute points
+  data.forEach((d, i) => {
+    const x = xPx(i);
+    estPts.push([x, yEst(d.est)]);
+    rsePts.push([x, yRse(d.rse)]);
+  });
+
+  // Build smooth polylines
+  function pathStr(pts) {
+    return pts.map((p,i) => (i===0 ? `M${p[0]},${p[1]}` : `L${p[0]},${p[1]}`)).join(' ');
+  }
+
+  // Shaded area under Estimasi line
+  const areaEst = `M${estPts[0][0]},${iH} ` + estPts.map(p=>`L${p[0]},${p[1]}`).join(' ') + ` L${estPts[estPts.length-1][0]},${iH} Z`;
+
+  // Build paths
+  estPath = `<defs>
+    <linearGradient id="gEst${year}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00d4d4" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#00d4d4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="gRse${year}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0556e" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#f0556e" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path d="${areaEst}" fill="url(#gEst${year})"/>
+  <path d="${pathStr(estPts)}" fill="none" stroke="#00d4d4" stroke-width="2" stroke-linejoin="round"/>`;
+
+  const areaRse = `M${rsePts[0][0]},${iH} ` + rsePts.map(p=>`L${p[0]},${p[1]}`).join(' ') + ` L${rsePts[rsePts.length-1][0]},${iH} Z`;
+  rsePath = `<path d="${areaRse}" fill="url(#gRse${year})"/>
+  <path d="${pathStr(rsePts)}" fill="none" stroke="#f0556e" stroke-width="2" stroke-linejoin="round"/>`;
+
+  // Dots + x labels
+  data.forEach((d, i) => {
+    const ex = estPts[i][0], ey = estPts[i][1];
+    const rx = rsePts[i][0], ry = rsePts[i][1];
+    const estCol = '#00d4d4', rseCol = rseColor(d.rse);
+
+    dots += `<circle cx="${ex}" cy="${ey}" r="4" fill="${estCol}" stroke="#0d0f14" stroke-width="1.5" opacity="0.9"
+      class="dot-pt" data-kako="${d.kako}" data-est="${d.est}" data-rse="${d.rse}" data-se="${d.se}" data-deff="${d.deff}" data-ci="${f2(d.ci_low)}–${f2(d.ci_up)}" style="cursor:pointer"/>`;
+    dots += `<circle cx="${rx}" cy="${ry}" r="4" fill="${rseCol}" stroke="#0d0f14" stroke-width="1.5" opacity="0.9"
+      class="dot-pt" data-kako="${d.kako}" data-est="${d.est}" data-rse="${d.rse}" data-se="${d.se}" data-deff="${d.deff}" data-ci="${f2(d.ci_low)}–${f2(d.ci_up)}" style="cursor:pointer"/>`;
+
+    // Vertical guide (subtle)
+    dots += `<line x1="${ex}" x2="${ex}" y1="0" y2="${iH}" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>`;
+
+    // x label rotated
+    xLabels += `<text transform="translate(${ex},${iH+8}) rotate(50)" fill="#5a6080" font-size="8.5" font-family="JetBrains Mono,monospace" text-anchor="start">${d.kako}</text>`;
+  });
+
+  // Legend
+  const leg = `<rect x="${iW/2-80}" y="-28" width="10" height="10" fill="#00d4d4" rx="2"/>
+    <text x="${iW/2-66}" y="-20" fill="#9098b0" font-size="10" font-family="DM Sans,sans-serif">Estimasi (%)</text>
+    <rect x="${iW/2+20}" y="-28" width="10" height="10" fill="#f0556e" rx="2"/>
+    <text x="${iW/2+34}" y="-20" fill="#9098b0" font-size="10" font-family="DM Sans,sans-serif">RSE (%)</text>`;
+
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="display:block">
+    <g transform="translate(${pad.left},${pad.top})">
+      ${gridLines}
+      ${estPath}
+      ${rsePath}
+      ${dots}
+      ${xLabels}
+      ${leg}
+    </g>
+  </svg>`;
+
+  document.getElementById(targetId).innerHTML = svg;
+
+  document.getElementById(targetId).querySelectorAll('.dot-pt').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      showTip(e, el.getAttribute('data-kako'), el.getAttribute('data-est'), el.getAttribute('data-rse'), el.getAttribute('data-ci'), el.getAttribute('data-se'), el.getAttribute('data-deff'));
+      el.setAttribute('r','6');
+    });
+    el.addEventListener('mousemove', e => moveTip(e));
+    el.addEventListener('mouseleave', () => { hideTip(); el.setAttribute('r','4'); });
+  });
+}
+
+// ==================== TABLE ====================
+function buildTable(year, tableId) {
+  const table = document.getElementById(tableId);
+  const data = RAW[year];
+  table.innerHTML = `<thead><tr>
+    <th>Kode</th><th>Nama Kab/Kota</th>
+    <th>Estimasi</th><th>SE</th><th>VAR</th>
+    <th>CI Lower</th><th>CI Upper</th><th>RSE (%)</th><th>DEFF</th>
+  </tr></thead>`;
+
+  const tbody = document.createElement('tbody');
+  data.forEach(d => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="kako-cell">${d.kako}</td>
+      <td class="name-cell" title="${NAMES[d.kako]||''}">${NAMES[d.kako]||d.kako}</td>
+      <td class="est-cell" style="color:${rseColor(d.rse)}">${f2(d.est)}</td>
+      <td>${f2(d.se)}</td>
+      <td>${f2(d.var)}</td>
+      <td>${f2(d.ci_low)}</td>
+      <td>${f2(d.ci_up)}</td>
+      <td><span class="rse-badge ${rseBadge(d.rse)}">${f2(d.rse)}%</span></td>
+      <td>${f2(d.deff)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+}
+
+// ==================== SUMMARY CARDS ====================
+function buildSummary(year, targetId) {
+  const st = calcStats(RAW[year]);
+  const rses = RAW[year].map(d=>d.rse);
+  const avg = rses.reduce((a,b)=>a+b,0)/rses.length;
+  document.getElementById(targetId).innerHTML = `
+    <div class="sum-card sc-cyan"><div class="sc-label">Total Area</div><div class="sc-val">${st.n}</div><div class="sc-sub">Kab/Kota</div></div>
+    <div class="sum-card sc-green"><div class="sc-label">RSE ≤ 25%</div><div class="sc-val">${st.below}</div><div class="sc-sub">${((st.below/st.n)*100).toFixed(1)}% presisi baik</div></div>
+    <div class="sum-card sc-rose"><div class="sc-label">RSE > 25%</div><div class="sc-val">${st.above}</div><div class="sc-sub">${((st.above/st.n)*100).toFixed(1)}% perlu SAE</div></div>
+    <div class="sum-card sc-amber"><div class="sc-label">Rata-rata RSE</div><div class="sc-val">${avg.toFixed(1)}%</div><div class="sc-sub">Min: ${st.minRse.toFixed(1)}% · Max: ${st.maxRse.toFixed(1)}%</div></div>
+  `;
+}
+
+function buildYearInfo(year, targetId) {
+  const st = calcStats(RAW[year]);
+  document.getElementById(targetId).innerHTML = `
+    <div class="yinfo-chip">Total: <span>${st.n}</span></div>
+    <div class="yinfo-chip">RSE≤25%: <span style="color:#40d080">${st.below}</span></div>
+    <div class="yinfo-chip">RSE>25%: <span style="color:#f0556e">${st.above}</span></div>
+    <div class="yinfo-chip">Median RSE: <span>${st.medRse.toFixed(1)}%</span></div>
+  `;
+}
+
+// ==================== ALL SUMMARY ====================
+function buildAllSummary() {
+  const all = ['2023','2024','2025'].flatMap(y => RAW[y]);
+  const st23 = calcStats(RAW['2023']);
+  const st24 = calcStats(RAW['2024']);
+  const st25 = calcStats(RAW['2025']);
+
+  document.getElementById('sum-grid-all').innerHTML = `
+    <div class="sum-card sc-cyan"><div class="sc-label">Total Observasi</div><div class="sc-val">${all.length}</div><div class="sc-sub">81 × 3 tahun</div></div>
+    <div class="sum-card sc-amber"><div class="sc-label">RSE ≤ 25% per Tahun</div><div class="sc-val">${st23.below} · ${st24.below} · ${st25.below}</div><div class="sc-sub">2023 · 2024 · 2025</div></div>
+    <div class="sum-card sc-rose"><div class="sc-label">RSE > 25% per Tahun</div><div class="sc-val">${st23.above} · ${st24.above} · ${st25.above}</div><div class="sc-sub">2023 · 2024 · 2025</div></div>
+    <div class="sum-card sc-green"><div class="sc-label">Avg RSE per Tahun</div>
+      <div class="sc-val" style="font-size:18px">${(RAW['2023'].reduce((a,b)=>a+b.rse,0)/81).toFixed(1)}% · ${(RAW['2024'].reduce((a,b)=>a+b.rse,0)/81).toFixed(1)}% · ${(RAW['2025'].reduce((a,b)=>a+b.rse,0)/81).toFixed(1)}%</div>
+      <div class="sc-sub">2023 · 2024 · 2025</div></div>
+  `;
+
+  document.getElementById('hero-below').textContent = st24.below;
+  document.getElementById('hero-above').textContent = st24.above;
+}
+
+// ==================== TREND CHART (Canvas) ====================
+function buildTrendChart() {
+  const canvas = document.getElementById('trend-chart');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.offsetWidth || 800;
+  const H = 320;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+
+  const years = ['2023','2024','2025'];
+  const kakoList = RAW['2023'].map(d => d.kako);
+  const pad = {top:20, right:80, bottom:60, left:52};
+  const iW = W - pad.left - pad.right;
+  const iH = H - pad.top - pad.bottom;
+  const maxRse = 110;
+
+  // grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let v=0; v<=maxRse; v+=25) {
+    const y = pad.top + iH - (v/maxRse*iH);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+iW, y);
+    const isCut = v === 25;
+    if (isCut) {
+      ctx.strokeStyle = '#f0a03c'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([5,4]);
+    } else {
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = isCut ? '#f0a03c' : '#5a6080';
+    ctx.font = `${isCut?'600 ':''}9px JetBrains Mono,monospace`;
+    ctx.textAlign = 'right'; ctx.fillText(v+'%', pad.left-4, y+4);
+  }
+  // RSE=25 label
+  const cutY = pad.top + iH - (25/maxRse*iH);
+  ctx.fillStyle = '#f0a03c'; ctx.font = '600 9px JetBrains Mono,monospace';
+  ctx.textAlign = 'left'; ctx.fillText('RSE=25%', pad.left+iW+4, cutY+4);
+
+  // lines per kab (transparent gray)
+  const colMap = {'2023':'#00d4d4','2024':'#9080f0','2025':'#40d080'};
+  kakoList.forEach(kako => {
+    const pts = years.map((y,i) => {
+      const d = RAW[y].find(r => r.kako === kako);
+      const x = pad.left + (i/(years.length-1))*iW;
+      const yv = pad.top + iH - (Math.min(d.rse,maxRse)/maxRse*iH);
+      return {x, y:yv, rse:d.rse, est:d.est, se:d.se, deff:d.deff, ci:`${f2(d.ci_low)}–${f2(d.ci_up)}`};
+    });
+    ctx.beginPath();
+    pts.forEach((p,i) => i===0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+    ctx.setLineDash([]); ctx.stroke();
+  });
+
+  // year x-labels
+  years.forEach((y,i) => {
+    const x = pad.left + (i/(years.length-1))*iW;
+    ctx.fillStyle = colMap[y]; ctx.font = '700 12px Syne,sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText(y, x, H - 10);
+  });
+
+  // store points for hover
+  canvas._pts = [];
+  kakoList.forEach(kako => {
+    years.forEach((y,i) => {
+      const d = RAW[y].find(r => r.kako === kako);
+      const x = pad.left + (i/(years.length-1))*iW;
+      const yv = pad.top + iH - (Math.min(d.rse,maxRse)/maxRse*iH);
+      canvas._pts.push({x, y:yv, kako, year:y, est:d.est, rse:d.rse, se:d.se, deff:d.deff, ci:`${f2(d.ci_low)}–${f2(d.ci_up)}`});
+    });
+  });
+  canvas._pad = pad; canvas._iH = iH; canvas._iW = iW; canvas._maxRse = maxRse;
+
+  // dots
+  canvas._pts.forEach(p => {
+    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+    ctx.fillStyle = rseColor(p.rse); ctx.globalAlpha = 0.6; ctx.fill(); ctx.globalAlpha = 1;
+  });
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    let closest = null, minD = 20;
+    canvas._pts.forEach(p => {
+      const d = Math.hypot(p.x - mx, p.y - my);
+      if (d < minD) { minD = d; closest = p; }
+    });
+    if (closest) {
+      showTip(e, closest.kako, closest.est, closest.rse, closest.ci, closest.se, closest.deff);
+    } else hideTip();
+  });
+  canvas.addEventListener('mouseleave', hideTip);
+}
+
+// ==================== SCATTER (Canvas) ====================
+function buildScatterChart() {
+  const canvas = document.getElementById('scatter-chart');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.offsetWidth || 800;
+  const H = 340;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+
+  const pad = {top:20, right:100, bottom:50, left:52};
+  const iW = W - pad.left - pad.right;
+  const iH = H - pad.top - pad.bottom;
+  const maxEst = 32, maxRse = 110;
+  const years = ['2023','2024','2025'];
+  const yColors = {'2023':'#00d4d4','2024':'#9080f0','2025':'#40d080'};
+
+  // grid
+  for (let v=0; v<=maxRse; v+=25) {
+    const y = pad.top + iH - (v/maxRse*iH);
+    const isCut = v===25;
+    ctx.strokeStyle = isCut ? '#f0a03c' : 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = isCut ? 1.5 : 1;
+    ctx.setLineDash(isCut ? [5,4] : []);
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+iW,y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = isCut ? '#f0a03c' : '#5a6080';
+    ctx.font = `${isCut?'600 ':''}9px JetBrains Mono,monospace`;
+    ctx.textAlign = 'right'; ctx.fillText(v+'%', pad.left-4, y+4);
+  }
+
+  // RSE=25 label right
+  const cutY = pad.top + iH - (25/maxRse*iH);
+  ctx.fillStyle = '#f0a03c'; ctx.font = '700 9px JetBrains Mono,monospace';
+  ctx.textAlign = 'left'; ctx.fillText('RSE=25%', pad.left+iW+4, cutY+4);
+
+  // x grid
+  for (let v=0; v<=maxEst; v+=5) {
+    const x = pad.left + (v/maxEst*iW);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x,pad.top); ctx.lineTo(x,pad.top+iH); ctx.stroke();
+    ctx.fillStyle = '#5a6080'; ctx.font = '9px JetBrains Mono,monospace';
+    ctx.textAlign = 'center'; ctx.fillText(v, x, pad.top+iH+14);
+  }
+
+  // x-axis label
+  ctx.fillStyle = '#5a6080'; ctx.font = '11px DM Sans,sans-serif';
+  ctx.textAlign = 'center'; ctx.fillText('Estimasi (%)', pad.left+iW/2, H-8);
+
+  canvas._pts = [];
+  years.forEach(y => {
+    RAW[y].forEach(d => {
+      const x = pad.left + (Math.min(d.est,maxEst)/maxEst*iW);
+      const yv = pad.top + iH - (Math.min(d.rse,maxRse)/maxRse*iH);
+      ctx.beginPath(); ctx.arc(x, yv, 4, 0, Math.PI*2);
+      ctx.fillStyle = yColors[y]; ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha=1;
+      canvas._pts.push({x,y:yv,kako:d.kako,year:y,est:d.est,rse:d.rse,se:d.se,deff:d.deff,ci:`${f2(d.ci_low)}–${f2(d.ci_up)}`});
+    });
+  });
+
+  // legend
+  let lx = pad.left+iW+8;
+  years.forEach((y,i) => {
+    const ly = pad.top + 20 + i*22;
+    ctx.fillStyle = yColors[y]; ctx.globalAlpha=0.8;
+    ctx.beginPath(); ctx.arc(lx+8, ly, 5, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+    ctx.fillStyle = '#9098b0'; ctx.font = '11px DM Sans,sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText(y, lx+18, ly+4);
+  });
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX-rect.left, my = e.clientY-rect.top;
+    let closest=null, minD=16;
+    canvas._pts.forEach(p => {
+      const d=Math.hypot(p.x-mx,p.y-my);
+      if(d<minD){minD=d;closest=p;}
+    });
+    if(closest) showTip(e,closest.kako,closest.est,closest.rse,closest.ci,closest.se,closest.deff);
+    else hideTip();
+  });
+  canvas.addEventListener('mouseleave', hideTip);
+}
+
+// ==================== NORMALITAS ====================
+function buildNormSection(targetId) {
+  const years = ['2023','2024','2025'];
+  const yearColors = {'2023':'#00d4d4','2024':'#9080f0','2025':'#40d080'};
+  let html = `<div class="norm-header"><h3>Uji Sebaran Penduga Langsung</h3><p style="font-size:12px;color:#5a6080;margin-top:4px;">H₀: Data menyebar Normal · α = 0.05</p></div>
+  <div class="norm-grid">`;
+
+  years.forEach(y => {
+    const rows = NORM.filter(n => n.tahun === y);
+    html += `<div class="norm-year-col">
+      <div class="norm-year-label" style="color:${yearColors[y]}">${y}</div>`;
+    rows.forEach(r => {
+      const tolak = r.keputusan === 'Tolak H0';
+      html += `<div class="norm-row">
+        <div style="flex:1">
+          <div class="norm-metode">${r.metode}</div>
+          <div class="norm-pval">p = ${r.pval}</div>
+        </div>
+        <span class="norm-badge ${tolak ? 'norm-tolak' : 'norm-gagal'}">${tolak ? 'Tolak H₀' : 'Gagal Tolak'}</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+
+  const el = document.getElementById(targetId);
+  if (el) { el.className = 'norm-section'; el.innerHTML = html; }
+}
+
+// ==================== TOOLTIP ====================
+function showTip(e, kako, est, rse, ci, se, deff) {
+  const t = document.getElementById('tooltip');
+  document.getElementById('tt-name').textContent = `${kako} · ${NAMES[kako]||''}`;
+  document.getElementById('tt-est').textContent = f2(est)+'%';
+  document.getElementById('tt-rse').textContent = f2(rse)+'%';
+  document.getElementById('tt-ci').textContent = ci;
+  document.getElementById('tt-se').textContent = f2(se);
+  document.getElementById('tt-deff').textContent = f2(deff);
+  t.classList.add('show');
+  moveTip(e);
+}
+function moveTip(e) {
+  const t = document.getElementById('tooltip');
+  let x = e.clientX+14, y = e.clientY-10;
+  if (x + 260 > window.innerWidth) x = e.clientX - 260;
+  if (y + 140 > window.innerHeight) y = e.clientY - 140;
+  t.style.left = x+'px'; t.style.top = y+'px';
+}
+function hideTip() { document.getElementById('tooltip').classList.remove('show'); }
+
+// ==================== TAB SWITCH ====================
+let activeTab = 'all';
+function showTab(tab) {
+  document.querySelectorAll('.year-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(tab) || (tab==='all' && b.textContent==='Ringkasan') || (tab==='norm' && b.textContent==='Uji Normalitas')) b.classList.add('active');
+  });
+  document.getElementById('filter-bar').style.display = ['2023','2024','2025'].includes(tab) ? 'flex' : 'none';
+  activeTab = tab;
+  if (tab==='all') { buildTrendChart(); buildScatterChart(); }
+}
+
+// Fix tab active on load
+document.querySelectorAll('.tab-btn')[0].classList.add('active');
+
+// ==================== SORT & FILTER ====================
+let sortField = 'kako', sortAsc = true;
+function sortTable(field) {
+  if (sortField === field) sortAsc = !sortAsc;
+  else { sortField = field; sortAsc = true; }
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sort-'+field).classList.add('active');
+  applyFilter();
+}
+
+function applyFilter() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const rseF = document.getElementById('rse-filter').value;
+  const years = ['2023','2024','2025'];
+  const activeYear = years.includes(activeTab) ? activeTab : null;
+  if (!activeYear) return;
+
+  let data = [...RAW[activeYear]];
+  if (q) data = data.filter(d => d.kako.includes(q) || (NAMES[d.kako]||'').toLowerCase().includes(q));
+  if (rseF === 'good') data = data.filter(d => d.rse <= CUT);
+  else if (rseF === 'mid') data = data.filter(d => d.rse > CUT && d.rse <= 50);
+  else if (rseF === 'high') data = data.filter(d => d.rse > 50);
+
+  data.sort((a,b) => {
+    let va = a[sortField], vb = b[sortField];
+    if (typeof va === 'string') va = va.localeCompare(vb);
+    else va = va - vb;
+    return sortAsc ? va : -va;
+  });
+
+  const tbody = document.querySelector(`#table-${activeYear} tbody`);
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  data.forEach(d => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="kako-cell">${d.kako}</td>
+      <td class="name-cell" title="${NAMES[d.kako]||''}">${NAMES[d.kako]||d.kako}</td>
+      <td class="est-cell" style="color:${rseColor(d.rse)}">${f2(d.est)}</td>
+      <td>${f2(d.se)}</td>
+      <td>${f2(d.var)}</td>
+      <td>${f2(d.ci_low)}</td>
+      <td>${f2(d.ci_up)}</td>
+      <td><span class="rse-badge ${rseBadge(d.rse)}">${f2(d.rse)}%</span></td>
+      <td>${f2(d.deff)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ==================== HISTOGRAM + KDE ====================
+function buildHistogram(year, targetId) {
+  const vals = RAW[year].map(d => d.est);
+  const n = vals.length;
+
+  // Bin setup: 0–35 with width 2.5
+  const binW = 2.5;
+  const minV = 0;
+  const maxV = Math.ceil(Math.max(...vals) / binW) * binW + binW;
+  const bins = [];
+  for (let lo = minV; lo < maxV; lo += binW) {
+    bins.push({ lo, hi: lo + binW, count: 0, kacos: [] });
+  }
+  vals.forEach((v, i) => {
+    const bi = Math.min(Math.floor((v - minV) / binW), bins.length - 1);
+    bins[bi].count++;
+    bins[bi].kacos.push({ kako: RAW[year][i].kako, est: v, rse: RAW[year][i].rse });
+  });
+
+  const maxCount = Math.max(...bins.map(b => b.count));
+
+  // KDE — Gaussian kernel, bandwidth by Silverman
+  const std = Math.sqrt(vals.reduce((s, v) => s + (v - vals.reduce((a,b)=>a+b,0)/n)**2, 0) / n);
+  const bw = 1.06 * std * Math.pow(n, -0.2);
+  const xRange = [];
+  for (let x = minV - bw; x <= maxV + bw; x += 0.25) xRange.push(x);
+  const kernel = (u) => Math.exp(-0.5 * u * u) / Math.sqrt(2 * Math.PI);
+  const kdeY = xRange.map(x => ({
+    x,
+    y: vals.reduce((s, v) => s + kernel((x - v) / bw), 0) / (n * bw)
+  }));
+
+  // SVG dims
+  const W = 760, H = 300;
+  const pad = { top: 28, right: 40, bottom: 54, left: 50 };
+  const iW = W - pad.left - pad.right;
+  const iH = H - pad.top - pad.bottom;
+
+  // Scales
+  function xPx(v) { return (v - minV) / (maxV - minV) * iW; }
+  function yCountPx(c) { return iH - (c / (maxCount + 1)) * iH; }
+  // KDE scale: fit max density → 80% of chart height
+  const maxKde = Math.max(...kdeY.map(p => p.y));
+  function yKdePx(d) { return iH - (d / maxKde) * iH * 0.88; }
+
+  // Mean & median
+  const sorted = [...vals].sort((a, b) => a - b);
+  const mean = vals.reduce((a, b) => a + b, 0) / n;
+  const median = n % 2 === 0
+    ? (sorted[n/2 - 1] + sorted[n/2]) / 2
+    : sorted[Math.floor(n/2)];
+
+  // Build SVG parts
+  let gridLines = '', bars = '', kdePath = '', xLabels = '', annots = '';
+
+  // Y grid (count)
+  for (let c = 0; c <= maxCount + 1; c++) {
+    if (c % 2 !== 0 && maxCount > 6) continue;
+    const y = yCountPx(c);
+    gridLines += `<line x1="0" x2="${iW}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    gridLines += `<text x="-6" y="${y+4}" fill="#5a6080" font-size="9" text-anchor="end" font-family="JetBrains Mono,monospace">${c}</text>`;
+  }
+  gridLines += `<text transform="translate(-38,${iH/2}) rotate(-90)" fill="#9080f0" font-size="10" text-anchor="middle" font-weight="600" font-family="DM Sans,sans-serif">Frekuensi</text>`;
+
+  // X axis labels (every binW*2)
+  for (let v = minV; v <= maxV; v += binW * 2) {
+    const x = xPx(v);
+    gridLines += `<line x1="${x}" x2="${x}" y1="0" y2="${iH}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`;
+    gridLines += `<text x="${x}" y="${iH+16}" fill="#5a6080" font-size="9" text-anchor="middle" font-family="JetBrains Mono,monospace">${v.toFixed(1)}</text>`;
+  }
+  gridLines += `<text x="${iW/2}" y="${iH+34}" fill="#5a6080" font-size="10" text-anchor="middle" font-family="DM Sans,sans-serif">Estimasi (%)</text>`;
+
+  // Histogram bars
+  bins.forEach(b => {
+    if (b.count === 0) return;
+    const x = xPx(b.lo);
+    const w = xPx(b.hi) - xPx(b.lo) - 1.5;
+    const y = yCountPx(b.count);
+    const h = iH - y;
+    const col = '#9080f0';
+    const label = b.kacos.map(k => `${k.kako}: ${k.est.toFixed(2)}%`).join('&#10;');
+    bars += `<rect x="${x}" y="${y}" width="${w}" height="${h}"
+      fill="${col}" opacity="0.55" rx="2" stroke="${col}" stroke-width="0.5"
+      class="hist-bar"
+      data-lo="${b.lo.toFixed(1)}" data-hi="${b.hi.toFixed(1)}" data-count="${b.count}" data-label="${label}"
+      style="cursor:pointer;transition:opacity 0.15s"/>`;
+  });
+
+  // KDE line (scaled to count axis via density → count scaling)
+  // Map density → approximate count: density * n * binW
+  const kdePts = kdeY
+    .filter(p => p.x >= minV - 1 && p.x <= maxV + 1)
+    .map(p => {
+      const cx = xPx(p.x);
+      const scaledCount = p.y * n * binW;
+      const cy = yCountPx(scaledCount);
+      return `${cx},${cy}`;
+    });
+  kdePath = `<polyline points="${kdePts.join(' ')}" fill="none" stroke="#00d4d4" stroke-width="2.5" stroke-linejoin="round" opacity="0.9"/>`;
+
+  // Mean & Median vertical lines
+  const meanX = xPx(mean);
+  const medX = xPx(median);
+  annots += `<line x1="${meanX}" x2="${meanX}" y1="0" y2="${iH}" stroke="#f0a03c" stroke-width="1.5" stroke-dasharray="5,3"/>`;
+  annots += `<text x="${meanX+4}" y="12" fill="#f0a03c" font-size="9" font-weight="700" font-family="JetBrains Mono,monospace">μ=${mean.toFixed(2)}</text>`;
+  annots += `<line x1="${medX}" x2="${medX}" y1="0" y2="${iH}" stroke="#40d080" stroke-width="1.5" stroke-dasharray="5,3"/>`;
+  annots += `<text x="${medX+4}" y="24" fill="#40d080" font-size="9" font-weight="700" font-family="JetBrains Mono,monospace">med=${median.toFixed(2)}</text>`;
+
+  // Legend
+  const legY = -20;
+  annots += `<rect x="${iW-200}" y="${legY-10}" width="10" height="10" fill="#9080f0" opacity="0.7" rx="2"/>
+    <text x="${iW-186}" y="${legY}" fill="#9098b0" font-size="10" font-family="DM Sans,sans-serif">Histogram Frekuensi</text>
+    <line x1="${iW-88}" x2="${iW-78}" y1="${legY-5}" y2="${legY-5}" stroke="#00d4d4" stroke-width="2.5"/>
+    <text x="${iW-74}" y="${legY}" fill="#9098b0" font-size="10" font-family="DM Sans,sans-serif">KDE</text>`;
+
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:100%">
+    <g transform="translate(${pad.left},${pad.top})">
+      ${gridLines}
+      ${bars}
+      ${kdePath}
+      ${annots}
+    </g>
+  </svg>`;
+
+  const container = document.getElementById(targetId);
+  container.innerHTML = svg;
+
+  // Tooltip for histogram bars
+  container.querySelectorAll('.hist-bar').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      const tt = document.getElementById('tooltip');
+      document.getElementById('tt-name').textContent = `Bin ${el.getAttribute('data-lo')}–${el.getAttribute('data-hi')}%`;
+      document.getElementById('tt-est').textContent = el.getAttribute('data-count') + ' kab/kota';
+      document.getElementById('tt-rse').textContent = '—';
+      document.getElementById('tt-ci').textContent = el.getAttribute('data-label').replace(/&#10;/g, ', ');
+      document.getElementById('tt-se').textContent = '—';
+      document.getElementById('tt-deff').textContent = '—';
+      tt.classList.add('show');
+      el.setAttribute('opacity', '0.85');
+      moveTip(e);
+    });
+    el.addEventListener('mousemove', e => moveTip(e));
+    el.addEventListener('mouseleave', () => { hideTip(); el.setAttribute('opacity', '0.55'); });
+  });
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  ['2023','2024','2025'].forEach(y => {
+    buildSummary(y, `sum-grid-${y}`);
+    buildYearInfo(y, `yinfo-${y}`);
+    buildLineChart(y, `line-${y}`);
+    buildHistogram(y, `hist-${y}`);
+    buildTable(y, `table-${y}`);
+  });
+  buildAllSummary();
+  buildNormSection('norm-section-inline');
+  buildNormSection('norm-full-section');
+  buildTrendChart();
+  buildScatterChart();
+
+  window.addEventListener('resize', () => {
+    if (activeTab === 'all') { buildTrendChart(); buildScatterChart(); }
+  });
+});
+</script>
+</body>
+</html>
