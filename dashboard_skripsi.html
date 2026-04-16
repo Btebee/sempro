@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Skripsi — SAE Perkawinan Anak Sulawesi 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2330;
+  --surface3: #21283a;
+  --border: #30363d;
+  --border-subtle: #21262d;
+  --accent: #e8834a;
+  --blue: #5fa8d3;
+  --green: #7bc67e;
+  --purple: #d29ef7;
+  --pink: #e06c88;
+  --yellow: #f0c35a;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-dim: #6e7681;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+em{font-style:italic}
+strong{font-weight:600}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0d1117 0%,#1a0e2e 40%,#0d1117 100%);padding:52px 40px 40px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;right:-120px;width:600px;height:600px;background:radial-gradient(circle,rgba(232,131,74,.1) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-80px;left:30%;width:400px;height:400px;background:radial-gradient(circle,rgba(95,168,211,.06) 0%,transparent 70%);pointer-events:none}
+.hero-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;opacity:.8}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(18px,2.5vw,30px);font-weight:900;line-height:1.35;max-width:900px;margin-bottom:14px}
+.hero h1 span{color:var(--accent)}
+.hero-sub{font-size:13px;color:var(--text-muted);max-width:780px;margin-bottom:28px}
+.hero-stats{display:flex;gap:14px;flex-wrap:wrap}
+.hero-stat{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;transition:border-color .2s}
+.hero-stat:hover{border-color:var(--accent)}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--accent);line-height:1}
+.hero-stat-label{font-size:11px;color:var(--text-muted);line-height:1.3}
+
+/* L1 NAV */
+.l1-nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;overflow-x:auto}
+.l1-tab{padding:14px 24px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:3px solid transparent;border-top:none;border-left:none;border-right:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap;display:flex;align-items:center;gap:8px;transition:all .2s;letter-spacing:.3px}
+.l1-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.l1-tab.active{border-bottom-color:var(--tab-color);color:var(--tab-color)}
+.l1-dot{width:8px;height:8px;border-radius:50%;background:var(--tab-color);opacity:.7}
+.l1-section{display:none}
+.l1-section.active{display:block}
+
+/* L2 NAV */
+.l2-nav{display:flex;gap:0;background:var(--surface2);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:47px;z-index:150}
+.l2-tab{padding:10px 18px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;border-top:none;border-left:none;border-right:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s}
+.l2-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.l2-tab.active{color:var(--sub-color);border-bottom-color:var(--sub-color)}
+.l2-section{display:none;padding:36px 40px;max-width:1300px;margin:0 auto}
+.l2-section.active{display:block}
+
+/* TYPOGRAPHY */
+.section-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:8px}
+.section-desc{font-size:13px;color:var(--text-muted);margin-bottom:28px;border-left:3px solid var(--border);padding-left:14px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;transition:border-color .2s}
+.card:hover{border-color:rgba(255,255,255,.12)}
+.card-title{font-size:11px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);margin-bottom:12px}
+
+/* QUESTION LIST */
+.q-list{list-style:none}
+.q-item{display:flex;gap:16px;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;background:var(--surface);transition:all .2s}
+.q-item:hover{border-color:var(--pink);background:var(--surface2)}
+.q-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--pink);line-height:1;min-width:32px;flex-shrink:0}
+.q-text{font-size:13px;line-height:1.65;color:var(--text)}
+.penguji-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--border)}
+.penguji-badge{padding:5px 14px;border-radius:20px;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin-bottom:28px}
+.table-head{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:rgba(255,255,255,.04)}
+th{padding:10px 14px;text-align:left;font-size:11px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--border-subtle);vertical-align:top;line-height:1.55}
+tr:hover td{background:rgba(255,255,255,.02)}
+.tag-cell{font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:4px;display:inline-block;white-space:nowrap}
+.num-cell{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-muted);line-height:1}
+
+/* TEMA BLOCKS */
+.tema-block{margin-bottom:32px}
+.tema-header-btn{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;width:100%;text-align:left;margin-bottom:0;transition:all .2s}
+.tema-header-btn:hover{border-color:var(--tema-clr);background:var(--surface2)}
+.tema-header-btn.open{border-radius:var(--radius) var(--radius) 0 0;border-color:var(--tema-clr)}
+.tema-badge-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border-radius:5px;background:var(--tema-clr);color:#0d1117;flex-shrink:0;white-space:nowrap}
+.tema-title-text{font-size:14px;font-weight:600;flex:1}
+.tema-count{font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;flex-shrink:0}
+.tema-chevron{font-size:16px;color:var(--text-muted);transition:transform .3s;flex-shrink:0}
+.tema-header-btn.open .tema-chevron{transform:rotate(90deg)}
+.tema-body{display:none;border:1px solid var(--tema-clr);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden}
+.tema-body.open{display:block}
+
+/* PARA CARDS */
+.para-card{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);background:var(--surface2);transition:background .15s}
+.para-card:last-child{border-bottom:none}
+.para-card:hover{background:var(--surface3)}
+.para-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--para-clr);min-width:56px;padding:16px 0 16px 16px;flex-shrink:0;font-weight:500}
+.para-body{padding:14px 16px 14px 0;flex:1}
+.para-isi{font-size:13px;line-height:1.75;color:var(--text)}
+.para-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.para-tag{font-size:10px;padding:2px 8px;border-radius:3px;font-family:'DM Mono',monospace;background:rgba(255,255,255,.06);color:var(--text-muted);border:1px solid var(--border)}
+.para-expand-toggle{padding:16px 14px;cursor:pointer;color:var(--text-dim);flex-shrink:0;font-size:16px;display:flex;align-items:flex-start;padding-top:18px;transition:color .2s}
+.para-expand-toggle:hover{color:var(--para-clr)}
+.para-detail{display:none;background:rgba(0,0,0,.2);padding:16px 20px;border-top:1px solid var(--border-subtle)}
+.para-detail.open{display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.detail-grid{grid-template-columns:1fr}}
+.detail-label{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:6px}
+.detail-text{font-size:13px;line-height:1.65}
+
+/* FULL TEXT */
+.ft-container{max-width:860px}
+.ft-bab{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;padding:24px 22px 8px;border-left:4px solid var(--ft-color);margin-bottom:8px}
+.ft-sub{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ft-color);padding:18px 22px 6px;border-left:3px solid var(--ft-color);margin-bottom:4px}
+.ft-tema-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;padding:20px 22px 6px;color:var(--ft-color);display:flex;align-items:center;gap:10px}
+.ft-tema-label::before{content:'';display:inline-block;width:28px;height:2px;background:currentColor;flex-shrink:0}
+.ft-p{padding:14px 22px;border-left:3px solid transparent;transition:border-color .15s,background .15s;cursor:pointer}
+.ft-p:hover{background:rgba(255,255,255,.02);border-left-color:var(--ft-color)}
+.ft-p-num{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;opacity:.65;margin-bottom:6px}
+.ft-p-text{font-size:14px;line-height:1.9;color:var(--text)}
+.ft-table-wrap{padding:0 22px 18px;overflow-x:auto}
+.ft-table-label{font-size:12px;font-family:'DM Mono',monospace;color:var(--ft-color);margin-bottom:10px;opacity:.8}
+.ft-source{font-size:11px;font-family:'DM Mono',monospace;color:var(--ft-color);padding:0 22px 14px;opacity:.7}
+
+/* RESULTS */
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.result-card-header{padding:18px 22px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.result-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.result-card-body{padding:22px}
+.rpubs-embed-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:relative;min-height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center}
+.rpubs-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--yellow);color:#0d1117;border-radius:var(--radius-sm);font-weight:600;font-size:13px;text-decoration:none;transition:opacity .2s}
+.rpubs-btn:hover{opacity:.85;text-decoration:none}
+
+/* MISC */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;font-weight:500}
+.chip-dot{width:6px;height:6px;border-radius:50%}
+.breakdown-cat{font-size:11px;font-weight:700;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.kn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px}
+.kn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;border-top:3px solid var(--kn-clr)}
+.kn-num{font-family:'Playfair Display',serif;font-size:34px;font-weight:900;line-height:1;margin-bottom:6px;color:var(--kn-clr)}
+.kn-label{font-size:11px;color:var(--text-muted);line-height:1.4}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+@media(max-width:768px){.hero{padding:32px 20px 28px}.l2-section{padding:24px 20px}.hero-stats{gap:10px}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.l2-section.active{animation:fadeIn .22s ease}
+.check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;background:var(--surface);transition:all .2s;cursor:pointer}
+.check-item:hover{border-color:var(--green)}
+.check-item.done{opacity:.55}
+.check-item.done .chk-icon{color:var(--green)}
+.chk-icon{font-size:16px;color:var(--text-dim);flex-shrink:0;margin-top:1px}
+.chk-text{font-size:13px;line-height:1.6}
+.divider{border:none;border-top:1px solid var(--border);margin:28px 0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:800px){.two-col{grid-template-columns:1fr}}
+.info-note{background:rgba(95,168,211,.07);border:1px solid rgba(95,168,211,.2);border-radius:var(--radius-sm);padding:12px 16px;font-size:12px;color:var(--text-muted);margin-bottom:20px;display:flex;gap:10px;align-items:flex-start}
+.info-note-icon{color:var(--blue);flex-shrink:0;margin-top:1px}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">📊 Dashboard Skripsi — Seminar Proposal &amp; Revisi</div>
+  <h1>Penerapan <span>Small Area Estimation</span> terhadap Proporsi Perempuan Umur 20–24 Tahun yang Berstatus Kawin atau Hidup Bersama Sebelum Umur 18 Tahun di Pulau Sulawesi Tahun 2024</h1>
+  <p class="hero-sub">Metode: SAE EBLUP &amp; Hierarchical Bayes Beta · Wilayah: 81 Kab/Kota Sulawesi · Data: Susenas Maret 2024 &amp; Podes 2024</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num" style="color:var(--pink)">32</div><div class="hero-stat-label">Total Poin<br>Revisi Penguji</div></div>
+    <div class="hero-stat"><div class="hero-stat-num" style="color:var(--accent)">27</div><div class="hero-stat-label">Paragraf<br>Latar Belakang</div></div>
+    <div class="hero-stat"><div class="hero-stat-num" style="color:var(--blue)">14</div><div class="hero-stat-label">Paragraf<br>Identifikasi Masalah</div></div>
+    <div class="hero-stat"><div class="hero-stat-num" style="color:var(--green)">81</div><div class="hero-stat-label">Kab/Kota<br>Pulau Sulawesi</div></div>
+    <div class="hero-stat"><div class="hero-stat-num" style="color:var(--purple)">46</div><div class="hero-stat-label">Kandidat Variabel<br>Penyerta</div></div>
+  </div>
+</div>
+
+<!-- L1 NAV -->
+<nav class="l1-nav">
+  <button class="l1-tab active" style="--tab-color:var(--pink)" onclick="switchL1('sempro',this)"><span class="l1-dot" style="--tab-color:var(--pink)"></span> Sempro &amp; Revisi</button>
+  <button class="l1-tab" style="--tab-color:var(--accent)" onclick="switchL1('rancangan',this)"><span class="l1-dot" style="--tab-color:var(--accent)"></span> Rancangan</button>
+  <button class="l1-tab" style="--tab-color:var(--blue)" onclick="switchL1('teks',this)"><span class="l1-dot" style="--tab-color:var(--blue)"></span> Teks Lengkap</button>
+  <button class="l1-tab" style="--tab-color:var(--yellow)" onclick="switchL1('hasil',this)"><span class="l1-dot" style="--tab-color:var(--yellow)"></span> Hasil</button>
+</nav>
+
+<!-- ========== SEMPRO & REVISI ========== -->
+<div class="l1-section active" id="l1-sempro">
+  <nav class="l2-nav">
+    <button class="l2-tab active" style="--sub-color:var(--pink)" onclick="switchL2('sempro','pertanyaan',this)">Pertanyaan Penguji</button>
+    <button class="l2-tab" style="--sub-color:var(--pink)" onclick="switchL2('sempro','revisi-siti',this)">Revisi Bu Siti</button>
+    <button class="l2-tab" style="--sub-color:var(--pink)" onclick="switchL2('sempro','revisi-febri',this)">Revisi Pak Febri</button>
+    <button class="l2-tab" style="--sub-color:var(--pink)" onclick="switchL2('sempro','breakdown',this)">Breakdown Masukan</button>
+  </nav>
+
+  <!-- Pertanyaan Penguji -->
+  <div class="l2-section active" id="sempro-pertanyaan">
+    <h2 class="section-title" style="color:var(--pink)">List Pertanyaan Penguji — Seminar Proposal</h2>
+    <p class="section-desc">Pertanyaan dan masukan langsung dari penguji saat Seminar Proposal. Sumber: Masukan Sempro.</p>
+    <div class="two-col">
+      <div>
+        <div class="penguji-header">
+          <span class="penguji-badge" style="background:rgba(224,108,136,.15);color:var(--pink);border:1px solid rgba(224,108,136,.3)">👩‍🏫 Bu Siti</span>
+          <span style="font-size:12px;color:var(--text-muted)">35 pertanyaan</span>
+        </div>
+        <ul class="q-list" id="qlist-siti"></ul>
+      </div>
+      <div>
+        <div class="penguji-header">
+          <span class="penguji-badge" style="background:rgba(95,168,211,.15);color:var(--blue);border:1px solid rgba(95,168,211,.3)">👨‍🏫 Pak Febri</span>
+          <span style="font-size:12px;color:var(--text-muted)">12 pertanyaan</span>
+        </div>
+        <ul class="q-list" id="qlist-febri"></ul>
+        <div class="card" style="margin-top:16px;border-left:3px solid var(--yellow)">
+          <div class="card-title">💡 Inti Masukan Pak Febri</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;padding-left:14px;border-left:2px solid var(--yellow)">Output yang diinginkan adalah <strong>estimasi</strong>, bukan hubungan sebab-akibat</li>
+            <li style="font-size:13px;padding-left:14px;border-left:2px solid var(--yellow)">Data belum tersedia secara andal → justifikasi sederhana untuk SAE</li>
+            <li style="font-size:13px;padding-left:14px;border-left:2px solid var(--yellow)">SAE banyak metode → ulas kelebihan/kekurangan masing-masing</li>
+            <li style="font-size:13px;padding-left:14px;border-left:2px solid var(--yellow)">Pilih 1 metode terbaik dengan argumen kuat</li>
+            <li style="font-size:13px;padding-left:14px;border-left:2px solid var(--yellow)">Variabel penyerta harus masuk akal secara sosiologis, bukan sekadar angka</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revisi Bu Siti -->
+  <div class="l2-section" id="sempro-revisi-siti">
+    <h2 class="section-title" style="color:var(--pink)">Daftar Revisi — Bu Siti</h2>
+    <p class="section-desc">20 poin revisi dari Bu Siti berdasarkan hasil Seminar Proposal.</p>
+    <div class="kn-grid">
+      <div class="kn-card" style="--kn-clr:var(--accent)"><div class="kn-num">20</div><div class="kn-label">Total Poin Revisi</div></div>
+      <div class="kn-card" style="--kn-clr:var(--blue)"><div class="kn-num">6</div><div class="kn-label">Bagian Latar Belakang</div></div>
+      <div class="kn-card" style="--kn-clr:var(--green)"><div class="kn-num">4</div><div class="kn-label">Sumber Data &amp; Sitasi</div></div>
+      <div class="kn-card" style="--kn-clr:var(--purple)"><div class="kn-num">4</div><div class="kn-label">Variabel Penyerta</div></div>
+    </div>
+    <div class="table-wrap"><table id="tbl-siti">
+      <thead><tr><th>No</th><th>Bagian</th><th>Poin Revisi</th><th>Keterangan</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+
+  <!-- Revisi Pak Febri -->
+  <div class="l2-section" id="sempro-revisi-febri">
+    <h2 class="section-title" style="color:var(--blue)">Daftar Revisi — Pak Febri</h2>
+    <p class="section-desc">12 poin revisi dari Pak Febri berdasarkan hasil Seminar Proposal.</p>
+    <div class="kn-grid">
+      <div class="kn-card" style="--kn-clr:var(--blue)"><div class="kn-num">12</div><div class="kn-label">Total Poin Revisi</div></div>
+      <div class="kn-card" style="--kn-clr:var(--accent)"><div class="kn-num">3</div><div class="kn-label">Tujuan &amp; Fokus Riset</div></div>
+      <div class="kn-card" style="--kn-clr:var(--green)"><div class="kn-num">3</div><div class="kn-label">Landasan Teori</div></div>
+      <div class="kn-card" style="--kn-clr:var(--purple)"><div class="kn-num">3</div><div class="kn-label">Metodologi SAE</div></div>
+    </div>
+    <div class="table-wrap"><table id="tbl-febri">
+      <thead><tr><th>No</th><th>Bagian</th><th>Poin Revisi</th><th>Keterangan</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="l2-section" id="sempro-breakdown">
+    <h2 class="section-title" style="color:var(--yellow)">Tabel Breakdown Masukan Penguji</h2>
+    <p class="section-desc">Penyatuan masukan Bu Siti dan Pak Febri per kategori beserta arah revisi yang disepakati.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Kategori</th><th>Masukan Bu Siti</th><th>Masukan Pak Febri</th><th>Arah Revisi / Tindakan</th></tr></thead>
+      <tbody id="tbl-breakdown"></tbody>
+    </table></div>
+  </div>
+</div><!-- end l1-sempro -->
+
+<!-- ========== RANCANGAN ========== -->
+<div class="l1-section" id="l1-rancangan">
+  <nav class="l2-nav">
+    <button class="l2-tab active" style="--sub-color:var(--accent)" onclick="switchL2('rancangan','lb',this)">Latar Belakang</button>
+    <button class="l2-tab" style="--sub-color:var(--blue)" onclick="switchL2('rancangan','im',this)">Identifikasi Masalah</button>
+    <button class="l2-tab" style="--sub-color:var(--green)" onclick="switchL2('rancangan','bab2',this)">BAB 2</button>
+    <button class="l2-tab" style="--sub-color:var(--purple)" onclick="switchL2('rancangan','bab3',this)">BAB 3</button>
+  </nav>
+
+  <!-- Rancangan LB -->
+  <div class="l2-section active" id="rancangan-lb">
+    <h2 class="section-title" style="color:var(--accent)">Rancangan Revisi Latar Belakang</h2>
+    <p class="section-desc">Format lengkap (final) — 6 tema, 27 paragraf. Klik tema untuk expand. Klik ▶ pada paragraf untuk melihat detail revisi.</p>
+    <div id="rancangan-lb-content"></div>
+  </div>
+
+  <!-- Rancangan IM -->
+  <div class="l2-section" id="rancangan-im">
+    <h2 class="section-title" style="color:var(--blue)">Rancangan Revisi Identifikasi Masalah</h2>
+    <p class="section-desc">Format lengkap (final) — 6 blok, 14 paragraf (IM-P1 s.d IM-P14). Klik blok untuk expand.</p>
+    <div id="rancangan-im-content"></div>
+  </div>
+
+  <!-- Rancangan BAB 2 -->
+  <div class="l2-section" id="rancangan-bab2">
+    <h2 class="section-title" style="color:var(--green)">Rancangan Revisi BAB 2</h2>
+    <p class="section-desc">Komprehensif per heading BAB II. Klik heading untuk expand detail revisi.</p>
+    <div id="rancangan-bab2-content"></div>
+  </div>
+
+  <!-- Rancangan BAB 3 -->
+  <div class="l2-section" id="rancangan-bab3">
+    <h2 class="section-title" style="color:var(--purple)">Rancangan Revisi BAB 3</h2>
+    <p class="section-desc">Rancangan revisi BAB III — Metodologi Penelitian. Fokus pada variabel penyerta dan desain penelitian.</p>
+    <div class="info-note"><span class="info-note-icon">ℹ</span><span>BAB 3 relatif sudah solid secara metodologi. Revisi utama berfokus pada penambahan variabel pendidikan di dimensi Individu dan penjelasan logis variabel penyerta yang masuk akal secara sosiologis.</span></div>
+    <div class="two-col">
+      <div class="card"><div class="card-title">🎯 Ruang Lingkup — Status</div><p style="font-size:13px;line-height:1.7;margin-bottom:10px">Sudah baik: 81 kab/kota Sulawesi, 6 provinsi, estimasi langsung + SAE EBLUP + SAE HB Beta, evaluasi RSE/RRMSE.</p><p style="font-size:13px;color:var(--green)">✓ Tidak perlu revisi major. Pastikan konsistensi terminologi dengan BAB 1.</p></div>
+      <div class="card"><div class="card-title">📊 Metode Analisis — Status</div><p style="font-size:13px;line-height:1.7;margin-bottom:10px">Sudah ada: pendugaan langsung, SAE EBLUP (Fay-Herriot), SAE HB Beta. Evaluasi RRMSE.</p><p style="font-size:13px;color:var(--green)">✓ Pastikan posisi estimasi langsung sebagai benchmark, bukan pembanding head-to-head.</p></div>
+    </div>
+    <div class="tema-block" style="--tema-clr:var(--purple)">
+      <button class="tema-header-btn open" onclick="toggleTema(this)">
+        <span class="tema-badge-label" style="background:var(--purple)">KRITIS</span>
+        <span class="tema-title-text">Revisi Tabel Kandidat Variabel Penyerta</span>
+        <span class="tema-count">46 kandidat (4 dimensi)</span>
+        <span class="tema-chevron">▶</span>
+      </button>
+      <div class="tema-body open" style="border-color:var(--purple)">
+        <div class="para-card" style="--para-clr:var(--purple)"><span class="para-num">Individu</span><div class="para-body"><p class="para-isi"><strong>Masalah Kritis:</strong> X1–X7 saat ini: BTS, sinyal 4G, rasio guru/murid SD/SMP/SMA, gizi buruk, kerawanan pangan. TIDAK ADA variabel pendidikan langsung.<br><strong>Tindakan:</strong> Tambahkan variabel pendidikan yang mencerminkan profil pelaku perkawinan anak (perempuan akses pendidikan rendah). Pertimbangkan ulang relevansi gizi buruk di level individu.<br><strong>Usulan tambahan:</strong> Angka buta aksara perempuan · APM/APK SD perempuan · % perempuan tidak tamat SD</p><div class="para-tags"><span class="para-tag">📋 BS-[18] Tambahkan variabel pendidikan</span><span class="para-tag">⚡ PRIORITAS TINGGI</span></div></div><span class="para-expand-toggle" onclick="toggleParaDetail(this)">▶</span></div>
+        <div class="para-detail"><div class="detail-grid"><div><div class="detail-label">Cara Pemilihan (Pak Febri)</div><div class="detail-text">Cek korelasi di level provinsi/nasional terlebih dahulu sebelum masuk model kab/kota. Variabel harus masuk akal secara sosiologis.</div></div><div><div class="detail-label">Tautan Revisi</div><div class="detail-text">📋 BS-[18],[33] Tidak ada pendidikan di level individu. Gizi buruk — apa hubungannya? Harus logis.</div></div></div></div>
+        <div class="para-card" style="--para-clr:var(--purple)"><span class="para-num">Keluarga</span><div class="para-body"><p class="para-isi">X8–X15: BLT, jaminan kesehatan ibu hamil, SKTM, kelas ibu hamil/balita, PMT, jaminan baduta, akta kelahiran. <strong>Status:</strong> Logika cukup kuat — kondisi ekonomi keluarga miskin → risiko perkawinan anak. Pertahankan dengan narasi diperkuat.</p></div><span class="para-expand-toggle" onclick="toggleParaDetail(this)">▶</span></div>
+        <div class="para-detail"><div class="detail-grid"><div><div class="detail-label">Status</div><div class="detail-text">Pertahankan. Pastikan narasi teoritis di BAB 2 Level Hubungan mendukung variabel-variabel ini.</div></div></div></div>
+        <div class="para-card" style="--para-clr:var(--purple)"><span class="para-num">Komunitas</span><div class="para-body"><p class="para-isi">X16–X41: Posyandu, kader KB, bidan, perkelahian pelajar asmara, aksesibilitas pendidikan, perkosaan, penerangan jalan, keaksaraan, Paket A/B/C, TBM, permukiman kumuh, rasio sekolah/perempuan, tenaga kesehatan, sarana ekonomi, PSK, bantaran sungai, bencana, keterampilan, karaoke, jalan aspal, angkutan. <strong>Status:</strong> Komprehensif. Pastikan semua punya landasan logis.</p><div class="para-tags"><span class="para-tag">📋 PF-[10],[11] Harus masuk akal secara sosiologis</span></div></div><span class="para-expand-toggle" onclick="toggleParaDetail(this)">▶</span></div>
+        <div class="para-detail"><div class="detail-grid"><div><div class="detail-label">Tindakan</div><div class="detail-text">Untuk setiap variabel: pastikan ada 1 kalimat penjelasan logis mengapa berhubungan dengan perkawinan anak di level komunitas.</div></div></div></div>
+        <div class="para-card" style="--para-clr:var(--purple)"><span class="para-num">Masyarakat</span><div class="para-body"><p class="para-isi">X42–X46: lahan nonpertanian, sentra industri, bank beroperasi, koperasi, keterlibatan perempuan di parlemen. X46 (keterlibatan perempuan di parlemen) sangat relevan secara gender. Pertahankan dan perkuat narasi.</p></div><span class="para-expand-toggle" onclick="toggleParaDetail(this)">▶</span></div>
+        <div class="para-detail"><div class="detail-grid"><div><div class="detail-label">Status</div><div class="detail-text">Pertahankan. Perkuat narasi mengapa representasi perempuan dalam kebijakan berkaitan dengan tingkat perkawinan anak.</div></div></div></div>
+      </div>
+    </div>
+  </div>
+</div><!-- end l1-rancangan -->
+
+<!-- ========== TEKS LENGKAP ========== -->
+<div class="l1-section" id="l1-teks">
+  <nav class="l2-nav">
+    <button class="l2-tab active" style="--sub-color:var(--accent)" onclick="switchL2('teks','lb',this)">Latar Belakang</button>
+    <button class="l2-tab" style="--sub-color:var(--blue)" onclick="switchL2('teks','im',this)">Identifikasi Masalah</button>
+    <button class="l2-tab" style="--sub-color:var(--green)" onclick="switchL2('teks','bab2',this)">BAB 2</button>
+    <button class="l2-tab" style="--sub-color:var(--purple)" onclick="switchL2('teks','bab3',this)">BAB 3</button>
+  </nav>
+  <div class="l2-section active" id="teks-lb"><div class="ft-container" style="--ft-color:var(--accent)" id="ft-lb-body"></div></div>
+  <div class="l2-section" id="teks-im"><div class="ft-container" style="--ft-color:var(--blue)" id="ft-im-body"></div></div>
+  <div class="l2-section" id="teks-bab2"><div class="ft-container" style="--ft-color:var(--green)" id="ft-bab2-body"></div></div>
+  <div class="l2-section" id="teks-bab3"><div class="ft-container" style="--ft-color:var(--purple)" id="ft-bab3-body"></div></div>
+</div><!-- end l1-teks -->
+
+<!-- ========== HASIL ========== -->
+<div class="l1-section" id="l1-hasil">
+  <nav class="l2-nav">
+    <button class="l2-tab active" style="--sub-color:var(--yellow)" onclick="switchL2('hasil','rpubs',this)">Hasil RPubs</button>
+    <button class="l2-tab" style="--sub-color:var(--yellow)" onclick="switchL2('hasil','ringkasan',this)">Ringkasan Output</button>
+  </nav>
+
+  <div class="l2-section active" id="hasil-rpubs">
+    <h2 class="section-title" style="color:var(--yellow)">Hasil Pengolahan — RPubs</h2>
+    <p class="section-desc">Link ke hasil pengolahan data R yang dipublikasikan di RPubs. Sumber: <a href="https://rpubs.com/btbee27/KKB3-1" target="_blank">rpubs.com/btbee27/KKB3-1</a></p>
+    <div class="result-card">
+      <div class="result-card-header">
+        <div class="result-icon" style="background:rgba(240,195,90,.12);color:var(--yellow)">📊</div>
+        <div><div style="font-size:15px;font-weight:600">Hasil Pengolahan SAE</div><div style="font-size:12px;color:var(--text-muted)">KKB3-1 · RPubs · Fajar</div></div>
+      </div>
+      <div class="result-card-body">
+        <div class="rpubs-embed-wrap">
+          <div style="font-size:40px;opacity:.4">📈</div>
+          <p style="font-size:13px;color:var(--text-muted);max-width:400px">Hasil pengolahan data R tersedia di RPubs. Klik tombol di bawah untuk membuka di tab baru.</p>
+          <a href="https://rpubs.com/btbee27/KKB3-1" target="_blank" class="rpubs-btn">🔗 Buka di RPubs</a>
+          <p style="font-size:11px;color:var(--text-dim)">rpubs.com/btbee27/KKB3-1</p>
+        </div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:20px">
+      <div class="card">
+        <div class="card-title">📋 Yang Diharapkan dari Output</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Tabel distribusi RSE penduga langsung 81 kab/kota Sulawesi</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Boxplot nilai RSE (Gambar 3)</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Estimasi EBLUP per kab/kota beserta RSE</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Estimasi HB Beta per kab/kota beserta credible interval</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Tabel perbandingan RRMSE: Langsung vs EBLUP vs HB Beta</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Peta tematik spasial kab/kota Sulawesi</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🔧 Status Pengolahan</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li class="check-item done" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9745;</span><span class="chk-text">Susenas Maret 2024 — data tersedia</span></li>
+          <li class="check-item done" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9745;</span><span class="chk-text">Podes 2024 — data tersedia</span></li>
+          <li class="check-item done" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9745;</span><span class="chk-text">Pendugaan langsung (direct estimation)</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Seleksi variabel penyerta (backward elimination)</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">SAE EBLUP (Fay-Herriot)</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">SAE HB Beta (MCMC)</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Evaluasi &amp; perbandingan RRMSE</span></li>
+          <li class="check-item" onclick="toggleCheck(this)"><span class="chk-icon chk-box">&#9744;</span><span class="chk-text">Pemetaan spasial</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="l2-section" id="hasil-ringkasan">
+    <h2 class="section-title" style="color:var(--yellow)">Ringkasan Output Sementara</h2>
+    <p class="section-desc">Ringkasan hasil pengolahan sementara berdasarkan data RSE penduga langsung yang sudah tersedia.</p>
+    <div class="kn-grid">
+      <div class="kn-card" style="--kn-clr:var(--green)"><div class="kn-num">2</div><div class="kn-label">Wilayah RSE ≤ 25%<br>(Akurat)</div></div>
+      <div class="kn-card" style="--kn-clr:var(--yellow)"><div class="kn-num">48</div><div class="kn-label">Wilayah RSE 25–50%<br>(Hati-hati)</div></div>
+      <div class="kn-card" style="--kn-clr:var(--pink)"><div class="kn-num">26</div><div class="kn-label">Wilayah RSE &gt; 50%<br>(Tidak Layak)</div></div>
+      <div class="kn-card" style="--kn-clr:var(--blue)"><div class="kn-num">44%</div><div class="kn-label">Median RSE<br>Sulawesi</div></div>
+      <div class="kn-card" style="--kn-clr:var(--accent)"><div class="kn-num">47.56%</div><div class="kn-label">Rata-rata RSE<br>Sulawesi</div></div>
+      <div class="kn-card" style="--kn-clr:var(--purple)"><div class="kn-num">101.39%</div><div class="kn-label">RSE Tertinggi<br>(Pencilan)</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📍 2 Wilayah dengan RSE Terbaik (≤ 25%)</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Kode</th><th>Wilayah</th><th>Kategori RSE</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green)">7111</td><td>Kab. Bolaang Mongondow Timur</td><td><span class="chip" style="background:rgba(123,198,126,.15);color:var(--green)"><span class="chip-dot" style="background:var(--green)"></span>RSE ≤ 25%</span></td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--green)">7325</td><td>Kab. Luwu Timur</td><td><span class="chip" style="background:rgba(123,198,126,.15);color:var(--green)"><span class="chip-dot" style="background:var(--green)"></span>RSE ≤ 25%</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔴 26 Wilayah RSE &gt; 50% — Tidak Layak Kebijakan</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+        <script>
+        const rse50=['7101·Bolaang Mongondow','7104·Kep. Talaud','7171·Kota Manado','7173·Kota Tomohon','7201·Banggai Kep.','7203·Morowali','7204·Poso','7212·Morowali Utara','7271·Kota Palu','7301·Kep. Selayar','7305·Takalar','7307·Sinjai','7312·Soppeng','7315·Pinrang','7402·Muna','7405·Konawe Selatan','7407·Wakatobi','7414·Buton Tengah','7415·Buton Selatan','7472·Kota Baubau','7502·Gorontalo','7505·Gorontalo Utara','7571·Kota Gorontalo'];
+        document.write(rse50.map(w=>`<span style="font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(224,108,136,.1);color:var(--pink);border:1px solid rgba(224,108,136,.2);font-family:'DM Mono',monospace">${w}</span>`).join(''));
+        </script>
+      </div>
+    </div>
+    <div class="info-note" style="margin-top:20px">
+      <span class="info-note-icon" style="color:var(--yellow)">💡</span>
+      <span>Interpretasi: 32% dari 81 wilayah di Sulawesi memiliki RSE &gt;50% (tidak layak dijadikan dasar kebijakan). Hanya 2,5% (2 wilayah) yang mencapai estimasi akurat. Ini membuktikan urgensi penggunaan SAE sebagai solusi metodologis.</span>
+    </div>
+  </div>
+</div><!-- end l1-hasil -->
+
+<script>
+/* ======= DATA ======= */
+const qSiti = [
+  [1,'Tujuannya apa sih tadi? Mendapatkan estimasi yang terbaik.'],
+  [2,'Kalau udah dapat estimasi siapa pengguna? Pemprov provinsi dan kab/kota.'],
+  [3,'Coba lihat latar belakang, ini kan ada beberapa data yang sudah kamu sajikan.'],
+  [4,'Dispensasi nikah, datanya dari mana? Ini kan perkawinan yang seharusnya tercatat di negara. Di KUA kan ada kan?'],
+  [5,'Apakah dari data negara ada catatan perkawinan dari penduduk?'],
+  [6,'Fajar jawab: definisi perkawinan anak + living together.'],
+  [7,'Dimana kamu jelaskan di proposal. Yang formal kamu sajikan ga? Udah dicek belum kira-kira?'],
+  [8,'Pakai data dari mana? Dari BPS Bu utamanya.'],
+  [9,'Harusnya dijelaskan, ada harusnya catatan perkawinan sampai level desa. Yang gak resmi itu: Kawin siri dan tercatat.'],
+  [10,'Perbandingan antara data catatan perkawinan resmi vs tidak resmi.'],
+  [11,'Jangan mengatakan tidak ada di level kabupaten/kota tanpa pembuktian.'],
+  [12,'Nah itu kamu kan akan menghasilkan suatu angka. Kenapa harus pakai SAE?'],
+  [13,'Fajar menjawab: presisi bisa ditingkatkan.'],
+  [14,'Gimana cara mengukur presisi?'],
+  [15,'Fajar menjawab: RSE (Relative Standard Error).'],
+  [16,'Kapan SAE menjadi solusi — ketika estimasi langsung RSE tinggi? Sudah kamu buktikan belum? Udah ke BPS?'],
+  [17,'Yang ada di BPS di level apa? Provinsi Bu. Ada gak di publikasi RSE-nya?'],
+  [18,'Ada gak penjelasannya disini? Nah itu artinya harus jelas. Istilahnya kamu memilih metode dan alat.'],
+  [19,'Pasti menurunkan apa tadi? Pasti? Presisi meningkat?'],
+  [20,'Jadi kenapa kamu menggunakannya SAE?'],
+  [21,'Sitasi kamu di SAE — statement siapa? Apakah hanya Putri? Sitasinya agak keliru. Hasil penelitian atau statement?'],
+  [22,'Halaman 2 paragraf berapa?'],
+  [24,'Sementara pendugaan langsung, sitasi 17 ternyata Rao dan Molina. Gimana statement-nya?'],
+  [25,'Kamu pakai textbook tapi seolah-olah hasil penelitian. Harus diperbaiki.'],
+  [26,'Kamu pakai SAE. Ada berapa banyak? Kenapa harus EBLUP dulu? Podes dan DDA?'],
+  [28,'Sehingga layak si EBLUP sebagai baseline.'],
+  [29,'Kalau EBLUP untuk apa? Untuk kontinu. Jadi kenapa harus ke EBLUP dulu?'],
+  [30,'Terus kamu menggunakan variabel-variabel. Coba lihat di dimensinya. Gimana cara menentukan variabel penyerta?'],
+  [31,'Kalau di Stranas, level individu itu apa definisinya? Terus kamu milihnya apa?'],
+  [32,'Kira-kira kaitan gizi buruk dengan slide 7 level individu?'],
+  [33,'Saya terganggu banget individu dengan gizi buruk. Kira-kira apa sih yang mewakili pengetahuan. Ada gak data pendidikan?'],
+  [34,'Kamu udah lihat belum, profil yang menjalani pernikahan anak seperti apa? Siapa biasanya yang menikah pada anak-anak?'],
+  [35,'Sama sekali ga ada pendidikan kan disini? Slide 14. Sehingga variabel penyerta memiliki kekuatan yang lebih.']
+];
+const qFebri = [
+  [1,'Sebenarnya risetnya mau ngapain?'],
+  [2,'Intinya mau ngapain? Intinya kacamata apa?'],
+  [3,'Kenapa mau diestimasi?'],
+  [4,'Gausah kaitkan dengan IPM. Langsung aja datanya ga tersedia. Sederhana aja.'],
+  [5,'Ketika melakukan estimasi pakai SAE. Tiba-tiba di tujuan ada EBLUP, Bayesian Beta. Kenapa?'],
+  [6,'Ga ada di identifikasi masalah. Kamu bicaralah kelebihan pendekatan metode dari banyak SAE tadi.'],
+  [7,'Makanya nanti kamu punya tujuan, kamu mau membandingkan metode-metode ini.'],
+  [8,'Kenapa dibandingkan dengan estimasi langsung? Bu Siti: nah itu, udah jelas-jelas tidak terbanding.'],
+  [9,'Ketika kamu membandingkan metode. Sehingga di landasan teori yang digunakan, lebih ke perbandingan model.'],
+  [10,'Dampak masukan di urgensinya aja.'],
+  [11,'Penelitian terkait juga tentang metode. Tentang EBLUP, Bayesian. Sudut pandang kamu bukan faktor yang memengaruhi. Lebih ke estimasi dan perbandingan model.'],
+  [12,'Bu Siti nyambung: bisa gak kamu melakukan SAE tanpa melakukan estimasi langsung? Gak bisa? Terus kenapa kamu bandingkan?']
+];
+
+/* render question lists */
+function renderQ(data, elId, color) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = data.map(([n,t]) =>
+    `<li class="q-item"><span class="q-num" style="color:${color}">${n}</span><span class="q-text">${t}</span></li>`
+  ).join('');
+}
+renderQ(qSiti, 'qlist-siti', 'var(--pink)');
+renderQ(qFebri, 'qlist-febri', 'var(--blue)');
+
+/* revisi Bu Siti data */
+const revSiti = [
+  [1,'Tujuan','Pertegas tujuan penelitian secara eksplisit','Tujuan harus jelas: mendapatkan estimasi terbaik prevalensi perkawinan anak','var(--accent)'],
+  [2,'Manfaat','Tambahkan penjelasan siapa pengguna hasil estimasi','Sebutkan secara eksplisit: Pemerintah Provinsi dan Kabupaten/Kota','var(--accent)'],
+  [3,'Latar Belakang','Perbaiki dan lengkapi penyajian data di latar belakang','Data yang disajikan harus lebih kuat dan relevan mendukung urgensi penelitian','var(--accent)'],
+  [4,'Sumber Data','Jelaskan sumber data dispensasi nikah secara rinci','Sebutkan bahwa data perkawinan tercatat di KUA dan cakupannya','var(--blue)'],
+  [5,'Tinjauan Pustaka','Tambahkan penjelasan mengenai catatan perkawinan resmi dari negara','Apakah data perkawinan penduduk tersedia dari catatan sipil/negara?','var(--blue)'],
+  [6,'Definisi','Tulis definisi perkawinan anak secara formal di proposal','Definisi (termasuk <em>living together</em>) yang disampaikan lisan harus tercantum di naskah','var(--blue)'],
+  [7,'Sumber Data','Jelaskan cakupan data perkawinan sampai level desa','Tunjukkan bahwa data resmi ada/tidak sampai level desa, dan keterbatasannya','var(--blue)'],
+  [8,'Sumber Data','Tambahkan perbandingan data catatan perkawinan resmi vs tidak resmi','Kawin siri vs tercatat harus dibahas sebagai bagian dari gap data','var(--blue)'],
+  [9,'Sumber Data','Jangan menyatakan "tidak ada data di level kab/kota" tanpa pembuktian','Harus dicek terlebih dahulu ke BPS, apakah benar tidak tersedia','var(--blue)'],
+  [10,'Justifikasi Metode','Buktikan secara empiris bahwa RSE estimasi langsung tinggi sebelum memilih SAE','Tunjukkan data RSE dari publikasi BPS sebagai justifikasi penggunaan SAE','var(--accent)'],
+  [11,'Justifikasi Metode','Tambahkan penjelasan kapan SAE menjadi solusi yang tepat','Jelaskan kondisi (presisi estimasi langsung rendah/RSE tinggi) → SAE layak digunakan','var(--accent)'],
+  [12,'Justifikasi Metode','Jelaskan bahwa SAE pasti meningkatkan presisi dengan argumen yang kuat','Jangan hanya klaim, harus ada dasar teori/empiris yang mendukung','var(--accent)'],
+  [13,'Presisi','Tambahkan penjelasan cara mengukur presisi secara formal','Jelaskan indikator presisi: RSE (Relative Standard Error) dan interpretasinya','var(--accent)'],
+  [14,'Sitasi','Perbaiki sitasi pada bagian SAE — jangan salah atribusi','Pernyataan dari buku teks (misal Rao & Molina) jangan ditulis seolah hasil penelitian','var(--green)'],
+  [15,'Sitasi','Bedakan antara statement dari buku dan hasil penelitian dalam sitasi','Perbaiki cara mensitasi: buku teks ≠ artikel penelitian','var(--green)'],
+  [16,'Pemilihan Metode','Jelaskan kenapa EBLUP dipilih sebagai baseline sebelum metode lain','Argumentasi harus logis: EBLUP → baseline → lanjut ke metode lain (kontinu)','var(--accent)'],
+  [17,'Variabel Penyerta','Jelaskan secara sistematis cara menentukan variabel penyerta','Pemilihan variabel harus berdasarkan teori dan logika, bukan hanya ketersediaan data','var(--purple)'],
+  [18,'Variabel Penyerta','Tambahkan variabel pendidikan sebagai variabel penyerta','Profil pelaku perkawinan anak erat kaitannya dengan tingkat pendidikan — harus masuk','var(--purple)'],
+  [19,'Variabel Penyerta','Jelaskan relevansi variabel gizi buruk di level individu','Hubungan gizi buruk dengan perkawinan anak di level individu harus dijelaskan secara logis','var(--purple)'],
+  [20,'Variabel Penyerta','Kaji ulang relevansi dan kekuatan tiap variabel penyerta','Variabel harus mewakili pengetahuan/kondisi nyata, bukan sekadar memenuhi syarat statistik','var(--purple)'],
+];
+const tblSiti = document.querySelector('#tbl-siti tbody');
+revSiti.forEach(([n,bag,poin,ket,clr]) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="num-cell" style="color:var(--pink)">${n}</td><td><span class="tag-cell" style="background:rgba(255,255,255,.06);color:${clr}">${bag}</span></td><td>${poin}</td><td>${ket}</td>`;
+  tblSiti.appendChild(tr);
+});
+
+const revFebri = [
+  [1,'Tujuan','Pertegas inti riset secara ringkas dan mudah dipahami','Jawab dengan jelas: riset ini bertujuan mengestimasi prevalensi perkawinan anak di level kab/kota','var(--accent)'],
+  [2,'Latar Belakang','Sederhanakan justifikasi — tidak perlu dikaitkan dengan IPM','Langsung saja ke persoalan: data tidak tersedia di level yang diinginkan','var(--accent)'],
+  [3,'Identifikasi Masalah','Tambahkan ke identifikasi masalah: adanya beragam metode SAE','EBLUP, Bayesian Beta, dll. harus dimunculkan di identifikasi masalah sebagai dasar pemilihan','var(--blue)'],
+  [4,'Tujuan','Perbaiki tujuan: masukkan perbandingan antar metode SAE sebagai tujuan','Tujuan = membandingkan metode SAE (EBLUP, Bayesian Beta, dll.) untuk estimasi terbaik','var(--accent)'],
+  [5,'Tujuan','Jelaskan kenapa estimasi langsung dibandingkan dengan SAE','Estimasi langsung = baseline wajib dalam SAE, bukan sekadar pembanding biasa','var(--accent)'],
+  [6,'Landasan Teori','Arahkan landasan teori ke perbandingan model SAE, bukan faktor penyebab','Fokus teori bukan pada "mengapa perkawinan anak terjadi" tapi pada "bagaimana mengestimasi"','var(--green)'],
+  [7,'Penelitian Terkait','Ubah sudut pandang penelitian terkait ke perspektif metode estimasi','Studi terkait harus membahas penggunaan EBLUP, Bayesian, SAE — bukan hanya faktor sosial','var(--green)'],
+  [8,'Urgensi','Masukkan dampak/urgensi ke bagian urgensi saja, bukan tersebar','Dampak perkawinan anak cukup di bagian urgensi sebagai motivasi','var(--accent)'],
+  [9,'Keseluruhan','Pastikan output penelitian jelas: menghasilkan estimasi, bukan analisis sebab-akibat','Tegaskan bahwa ini bukan studi regresi/kausal, melainkan studi estimasi area kecil','var(--purple)'],
+  [10,'Variabel Penyerta','Cara memilih variabel penyerta: lihat dulu hubungan di level yang lebih tinggi','Sebelum pakai di level kab/kota, cek korelasi variabel di level provinsi/nasional','var(--purple)'],
+  [11,'Variabel Penyerta','Variabel penyerta harus masuk akal secara substansif, bukan sekadar signifikan statistik','Jelaskan logika mengapa setiap variabel dipilih dari perspektif teori/praktik','var(--purple)'],
+  [12,'Metode','Jelaskan kelebihan dan kekurangan masing-masing metode SAE yang digunakan','Bandingkan EBLUP vs Bayesian Beta secara eksplisit sebelum memilih','var(--green)'],
+];
+const tblFebri = document.querySelector('#tbl-febri tbody');
+revFebri.forEach(([n,bag,poin,ket,clr]) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="num-cell" style="color:var(--blue)">${n}</td><td><span class="tag-cell" style="background:rgba(255,255,255,.06);color:${clr}">${bag}</span></td><td>${poin}</td><td>${ket}</td>`;
+  tblFebri.appendChild(tr);
+});
+
+const breakdown = [
+  ['Fokus & Tujuan','var(--accent)','Pertanyakan tujuan utama: mendapatkan estimasi terbaik untuk siapa? (Pemprov & Kab/Kot) [BS-1,2]','Tegaskan riset ini adalah tentang <strong>estimasi</strong>, bukan hubungan sebab-akibat [PF-1,11]','Geser narasi dari "analisis faktor" ke <strong>studi estimasi dan perbandingan model</strong> guna menghasilkan angka presisi bagi kebijakan daerah.'],
+  ['Latar Belakang & Data','var(--blue)','Jelaskan cakupan data: perbandingan catatan resmi (KUA/Dispensasi) dengan realita lapangan (siri/living bersama) [BS-4,6,9]','Sederhanakan alasan estimasi: data tidak tersedia secara andal. Jangan terlalu mengaitkan dengan IPM [PF-4]','Masukkan definisi perkawinan anak SDGs 5.3.1 yang mencakup <strong>hidup bersama</strong>. Buktikan ketiadaan data andal dengan mencantumkan <strong>nilai RSE</strong> dari BPS.'],
+  ['Identifikasi Masalah','var(--green)','Harus jelas mengapa SAE menjadi solusi. Kapan SAE diperlukan? (saat RSE tinggi) [BS-12,16]','Jelaskan kelebihan dan kekurangan berbagai metode SAE yang akan dibandingkan [PF-6]','Tambahkan sub-bab yang mengulas perbandingan kelebihan/kekurangan <strong>EBLUP vs Bayesian HB Beta</strong> dalam Identifikasi Masalah.'],
+  ['Literatur & Sitasi','var(--yellow)','Koreksi sitasi: bedakan antara <strong>pernyataan buku teks</strong> (Rao & Molina) dengan hasil penelitian orang lain [BS-21,24,25]','Tinjauan pustaka harus lebih fokus pada <strong>metode estimasi</strong> dan perbandingan model, bukan faktor pengaruh [PF-9,11]','Periksa kembali Bab 2; pastikan teori umum SAE dirujuk sebagai kerangka teori, bukan temuan penelitian.'],
+  ['Metodologi (SAE)','var(--purple)','Mengapa pakai EBLUP dulu? (sebagai baseline). Ingat EBLUP untuk data kontinu, HB Beta untuk proporsi [BS-26,29]','Jangan bandingkan SAE dengan estimasi langsung secara <em>head-to-head</em> karena sudah jelas tidak sebanding [PF-8,12]','Gunakan pendugaan langsung sebagai <strong>input model</strong> dan <strong>benchmark peningkatan presisi (RRMSE)</strong>, bukan pembanding kualitas akhir.'],
+  ['Variabel Penyerta','var(--pink)','<strong>Kritik Keras:</strong> Definisi level "Individu" tidak cocok dengan "Gizi Buruk". Masukkan variabel <strong>Pendidikan</strong> ke level individu [BS-31,33,35]','Pemilihan variabel harus <strong>masuk akal secara sosiologis</strong>, bukan sekadar melihat angka korelasi [PF-10,11]','Rekonstruksi variabel di Tabel 1. Pindahkan/tambahkan variabel pendidikan ke dimensi individu sesuai profil pelaku. [BS-34]'],
+];
+const tblBD = document.getElementById('tbl-breakdown');
+breakdown.forEach(([cat,clr,...cols]) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><span class="breakdown-cat" style="color:${clr}">${cat}</span></td>${cols.map(c=>`<td>${c}</td>`).join('')}`;
+  tblBD.appendChild(tr);
+});
+
+/* ======= RANCANGAN LB DATA ======= */
+const temaLB = [
+  { clr:'var(--accent)', badge:'TEMA 1', title:'Urgensi Global dan Komitmen Nasional', range:'P1 – P5', open:true, paras:[
+    ['P1','Perkawinan anak mencakup dua bentuk: formal (tercatat KUA/catatan sipil) dan informal (<em>living together</em>/kawin siri) bagi individu di bawah 18 tahun. UNICEF (2022) dan CRC mendefinisikan batas 18 tahun sebagai ambang kematangan biologis, psikologis, sosial. Indikator SDGs 5.3.1 secara eksplisit mencakup <em>married or in union</em>. Definisi ini berlaku di seluruh penelitian — mencakup perkawinan formal maupun ikatan informal.',['📋 BS-[6] Definisi formal + living together','📋 BS-[8] Perkawinan resmi vs tidak resmi'],'📋 BS-[6]: Definisi <em>living together</em> harus masuk naskah secara eksplisit.<br>📋 BS-[8]: Perkawinan resmi vs tidak resmi harus dibahas.','🔀 Latar Belakang & Data › Arah Revisi'],
+    ['P2','Perkawinan anak membebani perempuan secara tidak proporsional: 1 dari 5 perempuan usia 20–24 tahun menikah sebelum 18 tahun vs hanya 1 dari 30 laki-laki (UNICEF, 2024). Ketimpangan berakar pada konstruksi sosial peran gender, relasi kuasa, tekanan norma, dan keterbatasan akses pendidikan (Parsons et al., 2015).',['📋 BS-[3] Penyajian data harus kuat dan relevan'],'📋 BS-[3]: Penyajian data di latar belakang harus kuat dan relevan.','🔀 Fokus & Tujuan › Masukan Bu Siti'],
+    ['P3','Dampak perkawinan anak bersifat sistemik — diposisikan sebagai landasan urgensi, bukan fokus analisis. Mencakup: risiko kesehatan reproduksi (Yaya et al., 2019; Nour, 2009), putus sekolah dan hilangnya peluang ekonomi (Cameron et al., 2023), kemiskinan antargenerasi, penurunan produktivitas tenaga kerja nasional.',['📋 PF-[8] Dampak cukup di bagian urgensi'],'📋 PF-[8]: Dampak cukup di bagian urgensi, tidak perlu mendominasi latar belakang.','🔀 Latar Belakang & Data › Masukan Pak Febri'],
+    ['P4','SDGs Target 5.3 → eliminasi perkawinan anak pada 2030. Indikator 5.3.1: proporsi perempuan 20–24 tahun yang kawin atau hidup bersama sebelum 18 tahun. Frasa "hidup bersama" (<em>in union</em>) secara eksplisit mencakup perkawinan informal dan kawin siri. Pendekatan retrospektif dipilih agar pengalaman perkawinan anak dapat diukur stabil.',['📋 BS-[6] Living together harus disebutkan eksplisit'],'📋 BS-[6]: <em>Living together</em> harus disebutkan eksplisit dalam definisi indikator.','🔀 Latar Belakang & Data › Arah Revisi'],
+    ['P5','Respons Indonesia: UU No. 16/2019 (batas usia 19 tahun), RPJMN, Stranas PPA. Prevalensi nasional turun ke 5,9% (2024), melampaui target 8,74% (BPS, 2024). Namun capaian agregat nasional berpotensi mengaburkan disparitas antarwilayah yang masih tajam — menjadi transisi ke Tema 2.',['📋 PF-[1] Capaian nasional belum merata'],'📋 PF-[1]: Pertegas inti — capaian nasional belum merata, analisis kewilayahan menjadi penting.','🔀 Fokus & Tujuan › Masukan Pak Febri'],
+  ]},
+  { clr:'var(--blue)', badge:'TEMA 2', title:'Disparitas Regional dan Lokus Sulawesi', range:'P6 – P10', open:false, paras:[
+    ['P6','Disparitas spasial masih nyata: kawasan barat vs timur, kota vs desa (BPS, 2024). Sulawesi konsisten tertinggi: 16,42% (2018) → 8,93% (2024), masih di atas target nasional 8,74%. Jawa–Sumatera sudah di kisaran 4–5%, Kalimantan dan Bali–NTT di 7–8%.',['📋 BS-[3] Data latar belakang harus kuat'],'📋 BS-[3]: Penyajian data latar belakang harus kuat dan relevan.','🔀 Latar Belakang & Data › Masukan Bu Siti'],
+    ['P7','(Gambar 1 — Tren prevalensi per pulau 2018–2024.) Penurunan di Sulawesi relatif lebih lambat dibanding wilayah lain selama 2018–2024. Pola ini menempatkan Sulawesi sebagai lokus strategis untuk dikaji lebih lanjut.',['📋 BS-[3]'],'📋 BS-[3]: Penyajian data latar belakang harus kuat dan relevan.','Elemen: Gambar 1 Tren prevalensi per pulau 2018–2024'],
+    ['P8','Anomali pembangunan: 3 dari 5 provinsi Sulawesi ber-IPM tinggi belum capai target penurunan perkawinan anak (BPS, 2025). Peningkatan indikator makro tidak otomatis menurunkan praktik perkawinan anak karena faktor sosial-budaya tetap dominan (Kuswanto et al., 2024). Diakhiri: kondisi ini mendorong kebutuhan data granular di level kab/kota.',['📋 PF-[2] Jangan terlalu kaitkan IPM'],'📋 PF-[2]: Jangan terlalu kaitkan IPM. Langsung ke: data tidak tersedia di level yang dibutuhkan.','🔀 Latar Belakang & Data › Masukan Pak Febri'],
+    ['P9','Norma budaya lokal sebagai konteks — bukan fokus analisis: CMAI Sulawesi Selatan dan Tengah menunjukkan penerimaan sosial terhadap perkawinan anak masih tinggi (Ratnaningsih et al., 2022). Persepsi kehormatan keluarga mendorong perkawinan informal yang tidak terdaftar (Rumble et al., 2018).',['📋 PF-[2] Faktor sosial-budaya bukan fokus analisis'],'📋 PF-[2]: Faktor sosial-budaya bukan fokus analisis — cukup sebagai pengantar gap data.','🔀 Fokus & Tujuan › Masukan Pak Febri'],
+    ['P10','Variasi internal besar dalam satu provinsi → agregat provinsi menyembunyikan kantong kerentanan tinggi. Tambunan et al. (2024): pola perkawinan anak bersifat klaster. Diperlukan estimasi presisi hingga level kab/kota — untuk Pemerintah Provinsi dan Kabupaten/Kota sebagai pelaksana utama kebijakan.',['📋 BS-[1] Tujuan: estimasi terbaik','📋 BS-[2] Pengguna: Pemprov & Kab/Kota'],'📋 BS-[1]: Tujuan mendapat estimasi terbaik.<br>📋 BS-[2]: Pengguna Pemprov & Kab/Kota.','🔀 Fokus & Tujuan › Arah Revisi'],
+  ]},
+  { clr:'var(--green)', badge:'TEMA 3', title:'Mandat Stranas dan Kebutuhan Data Wilayah', range:'P11 – P15', open:false, paras:[
+    ['P11','Stranas PPA mendorong <em>localized intervention</em> (Bappenas, 2020). Pemerintah provinsi dan kabupaten/kota ditempatkan eksplisit sebagai aktor kunci. Efektivitas Stranas PPA bergantung pada kapasitas daerah memahami profil wilayahnya berdasarkan data akurat.',['📋 BS-[2] Pengguna estimasi: Pemprov & Kab/Kota'],'📋 BS-[2]: Pengguna estimasi harus disebutkan eksplisit: Pemprov & Kab/Kota.','🔀 Fokus & Tujuan › Masukan Bu Siti'],
+    ['P12','Kerangka desentralisasi: kab/kota memiliki kewenangan luas atas pendidikan, kesehatan, perlindungan sosial (Lewis, 2016). Prinsip <em>evidence-based policy</em> menuntut data granular dan presisi di level kab/kota. Tanpa data tersebut, kebijakan berisiko tidak tepat sasaran.',['📋 PF-[1] Output penelitian: estimasi untuk kebijakan daerah'],'📋 PF-[1]: Pertegas output penelitian: estimasi untuk kebijakan daerah.','🔀 Fokus & Tujuan › Masukan Pak Febri'],
+    ['P13','Lima tahap Stranas PPA — Tahap 1: pemetaan kondisi daerah sebagai fondasi penyusunan RAD (KemenPPPA, 2024). (Gambar 2.) <em>Baseline</em> yang kuat menjadi prasyarat agar intervensi selaras kebutuhan riil masyarakat.',['📋 BS-[2]'],'📋 BS-[2]: Pengguna estimasi.','Elemen: Gambar 2 Lima tahap proses pelaksanaan STRANAS PPA di daerah'],
+    ['P14','Variasi internal dalam satu provinsi bisa sangat besar. UNICEF (2020): gagal identifikasi wilayah prioritas = inefisiensi alokasi sumber daya dan hambatan percepatan SDGs. Angka provinsi tidak cukup untuk perencanaan intervensi yang tepat.',['📋 BS-[9] Jangan klaim tidak ada data tanpa pembuktian'],'📋 BS-[9]: Jangan klaim tidak ada data di level kab/kota tanpa pembuktian.','🔀 Latar Belakang & Data › Masukan Bu Siti'],
+    ['P15','Data KUA/Dukcapil tersedia hingga level desa, namun tidak valid sebagai ukuran prevalensi — hanya menangkap perkawinan jalur formal. AIPJ2 (2022): 83,33% praktik perkawinan anak tidak tercatat dalam sistem administratif formal → bias seleksi besar. Menjadi jembatan ke Tema 4.',['📋 BS-[4]','📋 BS-[5]','📋 BS-[7] Cakupan data KUA sampai level desa'],'📋 BS-[4],[5],[7]: Cakupan data KUA sampai level desa, catatan resmi negara, dan perbandingan formal vs informal harus dijelaskan.','🔀 Latar Belakang & Data › Masukan Bu Siti'],
+  ]},
+  { clr:'var(--yellow)', badge:'TEMA 4', title:'Indikator dan Keterbatasan Data', range:'P16 – P19', open:false, paras:[
+    ['P16','Indikator SDGs 5.3.1 via Susenas lebih andal: mencakup perkawinan formal dan informal (<strong>living together</strong>) yang tidak tertangkap data KUA. Susenas adalah satu-satunya sumber resmi yang mampu menangkap seluruh spektrum definisi perkawinan anak secara komprehensif (BPS, 2024).',['📋 BS-[6] Definisi living together','📋 BS-[8] Perbandingan resmi vs informal'],'📋 BS-[6],[8]: Definisi <em>living together</em> harus masuk. Perbandingan resmi vs tidak resmi.','🔀 Latar Belakang & Data › Arah Revisi'],
+    ['P17','Data dispensasi nikah bukan ukuran prevalensi yang valid. AIPJ2 (2022): 83,33% tidak tercatat resmi — hanya 16,6% masuk jalur formal. Data administratif menghasilkan <em>underestimation</em> besar → Susenas tetap sumber paling andal.',['📋 BS-[4],[8],[9]'],'📋 BS-[4],[8],[9]: Dispensasi nikah datanya dari mana. Perbandingan resmi vs informal. Jangan klaim tidak ada tanpa bukti.','🔀 Latar Belakang & Data › Masukan Bu Siti'],
+    ['P18','Meski Susenas unggul, desain sampelnya hanya representatif hingga level provinsi. Domain kab/kota: sampel kecil → varians estimasi besar → presisi rendah (Lohr, 2010). Persoalannya bukan pada definisi indikator, melainkan pada kapasitas teknis pendugaan di wilayah kecil.',['📋 BS-[10],[11] Kapan SAE menjadi solusi'],'📋 BS-[10],[11]: Kapan SAE menjadi solusi — ketika presisi estimasi langsung rendah.','🔀 Identifikasi Masalah › Masukan Bu Siti'],
+    ['P19','Gap utama: kebutuhan data kab/kota (Stranas PPA) berbenturan dengan keterbatasan desain survei nasional. Persoalan mengarah bukan pada pilihan indikator, tetapi pada kebutuhan metode pendugaan statistik yang lebih tepat.',['📋 PF-[1],[2] Sederhanakan: data tidak tersedia → SAE solusi'],'📋 PF-[1],[2]: Sederhanakan: data tidak tersedia secara andal → SAE sebagai solusi.','🔀 Latar Belakang & Data › Masukan Pak Febri'],
+  ]},
+  { clr:'var(--pink)', badge:'TEMA 5', title:'Problem Presisi Statistik (RSE)', range:'P20 – P22', open:false, paras:[
+    ['P20','RSE sebagai ukuran presisi: rasio standar error terhadap nilai estimasi (Lohr, 2010). Kriteria BPS (2023): RSE ≤25% (akurat), 25–50% (perlu hati-hati), >50% (tidak layak dasar kebijakan). (Tabel 1 — Interpretasi dan kategori nilai RSE, Sumber: BPS 2023.)',['📋 BS-[13] Cara mengukur presisi harus dijelaskan formal'],'📋 BS-[13]: Cara mengukur presisi harus dijelaskan secara formal dengan RSE.','🔀 Identifikasi Masalah › Masukan Bu Siti'],
+    ['P21','Bukti empiris RSE kab/kota Sulawesi: dari 81 kab/kota, hanya 2 wilayah RSE ≤25%, 26 wilayah RSE >50% (tidak layak kebijakan), median RSE 44%, rata-rata 47,56%, tertinggi 101,39%. Pendugaan langsung terbukti tidak andal untuk perencanaan kebijakan daerah.',['📋 BS-[10],[11] RSE tinggi harus dibuktikan empiris'],'📋 BS-[10],[11]: RSE tinggi harus dibuktikan secara empiris — detail di Identifikasi Masalah, ringkasan di sini.','🔀 Identifikasi Masalah › Masukan Bu Siti'],
+    ['P22','Implikasi RSE tinggi: salah identifikasi wilayah prioritas, inefisiensi anggaran, gagal menjangkau kelompok rentan → hambat pemetaan kondisi daerah Stranas PPA. Solusi konvensional (tambah sampel) tidak <em>feasible</em>: biaya besar dan beban operasional tidak proporsional untuk 81 kab/kota Sulawesi.',['📋 BS-[12] SAE pasti meningkatkan presisi'],'📋 BS-[12]: SAE pasti meningkatkan presisi — butuh argumen kuat.<br>📋 BS-[13]','🔀 Identifikasi Masalah › Arah Revisi'],
+  ]},
+  { clr:'var(--purple)', badge:'TEMA 6', title:'SAE sebagai Solusi Metodologis', range:'P23 – P27', open:false, paras:[
+    ['P23','SAE sebagai <em>indirect estimation</em> — prinsip <em>borrowing strength</em>: mengintegrasikan data survei dengan variabel penyerta (Podes 2024, DDA 2025) melalui model statistik untuk meningkatkan presisi domain kecil tanpa menambah beban survei (Rao & Molina, 2015).',['📋 BS-[11]','📋 PF-[1]'],'📋 BS-[11], PF-[1]: SAE sebagai solusi indirect estimation.','🔀 Metodologi (SAE) › Arah Revisi'],
+    ['P24','SAE: model level unit (butuh data mikro terhubung langsung) vs model level area (hanya butuh informasi agregat wilayah). Level area lebih sesuai karena variabel penyerta dari Podes 2024 dan DDA 2025 hanya tersedia dalam bentuk agregat kab/kota (Rao & Molina, 2015).',['📋 BS-[16] Mengapa EBLUP dulu? Jelaskan sebagai baseline'],'📋 BS-[16]: Mengapa EBLUP dulu? Jelaskan sebagai baseline.','🔀 Metodologi (SAE) › Masukan Bu Siti'],
+    ['P25','EBLUP sebagai baseline — lazim di statistik resmi, stabil dan efisien untuk variabel kontinu, estimasi varians via REML. <strong>Kelebihan:</strong> implementasi mudah, teruji luas. <strong>Kekurangan:</strong> asumsi normalitas kurang ideal untuk data proporsi [0,1] — tidak menjamin estimasi berada dalam rentang valid.',['📋 BS-[16]','📋 PF-[6] Ulas kelebihan & kekurangan'],'📋 BS-[16], PF-[6]: EBLUP untuk kontinu, jadikan baseline. Ulas kelebihan & kekurangan.','🔀 Metodologi (SAE) › Masukan Bu Siti + Masukan Pak Febri'],
+    ['P26','HB Beta sebagai alternatif — distribusi Beta alami pada [0,1] → secara inheren menjamin estimasi proporsi dalam rentang valid (Ferrari & Cribari-Neto, 2004). Lebih stabil pada domain sampel sangat kecil. <strong>Kekurangan:</strong> kompleks secara komputasi — memerlukan algoritma MCMC. Keunggulan teoritis HB Beta perlu dibuktikan melalui komparasi empiris menggunakan RRMSE.',['📋 BS-[16]','📋 PF-[6] Kelebihan & kekurangan tiap metode SAE'],'📋 BS-[16], PF-[6]: Kelebihan & kekurangan tiap metode SAE harus ada sebelum tujuan.','🔀 Metodologi (SAE) › Masukan Bu Siti + Masukan Pak Febri'],
+    ['P27','Penutup & kontribusi: penelitian ini adalah studi estimasi dan perbandingan model — bukan studi kausalitas. Pendugaan langsung diposisikan sebagai input model dan benchmark peningkatan presisi (RRMSE). Output: estimasi prevalensi perkawinan anak paling presisi di level kab/kota Sulawesi 2024, untuk Pemprov & Kab/Kota sebagai dasar pemetaan dan kebijakan.',['📋 BS-[1],[2]','📋 PF-[1],[2] Inti riset: estimasi. Untuk siapa? Pemprov & Kab/Kota'],'📋 BS-[1],[2], PF-[1],[2]: Inti riset adalah estimasi. Untuk siapa? Pemprov & Kab/Kota.','🔀 Fokus & Tujuan › Arah Revisi'],
+  ]},
+];
+
+function buildTema(data, containerId, defaultOpen) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  data.forEach(tema => {
+    const isOpen = tema.open || defaultOpen;
+    const block = document.createElement('div');
+    block.className = 'tema-block';
+    block.style.cssText = `--tema-clr:${tema.clr}`;
+    const btnClass = isOpen ? 'tema-header-btn open' : 'tema-header-btn';
+    const bodyClass = isOpen ? 'tema-body open' : 'tema-body';
+    const badgeBg = tema.clr === 'var(--yellow)' ? `background:${tema.clr};color:#0d1117` : `background:${tema.clr}`;
+    let paraHTML = tema.paras.map(([num, isi, tags, rev, tbl]) => {
+      const tagsHTML = (Array.isArray(tags) ? tags : []).map(t => `<span class="para-tag">${t}</span>`).join('');
+      return `<div class="para-card" style="--para-clr:${tema.clr}">
+        <span class="para-num">${num}</span>
+        <div class="para-body"><p class="para-isi">${isi}</p><div class="para-tags">${tagsHTML}</div></div>
+        <span class="para-expand-toggle" onclick="toggleParaDetail(this)">▶</span>
+      </div>
+      <div class="para-detail"><div class="detail-grid">
+        <div><div class="detail-label">Tautan Daftar Revisi</div><div class="detail-text">${rev}</div></div>
+        <div><div class="detail-label">Tautan Tabel Penyatuan</div><div class="detail-text">${tbl}</div></div>
+      </div></div>`;
+    }).join('');
+    block.innerHTML = `<button class="${btnClass}" onclick="toggleTema(this)">
+      <span class="tema-badge-label" style="${badgeBg}">${tema.badge}</span>
+      <span class="tema-title-text">${tema.title}</span>
+      <span class="tema-count">${tema.range}</span>
+      <span class="tema-chevron">▶</span>
+    </button>
+    <div class="${bodyClass}" style="border-color:${tema.clr}">${paraHTML}</div>`;
+    container.appendChild(block);
+  });
+}
+buildTema(temaLB, 'rancangan-lb-content');
+
+/* Identifikasi Masalah */
+const temaIM = [
+  { clr:'var(--blue)', badge:'BLOK A', title:'Konteks Substantif Sulawesi', range:'IM-P1 – IM-P3', open:true, paras:[
+    ['IM-P1','Prevalensi Sulawesi 8,93% (2024) — di atas rata-rata nasional 5,9% dan target 8,74% (BPS, 2024). Variasi antarprovinsi tidak homogen. Ketimpangan berpotensi semakin tajam di level kab/kota. Angka rata-rata nasional menyembunyikan kantong kerentanan tinggi (UNICEF, 2020).',['📋 BS-[3] Data harus kuat dan relevan'],'📋 BS-[3]: Data di latar belakang dan identifikasi masalah harus kuat dan relevan.','🔀 Latar Belakang & Data › Masukan Bu Siti'],
+    ['IM-P2','Anomali IPM: beberapa provinsi Sulawesi ber-IPM tinggi namun belum capai target perkawinan anak (BPS, 2025). Peningkatan indikator makro tidak otomatis mencerminkan dinamika sosial-budaya lokal (Kuswanto et al., 2024). Diakhiri: ketergantungan pada indikator makro berisiko menghasilkan interpretasi yang kurang komprehensif.',['📋 PF-[2] Jangan terlalu kaitkan IPM'],'📋 PF-[2]: Jangan terlalu kaitkan IPM. Langsung ke: butuh data granular di level yang dibutuhkan.','🔀 Latar Belakang & Data › Masukan Pak Febri'],
+    ['IM-P3','Norma budaya dan konstruksi sosial lokal — di-<em>reframe</em> sebagai alasan mengapa data administratif tidak cukup menangkap realitas, bukan sebagai faktor penyebab yang dianalisis. Tekanan sosial, legitimasi adat mendorong perkawinan informal yang tidak terdaftar. Regulasi formal belum mampu menggeser norma.',['📋 PF-[2] Faktor sosial-budaya bukan fokus analisis'],'📋 PF-[2]: Faktor sosial-budaya bukan fokus analisis — cukup sebagai pengantar gap data administratif.','🔀 Fokus & Tujuan › Masukan Pak Febri'],
+  ]},
+  { clr:'var(--green)', badge:'BLOK B', title:'Gap Data dan Kebutuhan Estimasi Kab/Kota', range:'IM-P4 – IM-P6', open:false, paras:[
+    ['IM-P4','Data administratif (KUA/Dukcapil) tidak valid sebagai ukuran prevalensi. AIPJ2 (2022): 83,33% praktik perkawinan anak tidak tercatat resmi → bias seleksi tinggi → <em>underestimation</em> besar terhadap kondisi riil. Susenas menjadi sumber paling andal karena cakupan definisinya mencakup perkawinan formal dan informal.',['📋 BS-[4],[8],[9]'],'📋 BS-[4],[8],[9]: Dispensasi nikah bukan ukuran prevalensi. Perbandingan formal vs informal. Jangan klaim tidak ada tanpa bukti.','🔀 Latar Belakang & Data › Masukan Bu Siti'],
+    ['IM-P5','Stranas PPA mengamanatkan pemetaan kondisi daerah sebagai tahap awal RAD (Bappenas, 2020). Kerangka desentralisasi menempatkan Pemprov dan Kab/Kota sebagai pelaksana utama — <em>evidence-based policy</em> menuntut data akurat di level kab/kota (Lewis, 2016). Tanpa data presisi kab/kota → perencanaan tidak tepat sasaran.',['📋 BS-[1],[2] Tujuan: estimasi terbaik. Pengguna: Pemprov & Kab/Kota'],'📋 BS-[1],[2]: Tujuan estimasi terbaik. Pengguna Pemprov & Kab/Kota.','🔀 Fokus & Tujuan › Masukan Bu Siti'],
+    ['IM-P6','Susenas: cakupan luas, definisi operasional konsisten — mencakup perkawinan formal dan <em>living together</em> (BPS, 2024). Namun desain sampelnya hanya representatif hingga tingkat provinsi. Domain kab/kota → sampel kecil → varians estimasi besar → presisi rendah (Lohr, 2010).',['📋 BS-[10],[11] Kapan SAE diperlukan'],'📋 BS-[10],[11]: Kapan SAE diperlukan — ketika presisi estimasi langsung rendah.','🔀 Identifikasi Masalah › Masukan Bu Siti'],
+  ]},
+  { clr:'var(--pink)', badge:'BLOK C', title:'Bukti Empiris RSE dan Justifikasi SAE', range:'IM-P7 – IM-P9', open:false, paras:[
+    ['IM-P7','RSE sebagai ukuran presisi: rasio standar error terhadap nilai estimasi (Cochran, 1977). Kriteria BPS (2023): RSE ≤25% (akurat), 25–50% (kurang presisi, hati-hati), >50% (tidak layak dasar kebijakan). Hasil evaluasi pendugaan langsung kab/kota Sulawesi: RSE tinggi tersebar di hampir seluruh provinsi.',['📋 BS-[13],[16] Cara mengukur presisi harus dijelaskan formal'],'📋 BS-[13],[16]: Cara mengukur presisi harus dijelaskan formal. Sudah dibuktikan ke BPS?','🔀 Identifikasi Masalah › Masukan Bu Siti'],
+    ['IM-P8','Tabel 2 — Distribusi 81 kab/kota Sulawesi berdasarkan kategori RSE: hanya 2 wilayah RSE ≤25%, 48 wilayah masuk kategori hati-hati, dan 26 wilayah RSE >50%. Gambar 3 (boxplot RSE): median RSE ~44%, rata-rata 47,56%, rentang IQR 38,15–53,55%, whisker 22,94–71,44%, pencilan hingga 101,39%. (Sumber: Susenas 2024, diolah)',['📋 BS-[10],[11],[16] Buktikan RSE tinggi secara empiris'],'📋 BS-[10],[11],[16]: Buktikan RSE tinggi secara empiris.','Elemen: Tabel 2 + Gambar 3 (boxplot RSE)'],
+    ['IM-P9','Implikasi RSE tinggi bagi kebijakan: salah identifikasi wilayah prioritas, inefisiensi anggaran, gagal menjangkau kelompok rentan. Solusi konvensional (tambah sampel) tidak <em>feasible</em>: biaya besar, tidak proporsional. Diperlukan pendekatan metodologis alternatif yang meningkatkan presisi tanpa menambah ukuran sampel.',['📋 BS-[12] SAE pasti meningkatkan presisi'],'📋 BS-[12]: SAE pasti meningkatkan presisi — harus ada argumen kuat.<br>📋 BS-[11]','🔀 Identifikasi Masalah › Arah Revisi'],
+  ]},
+  { clr:'var(--purple)', badge:'BLOK D', title:'Ragam Metode SAE dan Justifikasi Pemilihan', range:'IM-P10 – IM-P12', open:false, paras:[
+    ['IM-P10','SAE sebagai solusi <em>indirect estimation</em> — <em>borrowing strength</em> dari variabel penyerta (Rao & Molina, 2015). Posisi estimasi langsung: bukan pembanding <em>head-to-head</em>, melainkan input wajib dan <strong>benchmark</strong> peningkatan presisi (RRMSE) — karena SAE tidak dapat diterapkan tanpa estimasi langsung sebagai titik acuan. Model level area dipilih karena variabel penyerta hanya tersedia agregat kab/kota.',['📋 PF-[5],[8],[12] Kenapa dibandingkan estimasi langsung?'],'📋 PF-[5],[8],[12]: Estimasi langsung adalah input dan benchmark SAE, bukan pesaing kualitas akhir.','🔀 Metodologi (SAE) › Arah Revisi'],
+    ['IM-P11','Dua kandidat metode SAE: (1) <strong>EBLUP</strong> — lazim di statistik resmi, stabil dan efisien untuk variabel kontinu, estimasi varians via REML. Kekurangan: asumsi normalitas kurang ideal untuk data proporsi [0,1]. (2) <strong>HB Beta</strong> — distribusi Beta alami pada [0,1] → lebih sesuai untuk data proporsi, lebih stabil pada sampel sangat kecil. Kekurangan: kompleks secara komputasi (MCMC). Keunggulan HB Beta perlu dibuktikan melalui komparasi empiris.',['📋 PF-[3],[5],[6] EBLUP dan HB Beta harus ada di identifikasi masalah'],'📋 PF-[3],[5],[6]: EBLUP dan HB Beta harus ada di identifikasi masalah. Kelebihan & kekurangan masing-masing harus diulas.','🔀 Identifikasi Masalah › Masukan Pak Febri + Masukan Bu Siti'],
+    ['IM-P12','EBLUP sebagai <strong>baseline</strong> — pilihan konsisten dengan praktik umum SAE di statistik resmi, menghasilkan estimasi awal stabil sebagai acuan. HB Beta sebagai alternatif — secara teoritis lebih sesuai untuk indikator proporsi. Komparasi keduanya menggunakan RRMSE menghasilkan evidensi empiris pendekatan paling presisi untuk konteks kab/kota Sulawesi.',['📋 BS-[16]','📋 PF-[5],[6],[7] Tujuan harus memasukkan perbandingan metode'],'📋 BS-[16], PF-[5],[6],[7]: Kenapa EBLUP dulu? Sebagai baseline. Tujuan harus memasukkan perbandingan metode.','🔀 Metodologi (SAE) › Masukan Bu Siti + Identifikasi Masalah › Masukan Pak Febri'],
+  ]},
+  { clr:'var(--yellow)', badge:'BLOK E+F', title:'Variabel Penyerta & Rumusan Masalah', range:'IM-P13 – IM-P14', open:false, paras:[
+    ['IM-P13','Keberhasilan SAE sangat dipengaruhi pemilihan variabel penyerta yang relevan secara konseptual dan empiris. Variabel harus mencerminkan profil nyata individu yang menjalani perkawinan anak: perempuan dengan akses pendidikan rendah, kondisi ekonomi terbatas, dan lingkungan sosial yang menerima praktik ini. Cara pemilihan: lihat dulu hubungan variabel di level yang lebih tinggi (nasional/provinsi) sebelum diterapkan di level kab/kota.',['📋 BS-[17],[18],[19],[20]','📋 PF-[10],[11] Cara menentukan variabel penyerta harus sistematis'],'📋 BS-[17],[18],[19],[20], PF-[10],[11]: Cara menentukan variabel penyerta harus sistematis. Lihat level lebih tinggi dulu. Harus masuk akal secara sosiologis.','🔀 Variabel Penyerta (Auxiliary) › Masukan Pak Febri'],
+    ['IM-P14','<strong>3 Rumusan masalah:</strong> (1) Bagaimana estimasi tidak langsung indikator perkawinan anak kab/kota Sulawesi 2024 menggunakan SAE EBLUP dan HB Beta? (2) Bagaimana perbandingan kinerja penduga langsung dan tidak langsung ditinjau dari presisi estimasi (RSE/RRMSE)? (3) Bagaimana pola dan persebaran spasial perkawinan anak kab/kota Sulawesi berdasarkan estimasi terbaik?',['📋 PF-[4],[5],[7] Tujuan harus memasukkan perbandingan metode SAE'],'📋 PF-[4],[5],[7]: Tujuan harus memasukkan perbandingan metode SAE. Estimasi langsung bukan tujuan mandiri — posisikan sebagai benchmark presisi.','🔀 Fokus & Tujuan › Masukan Pak Febri'],
+  ]},
+];
+buildTema(temaIM, 'rancangan-im-content');
+
+/* BAB 2 Rancangan */
+const temaBab2 = [
+  { clr:'var(--green)', badge:'2.1a', title:'Pernikahan Anak — Definisi', range:'2 sub-bagian', open:true, paras:[
+    ['Def. Utama','<strong>Isi Saat Ini:</strong> UNICEF (2021), WHO (2014), UNFPA (2020), UU No.16/2019. Mencakup perkawinan formal. Belum secara eksplisit menyebut <em>living together</em>.<hr style="border-color:var(--border);margin:10px 0"><strong>Arah Revisi:</strong> Tambahkan satu kalimat penegasan di akhir sub-bagian: definisi yang digunakan penelitian ini mengikuti SDGs 5.3.1 — mencakup perkawinan formal maupun ikatan seperti perkawinan (<em>living together</em>/kawin siri). Sinkronkan dengan P1 dan P4 Latar Belakang.',['📋 BS-[6] Definisi living together harus masuk naskah secara formal'],'📋 BS-[6]: Definisi <em>living together</em> harus masuk naskah secara formal.','🔀 Latar Belakang & Data › Arah Revisi'],
+    ['Beda Dini vs Anak','<strong>Arah Revisi:</strong> Pertahankan, ringkas satu paragraf. Pastikan definisi akhir yang dipakai konsisten: penelitian ini mengacu pada batas 18 tahun sesuai instrumen internasional dan SDGs 5.3.1.',[],'Pertahankan pembedaan istilah pernikahan dini vs pernikahan anak. Ringkas satu paragraf.','—'],
+  ]},
+  { clr:'var(--blue)', badge:'2.1b', title:'Faktor Penyebab — Teori Ekologi Sosial (Reframe)', range:'5 level', open:false, paras:[
+    ['Pengantar','<strong>Arah Revisi:</strong> Reframe fungsi bagian ini: bukan sebagai fokus analisis kausal, melainkan sebagai kerangka konseptual untuk menjustifikasi pemilihan dimensi variabel penyerta SAE. Tambahkan kalimat: "Dalam penelitian ini, kerangka ekologi sosial digunakan sebagai landasan konseptual dalam mengorganisasikan kandidat variabel penyerta ke dalam dimensi yang relevan."',['📋 PF-[9],[11] Tinjauan teori harus diarahkan ke estimasi'],'📋 PF-[9],[11]: Tinjauan teori harus diarahkan ke estimasi & perbandingan model, bukan faktor penyebab.','🔀 Literatur & Sitasi › Masukan Pak Febri'],
+    ['Level Individu','<strong>KRITIS:</strong> Tidak ada variabel pendidikan. Gizi buruk ada di Tabel 1 (X1) tapi tidak ada di narasi teori.<br><strong>Arah Revisi:</strong> Tambahkan pendidikan (akses dan partisipasi sekolah perempuan) sebagai faktor level individu. Jelaskan secara logis kaitan gizi buruk dengan perkawinan anak di level individu — atau pindahkan ke dimensi lain jika korelasinya lemah.',['📋 BS-[18] Tambahkan variabel pendidikan','📋 BS-[32],[33],[34],[35] Gizi buruk — apa hubungannya?'],'📋 BS-[18],[32],[33],[34],[35]: Tidak ada pendidikan di level individu. Gizi buruk — apa hubungannya? Harus logis.','🔀 Variabel Penyerta (Auxiliary) › Arah Revisi'],
+    ['Level Hubungan','<strong>Arah Revisi:</strong> Pertahankan. Pastikan variabel penyerta di Tabel 1 dimensi Hubungan (X3–X5) memiliki korespondensi logis dengan narasi di sini — kelas ibu hamil, kelas ibu balita, perkelahian pelajar karena asmara.',['📋 BS-[20] Variabel penyerta harus punya kekuatan lebih'],'📋 BS-[20]: Variabel penyerta harus punya kekuatan yang lebih — kaitkan dengan narasi teori.','—'],
+    ['Level Komunitas','<strong>Arah Revisi:</strong> Pertahankan. Periksa kesesuaian dengan variabel penyerta Tabel 1 dimensi Komunitas (X6–X33) — pastikan setiap variabel kandidat memiliki dasar logis di narasi komunitas ini.',['📋 BS-[17]','📋 PF-[10] Cara menentukan variabel penyerta harus sistematis'],'📋 BS-[17], PF-[10]: Cara menentukan variabel penyerta harus sistematis dan masuk akal.','—'],
+    ['Level Masyarakat & Negara','<strong>Arah Revisi:</strong> Pertahankan. Pastikan variabel penyerta Tabel 1 dimensi Masyarakat (X34) dan Negara (X35–X46) memiliki landasan logis di narasi masing-masing level.',['📋 BS-[17]'],'📋 BS-[17]: Cara menentukan variabel penyerta harus sistematis.','—'],
+  ]},
+  { clr:'var(--accent)', badge:'2.1c', title:'Indikator Pemantauan Pernikahan Anak', range:'2 sub-bagian', open:false, paras:[
+    ['Data Adm. vs Survei','<strong>Arah Revisi:</strong> Gantikan "Laporan dari Kemen PPA" dengan AIPJ2 (2022) — angka 83,33% tidak tercatat agar konsisten dengan Latar Belakang, Identifikasi Masalah, dan argumen di seluruh naskah.',['📋 BS-[4],[8],[9] Perbandingan data resmi vs tidak resmi harus konsisten dengan angka AIPJ2'],'📋 BS-[4],[8],[9]: Perbandingan data resmi vs tidak resmi harus konsisten dengan angka AIPJ2.','—'],
+    ['Indikator SDGs 5.3.1','<strong>Arah Revisi:</strong> Pertahankan. Tambahkan 1 kalimat: indikator ini dipilih karena mampu menangkap perkawinan formal dan informal yang tidak tertangkap data administratif — menjadi jembatan logis ke pembahasan keunggulan Susenas.',['📋 BS-[6] Living together harus disebutkan eksplisit'],'📋 BS-[6]: <em>Living together</em> harus disebutkan eksplisit.','🔀 Latar Belakang & Data › Arah Revisi'],
+  ]},
+];
+buildTema(temaBab2, 'rancangan-bab2-content');
+
+/* ======= FULL TEXT ======= */
+const ftLB = document.getElementById('ft-lb-body');
+if (ftLB) ftLB.innerHTML = `
+<div class="ft-bab" style="border-color:var(--accent)">BAB I — PENDAHULUAN</div>
+<div class="ft-sub" style="color:var(--accent);border-color:var(--accent)">1.1 Latar Belakang</div>
+<div class="ft-tema-label" style="color:var(--accent)">Tema 1 — Urgensi Global dan Komitmen Nasional</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--accent)">P1</div><div class="ft-p-text">Pernikahan merupakan fase penting dalam siklus kehidupan yang idealnya dijalani ketika individu telah mencapai kematangan fisik, psikologis, dan sosial. Namun, ketika pernikahan terjadi pada usia anak, praktik tersebut berubah menjadi persoalan hak asasi dan pembangunan manusia. Secara internasional, Konvensi Hak Anak (CRC) mendefinisikan anak sebagai setiap individu yang berusia di bawah 18 tahun. Oleh karena itu, pernikahan yang terjadi sebelum usia tersebut dikategorikan sebagai pernikahan anak (UNICEF, 2022). Berbagai penelitian menunjukkan bahwa praktik ini berkorelasi dengan peningkatan risiko kesehatan reproduksi, terputusnya pendidikan, serta terbatasnya peluang ekonomi di masa depan (Fan & Koski, 2022; Pourtaheri et al., 2023).</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--accent)">P2</div><div class="ft-p-text">Dari perspektif gender, praktik pernikahan anak membebani perempuan secara tidak proporsional. UNICEF (2024) mencatat bahwa secara global sekitar satu dari lima perempuan usia 20–24 tahun pernah menikah sebelum usia 18 tahun, sementara pada laki-laki angkanya hanya sekitar satu dari tiga puluh. Ketimpangan ini menunjukkan bahwa praktik pernikahan anak sangat terkait dengan konstruksi sosial mengenai peran gender, relasi kuasa, serta posisi perempuan dalam struktur sosial. Kerentanan perempuan juga diperkuat oleh faktor ekonomi rumah tangga, rendahnya akses pendidikan, serta tekanan norma sosial (Parsons et al., 2015).</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--accent)">P3</div><div class="ft-p-text">Dampak pernikahan anak bersifat sistemik dan jangka panjang. Pada aspek kesehatan, perempuan yang menikah pada usia anak memiliki risiko lebih tinggi mengalami komplikasi kehamilan, gangguan kesehatan reproduksi, serta tekanan psikologis (Yaya et al., 2019; Nour, 2009). Cameron et al. (2023) menunjukkan bahwa perempuan yang menikah dini memiliki probabilitas lebih besar untuk putus sekolah, yang pada akhirnya membatasi partisipasi dalam pasar kerja formal. Kondisi ini tidak hanya merugikan individu, tetapi juga berpotensi melanggengkan siklus kemiskinan antargenerasi.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--accent)">P4</div><div class="ft-p-text">Urgensi penghapusan praktik pernikahan anak ditegaskan dalam agenda global Sustainable Development Goals (SDGs), khususnya Target 5.3 yang menyerukan eliminasi praktik perkawinan anak, dini, dan paksa pada tahun 2030 (United Nations, 2015). Untuk memantau kemajuan tersebut, digunakan indikator SDG 5.3.1 yang mengukur proporsi perempuan usia 20–24 tahun yang berstatus kawin atau hidup bersama (<em>living together</em>) sebelum usia 18 tahun. Pendekatan retrospektif dipilih agar pengalaman pernikahan anak dapat diukur secara lebih stabil dan tidak bias oleh kejadian yang masih berlangsung.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--accent)">P5</div><div class="ft-p-text">Sebagai bagian dari komunitas global, Indonesia mengadopsi komitmen tersebut melalui penguatan regulasi dan kebijakan nasional. Revisi Undang-Undang Nomor 16 Tahun 2019 menetapkan batas usia minimal pernikahan menjadi 19 tahun bagi laki-laki dan perempuan. Komitmen ini diperkuat dalam RPJMN serta Strategi Nasional Pencegahan Perkawinan Anak (Stranas PPA). Data BPS menunjukkan bahwa prevalensi nasional perkawinan anak telah menurun hingga 5,9 persen pada tahun 2024, melampaui target nasional sebesar 8,74 persen (BPS, 2024). Namun demikian, keberhasilan pada tingkat nasional belum tentu mencerminkan kondisi yang merata di seluruh wilayah Indonesia.</div></div>
+<div class="ft-tema-label" style="color:var(--blue)">Tema 2 — Disparitas Regional dan Lokus Sulawesi</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--blue)">P6</div><div class="ft-p-text">Meskipun secara agregat nasional Indonesia telah menunjukkan capaian penurunan prevalensi perkawinan anak hingga 5,9 persen pada tahun 2024, angka tersebut tidak mencerminkan keseragaman kondisi antarwilayah. Disparitas spasial masih terlihat jelas, baik antara kawasan barat dan timur Indonesia maupun antara wilayah perkotaan dan perdesaan (BPS, 2024). Capaian nasional cenderung menutupi heterogenitas kondisi lokal yang berbeda-beda.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--blue)">P7</div><div class="ft-p-text">Pulau Sulawesi menjadi salah satu wilayah yang secara konsisten mencatat prevalensi perkawinan anak tertinggi dibandingkan pulau-pulau besar lainnya selama periode 2018–2024. Data menunjukkan bahwa prevalensi di Sulawesi menurun dari 16,42 persen pada tahun 2018 menjadi 8,93 persen pada tahun 2024, namun tetap berada di atas target nasional tahun 2024 sebesar 8,74 persen. Sebagai perbandingan, Jawa dan Sumatera telah mencapai kisaran 4–5 persen, sementara Kalimantan serta Bali–Nusa Tenggara berada pada kisaran 7–8 persen. Pola ini mengindikasikan bahwa penurunan di Sulawesi relatif lebih lambat dibandingkan wilayah lain.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--blue)">P8</div><div class="ft-p-text">Kondisi tersebut menjadi semakin menarik ketika dikaitkan dengan capaian pembangunan makro wilayah. Berdasarkan data IPM tahun 2024, lima provinsi di Sulawesi tergolong dalam kategori IPM tinggi (BPS, 2025). Namun demikian, tiga di antaranya masih belum mencapai target nasional penurunan prevalensi perkawinan anak. Fakta ini menimbulkan paradoks pembangunan, di mana peningkatan indikator makro tidak secara otomatis diikuti oleh penurunan praktik perkawinan anak. Temuan serupa disampaikan oleh Kuswanto et al. (2024).</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--blue)">P9</div><div class="ft-p-text">Dominasi norma budaya dan konstruksi sosial mengenai peran gender turut memperkuat kompleksitas persoalan di Sulawesi. Studi Ratnaningsih et al. (2022) melalui pengukuran Child Marriage Acceptability Index (CMAI) di Sulawesi Selatan dan Sulawesi Tengah menemukan bahwa penerimaan sosial terhadap perkawinan anak masih relatif tinggi di beberapa komunitas. Dalam konteks seperti ini, regulasi formal seperti UU Nomor 16 Tahun 2019 belum sepenuhnya mampu menggeser norma sosial yang telah mengakar kuat di masyarakat.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--blue)">P10</div><div class="ft-p-text">Ketimpangan antarwilayah tersebut menegaskan pentingnya analisis hingga tingkat kabupaten/kota. Agregasi pada level provinsi berpotensi menyembunyikan variasi internal yang signifikan, di mana dalam satu provinsi dapat terdapat kabupaten dengan prevalensi sangat tinggi berdampingan dengan kabupaten lain yang relatif rendah. Studi spasial oleh Tambunan et al. (2024) menunjukkan bahwa pola perkawinan anak di Indonesia memiliki karakteristik klaster yang tidak selalu mengikuti batas administratif provinsi. Oleh karena itu, diperlukan estimasi indikator perkawinan anak yang presisi hingga level kabupaten/kota.</div></div>
+<div class="ft-tema-label" style="color:var(--green)">Tema 3 — Mandat Stranas dan Kebutuhan Data Wilayah</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">P11</div><div class="ft-p-text">Ketimpangan antarwilayah mendorong perlunya pendekatan intervensi yang tidak lagi bersifat seragam, melainkan berbasis kewilayahan. Pemerintah Indonesia melalui Stranas PPA secara eksplisit menekankan pentingnya <em>localized intervention</em> (Bappenas, 2020). Dokumen tersebut menempatkan pemerintah daerah, baik provinsi maupun kabupaten/kota sebagai aktor kunci dalam merancang dan mengimplementasikan kebijakan pencegahan yang kontekstual. Efektivitas Stranas PPA sangat bergantung pada kapasitas daerah dalam memahami profil dan dinamika perkawinan anak di wilayahnya masing-masing.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">P12</div><div class="ft-p-text">Dalam kerangka desentralisasi fiskal dan administratif di Indonesia, pemerintah kabupaten/kota memiliki kewenangan yang luas dalam pengelolaan pelayanan publik, termasuk pendidikan, kesehatan, dan perlindungan sosial (Lewis, 2016). Namun demikian, prinsip <em>evidence-based policy</em> menuntut agar setiap kebijakan berbasis pada indikator statistik yang akurat dan relevan. Tanpa dukungan data yang granular dan presisi pada level kabupaten/kota, kebijakan berisiko bersifat umum, tidak tepat sasaran, dan kurang efektif dalam menjangkau kelompok paling rentan.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">P13</div><div class="ft-p-text">Stranas PPA secara sistematis merumuskan lima tahapan implementasi di daerah, di mana tahap pertama adalah pemetaan kondisi daerah. Tahap ini bertujuan untuk memperoleh <em>baseline</em> mengenai tingkat prevalensi, karakteristik sosial, serta faktor-faktor kontekstual yang memengaruhi praktik perkawinan anak (KemenPPPA, 2024). <em>Baseline</em> yang kuat menjadi fondasi utama dalam penyusunan Rencana Aksi Daerah (RAD) serta dalam penentuan prioritas intervensi. Tanpa pemetaan yang akurat, intervensi berpotensi tidak selaras dengan kebutuhan riil masyarakat setempat.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">P14</div><div class="ft-p-text">Ketersediaan data pada level kabupaten/kota menjadi krusial karena variasi internal dalam satu provinsi dapat sangat besar. Sebuah provinsi dengan rata-rata prevalensi moderat dapat saja memiliki beberapa kabupaten dengan tingkat perkawinan anak yang sangat tinggi. Jika kebijakan hanya didasarkan pada angka provinsi, maka wilayah-wilayah dengan kerentanan tinggi dapat terabaikan. UNICEF (2020) menegaskan bahwa kegagalan dalam mengidentifikasi wilayah prioritas secara tepat dapat menyebabkan inefisiensi alokasi sumber daya dan menghambat percepatan pencapaian target SDGs.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">P15</div><div class="ft-p-text">Hingga saat ini ketersediaan data prevalensi perkawinan anak yang andal pada level kabupaten/kota masih terbatas. Data administratif seperti pencatatan pernikahan di Kantor Urusan Agama (KUA) atau Dinas Kependudukan dan Pencatatan Sipil tidak sepenuhnya mampu merepresentasikan praktik perkawinan anak, terutama yang tidak tercatat secara formal. Di sisi lain, sumber data survei nasional yang digunakan untuk pemantauan resmi memiliki keterbatasan representasi pada domain kecil. Kesenjangan ini menciptakan kebutuhan mendesak untuk mengevaluasi metode estimasi yang mampu menghasilkan statistik wilayah kecil yang lebih presisi.</div></div>
+<div class="ft-tema-label" style="color:var(--yellow)">Tema 4 — Indikator dan Keterbatasan Data</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--yellow)">P16</div><div class="ft-p-text">Pengukuran prevalensi perkawinan anak di Indonesia menggunakan indikator SDG 5.3.1, yaitu proporsi perempuan usia 20–24 tahun yang berstatus kawin atau hidup bersama sebelum usia 18 tahun. Indikator ini bersumber dari Survei Sosial Ekonomi Nasional (Susenas) yang dilaksanakan oleh Badan Pusat Statistik. Susenas dinilai komprehensif karena mampu menangkap baik perkawinan yang tercatat secara formal maupun praktik hidup bersama (<em>living together</em>) yang tidak selalu tercatat dalam sistem administrasi negara (BPS, 2024).</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--yellow)">P17</div><div class="ft-p-text">Sebaliknya, data administratif seperti permohonan dispensasi nikah di pengadilan agama tidak dapat dijadikan ukuran prevalensi yang valid. Data Badan Peradilan Agama (2024) menunjukkan bahwa sekitar 96 persen permohonan dispensasi nikah dikabulkan, namun angka tersebut tidak merepresentasikan seluruh praktik perkawinan anak yang terjadi di masyarakat. Laporan AIPJ2 (2022) menunjukkan bahwa sekitar 83,33 persen praktik perkawinan anak tidak tercermin dalam data administratif formal. Kondisi ini menyebabkan data administratif memiliki bias seleksi yang tinggi dan menghasilkan <em>underestimation</em> besar.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--yellow)">P18</div><div class="ft-p-text">Meskipun Susenas lebih unggul dalam cakupan dan definisi operasional, desain sampel survei ini pada dasarnya dirancang agar representatif hingga tingkat provinsi. Representasi pada level kabupaten/kota tidak menjadi tujuan utama desain sampel, sehingga ukuran sampel untuk domain kecil relatif terbatas. Dalam teori survei, keterbatasan ukuran sampel pada suatu domain akan berdampak pada meningkatnya varians estimasi serta menurunnya tingkat presisi (Lohr, 2010). Meskipun indikator SDG 5.3.1 telah terdefinisi dengan baik, kualitas estimasi pada tingkat kabupaten/kota masih menghadapi tantangan metodologis.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--yellow)">P19</div><div class="ft-p-text">Kondisi tersebut menimbulkan kesenjangan antara kebutuhan data wilayah kecil sebagaimana diamanatkan dalam Stranas PPA dengan keterbatasan desain survei nasional. Hingga saat ini, belum tersedia sumber data alternatif yang secara konsisten dan andal mampu menyajikan prevalensi perkawinan anak pada tingkat kabupaten/kota. Ketergantungan pada pendugaan langsung dari sampel kecil berpotensi menghasilkan estimasi dengan tingkat ketidakpastian yang tinggi. Oleh karena itu, permasalahan tidak lagi terletak pada definisi indikator, melainkan pada aspek teknis pendugaan statistik.</div></div>
+<div class="ft-tema-label" style="color:var(--pink)">Tema 5 — Problem Presisi Statistik (RSE)</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--pink)">P20</div><div class="ft-p-text">Keterbatasan desain sampel Susenas pada tingkat kabupaten/kota berdampak langsung pada kualitas presisi pendugaan langsung (<em>direct estimation</em>). Dalam statistika survei, presisi suatu estimasi sering diukur menggunakan Relative Standard Error (RSE), yaitu rasio antara standar error dan nilai estimasi yang dinyatakan dalam persentase (Lohr, 2010). Semakin besar nilai RSE, semakin tinggi tingkat ketidakpastian estimasi tersebut. Secara umum, estimasi dengan RSE di atas 25 persen dikategorikan kurang presisi, sementara nilai di atas 50 persen dianggap tidak layak digunakan sebagai dasar pengambilan kebijakan (BPS, 2023).</div></div>
+<div class="ft-table-wrap">
+  <div class="ft-table-label" style="color:var(--pink)">Tabel 1. Interpretasi dan kategori nilai RSE</div>
+  <table style="font-size:13px;max-width:520px"><thead><tr><th>Kategori RSE</th><th>Interpretasi</th></tr></thead>
+  <tbody><tr><td style="color:var(--green);font-weight:600">RSE ≤ 25%</td><td>Estimasi akurat</td></tr>
+  <tr><td style="color:var(--yellow);font-weight:600">25% &lt; RSE ≤ 50%</td><td>Estimasi belum akurat (dapat digunakan dengan kehati-hatian)</td></tr>
+  <tr><td style="color:var(--pink);font-weight:600">RSE &gt; 50%</td><td>Estimasi sangat tidak akurat (tidak dapat digunakan)</td></tr></tbody></table>
+  <div class="ft-source" style="color:var(--pink)">Sumber: BPS (2023)</div>
+</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--pink)">P21</div><div class="ft-p-text">Secara teoritis, presisi estimasi dapat ditingkatkan melalui penambahan ukuran sampel. Dalam kerangka teori sampling, varians estimasi berbanding terbalik dengan ukuran sampel (Cochran, 1977). Namun demikian, pendekatan ini tidak selalu <em>feasible</em> dalam praktik. Penambahan sampel secara signifikan memerlukan peningkatan anggaran, tenaga enumerator, serta waktu pelaksanaan survei. Dalam konteks survei nasional berskala besar seperti Susenas, ekspansi sampel hingga memadai untuk seluruh kabupaten/kota akan menimbulkan beban operasional yang sangat besar dan kurang efisien.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--pink)">P22</div><div class="ft-p-text">RSE yang tinggi tidak hanya menjadi persoalan teknis statistik, tetapi juga memiliki implikasi langsung terhadap kualitas kebijakan daerah. Estimasi dengan tingkat ketidakpastian besar dapat menyebabkan salah identifikasi wilayah prioritas, ketidaktepatan alokasi anggaran, serta kegagalan dalam menargetkan kelompok rentan secara efektif. Dalam konteks implementasi Stranas PPA, kondisi ini berpotensi menghambat upaya pemetaan kondisi daerah yang menjadi fondasi perencanaan intervensi. Oleh karena itu, diperlukan pendekatan metodologis alternatif yang mampu meningkatkan presisi estimasi tanpa harus menambah ukuran sampel secara konvensional.</div></div>
+<div class="ft-tema-label" style="color:var(--purple)">Tema 6 — Small Area Estimation (SAE) sebagai Solusi Metodologis</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">P23–P24</div><div class="ft-p-text">Permasalahan presisi yang rendah pada pendugaan langsung di tingkat kabupaten/kota tidak dapat diselesaikan secara efisien melalui penambahan ukuran sampel. Salah satu pendekatan yang banyak digunakan dalam statistika resmi adalah Small Area Estimation (SAE). Metode ini bekerja dengan memanfaatkan informasi tambahan (<em>auxiliary variables</em>) dari area lain untuk "<em>meminjam kekuatan</em>" (<em>borrowing strength</em>) melalui model statistik (Rao & Molina, 2015). Metode SAE secara umum dibedakan menjadi model level unit dan model level area. Model level area lebih sesuai karena variabel penyerta (Podes 2024, DDA 2025) hanya tersedia dalam bentuk agregat kab/kota.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">P25–P26</div><div class="ft-p-text">EBLUP dipilih sebagai model <em>baseline</em> karena relatif stabil dan efisien untuk variabel bertipe kontinu. EBLUP berada dalam kerangka <em>linear mixed model</em> yang mengasumsikan normalitas error dan random effect (Kackar & Harville, 1984). Namun demikian, asumsi normalitas dapat menjadi kurang sesuai untuk indikator proporsi yang berada pada rentang 0 hingga 1. Untuk mengatasi keterbatasan tersebut, pendekatan Hierarchical Bayes dengan distribusi Beta menawarkan alternatif yang lebih fleksibel karena distribusi Beta secara alami terdefinisi pada interval 0 hingga 1 dan lebih sesuai untuk memodelkan data proporsi (Ferrari & Cribari-Neto, 2004).</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">P27</div><div class="ft-p-text">Penelitian ini memberikan kontribusi metodologis dan kebijakan dengan menyajikan estimasi indikator perkawinan anak (SDGs 5.3.1) pada tingkat kabupaten/kota di Pulau Sulawesi menggunakan pendekatan Small Area Estimation (SAE). Secara metodologis, penelitian ini membandingkan kinerja model EBLUP sebagai pendekatan <em>baseline</em> dengan model Hierarchical Bayes berbasis distribusi Beta yang secara teoretis lebih sesuai untuk data berbentuk proporsi. Secara substantif, hasil penelitian ini diharapkan mampu mengisi kesenjangan ketersediaan data prevalensi perkawinan anak pada level kabupaten/kota, sehingga dapat mendukung pemetaan kondisi daerah sebagaimana diamanatkan dalam Stranas PPA.</div></div>`;
+
+const ftIM = document.getElementById('ft-im-body');
+if (ftIM) ftIM.innerHTML = `
+<div class="ft-sub" style="color:var(--blue);border-color:var(--blue)">1.2 Identifikasi Masalah &amp; Rumusan Masalah</div>
+<div class="info-note"><span class="info-note-icon">📄</span><span>Teks lengkap identifikasi masalah revisi dari Rev_Draf_BAB_1.docx. Sudah disesuaikan dengan revisi penguji.</span></div>
+${[
+['IM-P1','Meskipun Indonesia secara nasional telah menunjukkan capaian penurunan prevalensi perkawinan anak hingga 5,9 persen pada tahun 2024, capaian tersebut tidak sepenuhnya mencerminkan keseragaman kondisi antarwilayah. Di Pulau Sulawesi, prevalensi perkawinan anak masih tercatat sebesar 8,93 persen pada tahun yang sama (BPS, 2024), yang berarti berada di atas rata-rata nasional. Ketimpangan ini berpotensi semakin tajam apabila dianalisis pada tingkat kabupaten/kota, mengingat dalam satu provinsi dapat terdapat wilayah dengan prevalensi sangat tinggi berdampingan dengan wilayah yang relatif rendah. Dalam konteks statistik pembangunan, penggunaan angka rata-rata nasional berisiko menyembunyikan kantong-kantong wilayah dengan tingkat kerentanan tinggi (UNICEF, 2020).'],
+['IM-P2','Ketidaksinkronan antara capaian nasional dan kondisi di Sulawesi semakin kompleks ketika dikaitkan dengan indikator pembangunan makro seperti IPM. Data menunjukkan bahwa beberapa provinsi di Sulawesi telah mencapai kategori IPM tinggi (BPS, 2025), namun peningkatan indikator tersebut tidak secara otomatis diikuti oleh penurunan prevalensi perkawinan anak yang signifikan. Temuan serupa disampaikan oleh Kuswanto et al. (2024) yang menunjukkan bahwa pengaruh faktor pendidikan dan ekonomi dapat dimediasi oleh norma sosial yang mengakar di masyarakat.'],
+['IM-P3','Norma budaya dan konstruksi sosial lokal memiliki peran signifikan dalam mempertahankan praktik perkawinan anak. Berbagai studi menunjukkan bahwa tekanan sosial, legitimasi adat, serta persepsi mengenai kehormatan keluarga menjadi faktor yang mendorong keputusan menikahkan anak pada usia dini (Rumble et al., 2018; Ratnaningsih et al., 2022). Regulasi formal belum sepenuhnya mampu menggeser norma sosial yang telah mengakar kuat di masyarakat, sehingga mempersulit upaya pengendalian dan pengukuran fenomena secara akurat.'],
+['IM-P4','Kesenjangan antara realitas sosial dan sistem pencatatan administratif negara semakin memperumit pengukuran prevalensi perkawinan anak secara komprehensif. Dispensasi nikah bukan ukuran prevalensi yang valid karena tidak seluruh praktik diajukan melalui mekanisme tersebut. Laporan AIPJ2 (2022) menunjukkan bahwa sekitar 83,33 persen praktik perkawinan anak tidak tercatat secara resmi dalam sistem administratif formal. Kondisi ini menciptakan bias seleksi dalam data administratif dan berisiko menghasilkan <em>underestimation</em> terhadap kondisi riil di masyarakat.'],
+['IM-P5','Kebutuhan akan data prevalensi yang presisi hingga tingkat kabupaten/kota semakin menguat seiring dengan amanat Stranas PPA. Tahap awal implementasi kebijakan di daerah adalah pemetaan kondisi wilayah sebagai <em>baseline</em> dalam penyusunan Rencana Aksi Daerah (Bappenas, 2020). Dalam kerangka desentralisasi, pemerintah daerah memiliki kewenangan dalam perencanaan dan penganggaran program, sehingga ketersediaan data yang akurat dan terdisagregasi menjadi prasyarat utama bagi kebijakan berbasis bukti (Lewis, 2016). Tanpa data prevalensi yang andal pada tingkat kabupaten/kota, proses perencanaan berisiko tidak tepat sasaran dan tidak efisien.'],
+['IM-P6','Sebagai sumber resmi pengukuran indikator SDGs 5.3.1 di Indonesia, Susenas memiliki cakupan yang luas dan definisi operasional yang konsisten. Indikator ini mengukur proporsi perempuan usia 20–24 tahun yang pernah kawin atau hidup bersama sebelum usia 18 tahun, sehingga mampu menangkap praktik perkawinan formal maupun informal. Namun demikian, desain sampel Susenas pada dasarnya dirancang agar representatif hingga tingkat provinsi. Domain dengan ukuran sampel kecil cenderung menghasilkan varians estimasi yang lebih besar dan presisi yang lebih rendah (Lohr, 2010).'],
+['IM-P7','Keterbatasan ukuran sampel berdampak langsung pada rendahnya presisi pendugaan langsung (<em>direct estimation</em>). Presisi suatu estimasi umumnya diukur menggunakan Relative Standard Error (RSE), yaitu rasio antara standar error terhadap nilai estimasi yang dinyatakan dalam persentase (Cochran, 1977). Dalam praktik statistik resmi, estimasi dengan RSE di atas 25 persen dikategorikan kurang presisi, sedangkan nilai di atas 50 persen dianggap tidak layak digunakan sebagai dasar kebijakan (BPS, 2023).'],
+['IM-P8','Hasil evaluasi pendugaan langsung indikator perkawinan anak di Sulawesi menunjukkan distribusi yang mengkhawatirkan: hanya 2 wilayah masuk kategori RSE ≤ 25% (akurat), 48 wilayah masuk kategori hati-hati (25–50%), dan 26 wilayah RSE > 50% (tidak layak kebijakan). Median RSE berada sekitar 44 persen dengan rata-rata 47,56 persen, rentang IQR 38,15–53,55%, dan nilai pencilan RSE mencapai lebih dari 101,39 persen. Pola ini menunjukkan bahwa presisi penduga langsung cenderung rendah dan tidak merata. (Sumber: Susenas 2024, diolah)'],
+['IM-P9','Kondisi ini menunjukkan bahwa estimasi langsung tidak mampu memberikan tingkat keandalan yang memadai untuk mendukung perencanaan kebijakan daerah secara akurat. Implikasinya meluas pada risiko salah identifikasi wilayah prioritas, inefisiensi alokasi anggaran, serta kegagalan dalam menargetkan kelompok rentan secara efektif. Solusi konvensional berupa penambahan ukuran sampel tidak <em>feasible</em> karena memerlukan biaya besar dan beban operasional yang tidak proporsional. Diperlukan pendekatan metodologis alternatif yang mampu meningkatkan presisi estimasi tanpa menambah ukuran sampel secara konvensional.'],
+['IM-P10','Salah satu pendekatan metodologis yang dikembangkan untuk mengatasi permasalahan presisi pada domain kecil adalah Small Area Estimation (SAE). Metode ini bekerja dengan mengintegrasikan informasi dari survei dengan variabel penyerta (<em>auxiliary variables</em>) melalui model statistik sehingga mampu "meminjam kekuatan" dari area lain untuk meningkatkan stabilitas estimasi (Rao & Molina, 2015). Posisi estimasi langsung dalam kerangka SAE bukanlah sebagai pembanding head-to-head, melainkan sebagai input wajib dan <strong>benchmark</strong> peningkatan presisi (RRMSE).'],
+['IM-P11','Model EBLUP sering digunakan sebagai pendekatan <em>baseline</em> dalam kerangka model level area. EBLUP berada dalam kerangka <em>linear mixed model</em> yang mengasumsikan distribusi normal pada komponen error dan <em>random effect</em> (Kackar & Harville, 1984). <strong>Kelebihan:</strong> relatif efisien, banyak digunakan di statistik resmi. <strong>Kekurangan:</strong> asumsi normalitas tidak sepenuhnya sesuai dengan karakteristik data proporsi yang terikat pada rentang nol hingga satu, sehingga memungkinkan prediksi di luar rentang valid.'],
+['IM-P12','Sebagai alternatif, pendekatan Hierarchical Bayes (HB) berbasis distribusi Beta menawarkan kerangka yang lebih fleksibel untuk memodelkan data proporsi. Distribusi Beta secara teoritis terdefinisi pada interval nol hingga satu, sehingga lebih sesuai untuk indikator seperti prevalensi perkawinan anak yang dinyatakan dalam bentuk proporsi (Ferrari & Cribari-Neto, 2004). <strong>Kelebihan:</strong> estimasi dalam rentang valid, lebih stabil pada domain sampel sangat kecil. <strong>Kekurangan:</strong> kompleks secara komputasi karena memerlukan algoritma MCMC. Keunggulan HB Beta bersifat teoritis dan perlu dibuktikan melalui komparasi empiris.'],
+['IM-P13','Selain pemilihan model estimasi, keberhasilan penerapan SAE sangat dipengaruhi oleh pemilihan variabel penyerta yang relevan secara konseptual dan empiris. Rao dan Molina (2015) menekankan bahwa kualitas model SAE sangat bergantung pada relevansi dan kualitas variabel penyerta yang digunakan. Pemilihan variabel tidak dapat semata-mata didasarkan pada signifikansi statistik, tetapi harus mencerminkan profil nyata individu yang menjalani perkawinan anak: perempuan dengan akses pendidikan rendah, kondisi ekonomi terbatas, dan lingkungan sosial yang menerima praktik ini. Cara pemilihan yang tepat: lihat dulu hubungan variabel di level yang lebih tinggi (nasional/provinsi) sebelum diterapkan di level kab/kota.'],
+['IM-P14 (Rumusan Masalah)','Berdasarkan kondisi tersebut, penelitian ini dirancang untuk menjawab pertanyaan-pertanyaan berikut: (1) Bagaimana hasil pendugaan tidak langsung indikator perkawinan anak pada level kabupaten/kota di Pulau Sulawesi tahun 2024 yang diperoleh menggunakan metode SAE EBLUP dan SAE HB Beta? (2) Bagaimana perbandingan kinerja penduga langsung dan penduga tidak langsung (SAE EBLUP dan SAE HB Beta) ditinjau dari tingkat presisi estimasi (RSE/RRMSE)? (3) Bagaimana pola dan persebaran spasial tingkat perkawinan anak antarwilayah kabupaten/kota di Pulau Sulawesi berdasarkan hasil estimasi terbaik, serta wilayah mana saja yang tergolong memiliki tingkat kerentanan tinggi maupun rendah?'],
+].map(([num,txt]) => `<div class="ft-p"><div class="ft-p-num" style="color:var(--blue)">${num}</div><div class="ft-p-text">${txt}</div></div>`).join('')}`;
+
+const ftBab2 = document.getElementById('ft-bab2-body');
+if (ftBab2) ftBab2.innerHTML = `
+<div class="ft-bab" style="border-color:var(--green)">BAB II — TINJAUAN PUSTAKA</div>
+<div class="ft-sub" style="color:var(--green);border-color:var(--green)">2.1 Landasan Teori</div>
+<div class="ft-tema-label" style="color:var(--green)">Pernikahan Anak</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">2.1.1</div><div class="ft-p-text">Pernikahan anak merupakan praktik perkawinan yang melibatkan individu yang belum mencapai usia dewasa. Secara internasional, pernikahan anak didefinisikan sebagai setiap bentuk perkawinan formal maupun hubungan menyerupai perkawinan yang dilakukan oleh seseorang sebelum berusia 18 tahun (UNICEF, 2021). World Health Organization (WHO) memandang pernikahan anak sebagai fenomena yang berkaitan erat dengan aspek kesehatan dan kesejahteraan individu (WHO, 2014). Dalam konteks Indonesia, Undang-Undang Nomor 16 Tahun 2019 tentang Perkawinan menetapkan batas minimum usia perkawinan 19 tahun. <strong>Dalam penelitian ini, definisi yang digunakan mengikuti SDGs 5.3.1 — mencakup perkawinan formal maupun ikatan seperti perkawinan (<em>living together</em>/kawin siri).</strong></div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">2.1.2</div><div class="ft-p-text">Dalam kajian akademik, penting untuk membedakan antara istilah pernikahan anak dan pernikahan dini. Pernikahan dini umumnya merujuk pada perkawinan yang dilakukan pada usia relatif muda menurut norma sosial atau budaya setempat, dan bersifat lebih kontekstual. Sebaliknya, pernikahan anak memiliki pengertian yang lebih spesifik dan normatif, yaitu perkawinan yang melibatkan individu di bawah usia 18 tahun, sebagaimana dirujuk dalam berbagai instrumen internasional perlindungan anak (UNICEF, 2021; OHCHR, 2014).</div></div>
+<div class="ft-tema-label" style="color:var(--green)">Faktor-Faktor Penyebab — Teori Ekologi Sosial (sebagai Kerangka Variabel Penyerta)</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">2.1.3</div><div class="ft-p-text">Pernikahan anak merupakan persoalan sosial yang muncul dari interaksi berbagai faktor yang berlapis. Teori ekologi sosial yang dikembangkan oleh Urie Bronfenbrenner (1979, 1994) memberikan pendekatan yang komprehensif — menjelaskan bahwa perkembangan manusia tidak dapat dilepaskan dari sistem lingkungan yang terstruktur secara bertingkat. <strong>Dalam penelitian ini, kerangka ekologi sosial digunakan sebagai landasan konseptual dalam mengorganisasikan kandidat variabel penyerta SAE ke dalam dimensi yang relevan secara teoritis</strong>, bukan sebagai fokus analisis kausal. Lima lapisan: individu, hubungan, komunitas, masyarakat, dan negara — masing-masing memberikan pengaruh tersendiri terhadap terjadinya perkawinan anak.</div></div>
+<div class="ft-tema-label" style="color:var(--green)">Indikator Pemantauan Pernikahan Anak</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">2.1.4</div><div class="ft-p-text">Dalam kerangka pembangunan global, indikator resmi yang digunakan untuk memantau pernikahan anak adalah SDGs 5.3.1, yaitu proporsi perempuan usia 20 hingga 24 tahun yang menikah atau hidup bersama sebelum usia 18 tahun (UNSD, 2023; UNICEF, 2021). Indikator ini secara eksplisit mencakup <em>living together</em> karena keduanya memiliki konsekuensi pendidikan, kesehatan reproduksi, dan sosial ekonomi yang signifikan. Secara operasional: <strong>PPA = (F&lt;18 / N20-24) × 100%</strong>, dengan PPA: persentase pernikahan anak; F&lt;18: jumlah perempuan 20–24 tahun yang menikah/hidup bersama sebelum 18 tahun; N20-24: total perempuan 20–24 tahun.</div></div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">2.1.5</div><div class="ft-p-text">Pengukuran yang hanya mengandalkan data administratif memiliki keterbatasan dalam hal cakupan. Laporan AIPJ2 (2022) menunjukkan bahwa dalam praktiknya, sekitar 83,33 persen kasus perkawinan anak tidak tercatat, baik di KUA maupun di catatan sipil. Kondisi ini menyebabkan sebagian peristiwa perkawinan anak tidak terakomodasi dalam sistem administrasi resmi. Oleh karena itu, pendekatan berbasis survei rumah tangga yang mencakup perkawinan formal dan hidup bersama — yakni Susenas — dinilai lebih mampu memberikan gambaran yang menyeluruh.</div></div>
+<div class="ft-sub" style="color:var(--green);border-color:var(--green)">2.2 Penelitian Terkait</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--green)">2.2</div><div class="ft-p-text">Penelitian mengenai penerapan Small Area Estimation (SAE) berkembang pesat seiring kebutuhan akan estimasi indikator pada wilayah dengan ukuran sampel kecil. Dari 10 studi terkait yang diidentifikasi (Molina dkk. 2014; Satriya dkk. 2015; Fajar dkk. 2019; Afifah dan Faradis 2020; Istiqomah dan Wulansari 2022; Shiferaw dkk. 2024; Yahya dan Sitorus 2024; Yuniarty dkk. 2024; Miolo dkk. 2024; Akbar dan Istiana 2025), terbukti bahwa SAE — baik melalui pendekatan EBLUP maupun HB Beta — mampu meningkatkan presisi estimasi indikator sosial dan ekonomi pada domain kecil. Akbar dan Istiana (2025) di DKI Jakarta menunjukkan HB Beta memberikan estimasi terbaik. Namun demikian, belum ditemukan penelitian yang secara khusus membandingkan model EBLUP dan HB Beta dalam mengestimasi persentase perkawinan anak pada level kabupaten/kota di Pulau Sulawesi — menjadi pembeda penelitian ini.</div></div>`;
+
+const ftBab3 = document.getElementById('ft-bab3-body');
+if (ftBab3) ftBab3.innerHTML = `
+<div class="ft-bab" style="border-color:var(--purple)">BAB III — METODOLOGI PENELITIAN</div>
+<div class="ft-sub" style="color:var(--purple);border-color:var(--purple)">3.1 Ruang Lingkup Penelitian</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">3.1</div><div class="ft-p-text">Penelitian ini bertujuan untuk mengestimasi proporsi perempuan umur 20–24 tahun yang berstatus kawin atau hidup bersama sebelum umur 18 tahun pada level kabupaten/kota di Pulau Sulawesi Tahun 2024. Metode estimasi yang digunakan terdiri atas: (1) estimasi langsung (<em>direct estimation</em>) sebagai <em>benchmark</em> peningkatan presisi — bukan pembanding head-to-head, melainkan input wajib dan acuan RRMSE; (2) SAE EBLUP sebagai <em>baseline</em>; (3) SAE Hierarchical Bayes dengan asumsi distribusi Beta. SAE HB Beta dipilih karena indikator yang diestimasi berbentuk proporsi [0,1], sehingga secara konseptual sesuai dimodelkan menggunakan distribusi Beta. Wilayah penelitian mencakup 81 kabupaten/kota di enam provinsi Pulau Sulawesi: Sulawesi Utara, Sulawesi Tengah, Sulawesi Selatan, Sulawesi Tenggara, Gorontalo, dan Sulawesi Barat.</div></div>
+<div class="ft-sub" style="color:var(--purple);border-color:var(--purple)">3.2 Metode Pengumpulan Data</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">3.2</div><div class="ft-p-text">Penelitian ini menggunakan data sekunder dari dua sumber utama: (1) <strong>Susenas KOR Maret 2024</strong> — untuk memperoleh <em>interest variable</em> (proporsi perempuan 20–24 tahun yang kawin/hidup bersama sebelum 18 tahun). Susenas Maret 2024 menerapkan desain <em>stratified two-stage sampling</em> dengan total 345.000 rumah tangga dari 34.500 blok sensus. (2) <strong>Podes 2024</strong> — untuk memperoleh <em>auxiliary variables</em>. Podes dikumpulkan secara sensus sehingga memenuhi asumsi <em>zero sampling error</em> pada variabel penyerta. Variabel penyerta kemudian diagregasi ke level kabupaten/kota agar sesuai dengan level analisis variabel respon.</div></div>
+<div class="ft-sub" style="color:var(--purple);border-color:var(--purple)">3.3 Kandidat Variabel Penyerta (46 variabel)</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">3.3</div><div class="ft-p-text">Berdasarkan kajian literatur dan ketersediaan data, diperoleh 46 kandidat variabel penyerta dalam 4 dimensi. <strong>Individu (X1–X7):</strong> BTS, sinyal 4G, rasio guru/murid SD/SMP/SMA, gizi buruk, kerawanan pangan. <em>[Revisi: Dimensi ini memerlukan penambahan variabel pendidikan langsung seperti angka buta aksara perempuan atau APM sekolah]</em>. <strong>Keluarga (X8–X15):</strong> BLT, jaminan kesehatan ibu hamil miskin, SKTM, kelas ibu hamil/balita, PMT, jaminan baduta, akta kelahiran. <strong>Komunitas (X16–X41):</strong> Posyandu, kader KB, bidan, perkelahian pelajar, aksesibilitas pendidikan, perkosaan, penerangan jalan, keaksaraan, Paket A/B/C, TBM, permukiman kumuh, rasio sekolah, tenaga kesehatan, sarana ekonomi, dan lainnya. <strong>Masyarakat (X42–X46):</strong> lahan nonpertanian, sentra industri, bank, koperasi, keterlibatan perempuan di parlemen.</div></div>
+<div class="ft-sub" style="color:var(--purple);border-color:var(--purple)">3.4 Metode Analisis</div>
+<div class="ft-p"><div class="ft-p-num" style="color:var(--purple)">3.4</div><div class="ft-p-text">Kandidat variabel penyerta melalui proses seleksi: (1) pengujian korelasi Pearson dengan variabel respon (dan logit variabel respon untuk HB Beta), (2) pendeteksian multikolinearitas (eliminasi jika korelasi ≥ 0,8), (3) seleksi variabel menggunakan <em>backward elimination</em>. Metode analisis utama: <strong>(a) Pendugaan Langsung</strong> — sebagai benchmark RRMSE dan input model SAE. <strong>(b) SAE EBLUP</strong> (Fay-Herriot model level area) — model <em>baseline</em>, estimasi varians via REML, pengujian normalitas random effect via Kolmogorov-Smirnov. <strong>(c) SAE HB Beta</strong> — model alternatif dengan distribusi Beta [0,1], inferensi via MCMC menggunakan package saeHB. Evaluasi kinerja: RSE dan RRMSE. Metode terpilih digunakan untuk penyusunan peta tematik spasial 81 kab/kota Sulawesi menggunakan QGIS 3.28.3 dengan metode Natural Breaks (Jenks).</div></div>`;
+
+/* ======= NAVIGATION FUNCTIONS ======= */
+function switchL1(name, btn) {
+  document.querySelectorAll('.l1-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.l1-tab').forEach(t => t.classList.remove('active'));
+  const sec = document.getElementById('l1-' + name);
+  if (sec) sec.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function switchL2(l1, l2, btn) {
+  const parent = document.getElementById('l1-' + l1);
+  if (!parent) return;
+  parent.querySelectorAll('.l2-section').forEach(s => s.classList.remove('active'));
+  parent.querySelectorAll('.l2-tab').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(l1 + '-' + l2);
+  if (target) target.classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleTema(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  if (body) body.classList.toggle('open');
+}
+
+function toggleParaDetail(toggle) {
+  const card = toggle.closest('.para-card');
+  const detail = card ? card.nextElementSibling : null;
+  if (detail && detail.classList.contains('para-detail')) {
+    detail.classList.toggle('open');
+    toggle.textContent = detail.classList.contains('open') ? '▼' : '▶';
+    toggle.style.color = detail.classList.contains('open') ? 'var(--para-clr)' : '';
+  }
+}
+
+function toggleCheck(item) {
+  item.classList.toggle('done');
+  const icon = item.querySelector('.chk-box');
+  if (icon) icon.innerHTML = item.classList.contains('done') ? '&#9745;' : '&#9744;';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.para-detail.open').forEach(d => {
+      d.classList.remove('open');
+    });
+  }
+});
+</script>
+</body>
+</html>
